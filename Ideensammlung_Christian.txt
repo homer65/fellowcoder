@@ -1,0 +1,3 @@
+Erste Idee ist eine Entwicklungsumgebung zusammenzustellen.
+Dazu gehören:
+Installation Flask: pip install flask
