@@ -1,3 +1,10 @@
-Erste Idee ist eine Entwicklungsumgebung zusammenzustellen.
-Dazu gehören:
-Installation Flask: pip install flask
+Impressum + Datenschutzerklärung
+Es muß eine Login Möglichkeit geben. EMail und Passwort und Pseudonym sollten reichen. Passwort in Datenbank verschlüsseln.
+Beim Registrieren EMail prüfen?
+Jeder Nutzer sollte ein Profil haben. Wie sieht das genau aus?
+Profil Suchfunktion. Nachricht an gefundenen Nutzer sendbar.
+Nutzer sollten Gruppen bilden können. Ein Nutzer ist Gruppen Admin.
+Gruppen Admin sollten Nutzer in Gruppe aufnehmen und entfernen können.
+Es sollte einen Gruppenchat geben.
+Man kann Gesuche aufgeben.
+Gesuch Suchfunktion. Nachricht an gefundenen Nutzer sendbar.
