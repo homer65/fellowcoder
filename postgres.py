@@ -6,9 +6,17 @@ class Postgres():
         self.connection = None
         
     def connect(self):
+        user = ""
+        password = ""
+        with open("postgres.login","r") as f:
+            for satz in f:
+                worte = satz.split("=")
+                if len(worte) > 1:
+                    user = worte[0]
+                    password = worte[1]
         try:
-            self.connection = psycopg2.connect(user = "fellow",
-                                               password = "franzundchristian",
+            self.connection = psycopg2.connect(user = user,
+                                               password = password,
                                                host = "45.129.182.115",
                                                port = "5432",
                                                database = "fellowcoder")
