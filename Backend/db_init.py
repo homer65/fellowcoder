@@ -2,10 +2,8 @@ import firebase_admin
 from firebase_admin import credentials, firestore, storage
 
 
-
-
-
 class DB_Init:
+
     def __init__(self):
         super().__init__()
         self.init_firestore_app()
