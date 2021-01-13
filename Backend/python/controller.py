@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request
 import time
 from firestore import Firestore
-from django.contrib.postgres.aggregates.general import BoolAnd
 
 app = Flask(__name__)
 
