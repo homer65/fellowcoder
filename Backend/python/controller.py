@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 import time
 from firestore import Firestore
+#import json
 
 app = Flask(__name__)
 
@@ -19,6 +20,7 @@ def register():
     vorname = request.values.get("vorname")
     land = request.values.get("land")
     email = request.values.get("email")
+    #sprachen_als_array = json.loads(request.data)["sprachen"]
     sprache1 = request.values.get("sprache1")
     sprache2 = request.values.get("sprache2")
     sprache3 = request.values.get("sprache3")
@@ -42,6 +44,7 @@ def register():
     dict["land"] = land 
     dict["email"] = email 
     dict["sprachen"] = sprachen 
+    #dict["sprachen"] = ["Python", "PHP", "JAVA"] 
     dict["registriert"] = registriert 
     dict["lastlogin"] = lastlogin
     firestore.set_Pseudonym(pseudonym,dict)
