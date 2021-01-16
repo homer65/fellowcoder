@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:cooky/cooky.dart' as cookie;
@@ -26,4 +27,20 @@ class Backend_Com {
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     return _response;
   }
+
+  Future create_user() async {
+    String url = _be_url + "/register.py";
+    Map<String, dynamic> data = null;
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    return _response;
+  }
+
+  Future<DB_User> get_user() async {
+    String url = _be_url + "/login.py";
+    Map<String, dynamic> data = null;
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    return DB_User.fromJson(jsonDecode(_response));
+  }
+
+  //TODO: userdaten einzeln ändern
 }
