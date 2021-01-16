@@ -1,12 +1,17 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
 
+global anzahl_init_firebase
+anzahl_init_firebase = 0
 
 class Firestore:
 
     def __init__(self):
         super().__init__()
-        self.init_firestore_app()
+        global anzahl_init_firebase
+        anzahl_init_firebase = anzahl_init_firebase + 1
+        if anzahl_init_firebase <= 1:
+            self.init_firestore_app()
         self.db = firestore.client()
 
     def init_firestore_app(self):

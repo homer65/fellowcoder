@@ -1,9 +1,9 @@
 from flask import Flask
 from flask import request
-from flask_cors import CORS
 import time
 from firestore import Firestore
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -17,16 +17,17 @@ def controller(name):
 def register():
     erg = '{"return":"ko"}'
     pseudonym = request.values.get("pseudonym")
+    if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
     bildurl = request.values.get("bildurl")
     name = request.values.get("name")
     vorname = request.values.get("vorname")
     land = request.values.get("land")
-    sprachen = json.loads(request.data)["sprachen"]
+    #sprachen = json.loads(request.data)["sprachen"]
+    sprachen = json.loads(request.values.get("sprachen"))
     beschreibungstext = request.values.get("beschreibungstext")
     geburtsdatum = request.values.get("geburtsdatum")
     registriert = time.time()
     lastlogin = registriert
-    if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
     firestore = Firestore()
     if firestore.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert schon"}'
     dict = {}
@@ -43,4 +44,3 @@ def register():
     return '{"return":"ok"}'
     return erg
 
-app.run()
