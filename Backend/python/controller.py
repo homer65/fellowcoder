@@ -21,7 +21,10 @@ def login():
     firestore = Firestore()
     if not firestore.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
     dict = firestore.get_Benutzer(pseudonym)
-    erg = json.dumps(dict, indent = 4)
+    dict_erg = {}
+    dict_erg["return"] = "ok"
+    dict_erg["detail"] = dict
+    erg = json.dumps(dict_erg, indent = 4)
     return erg
 
 def register():
