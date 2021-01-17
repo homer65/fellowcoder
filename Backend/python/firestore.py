@@ -33,3 +33,8 @@ class Firestore:
 
     def set_Pseudonym(self,pseudonym,daten):
         self.db.collection('benutzer').document(pseudonym).set(daten)
+
+    def get_Benutzer(self,pseudonym):
+        dokument_ref = self.db.collection('benutzer').document(pseudonym)
+        dokument = dokument_ref.get()
+        return dokument.to_dict()

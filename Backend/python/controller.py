@@ -12,7 +12,17 @@ CORS(app, supports_credentials=True)
 def controller(name):
     erg = '{"return":"ko","detail":"unbekannt"}'
     if name == "register.py": erg = register()
+    elif name == "login.py": erg = login()
     return erg 
+
+def login():
+    pseudonym = request.values.get("pseudonym")
+    if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
+    firestore = Firestore()
+    if not firestore.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
+    dict = firestore.get_Benutzer(pseudonym)
+    erg = json.dumps(dict, indent = 4)
+    return erg
 
 def register():
     erg = '{"return":"ko"}'
