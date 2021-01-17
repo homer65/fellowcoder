@@ -57,3 +57,4 @@ def register():
     return '{"return":"ok"}'
     return erg
 
+app.run()
