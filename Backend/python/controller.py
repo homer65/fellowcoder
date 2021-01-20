@@ -8,7 +8,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-@app.route('/<name>')
+@app.route('/<name>',methods=['GET','POST'])
 def controller(name):
     erg = '{"return":"ko","detail":"unbekannt"}'
     if name == "register.py": erg = register()
