@@ -4,7 +4,7 @@ import time
 from firestore import Firestore
 import json
 from flask_cors import CORS
-#from firebase_admin import auth
+from firebase_admin import auth
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -16,8 +16,13 @@ def controller(name):
     elif name == "login.py": erg = login()
     return erg 
 
+def get_uid():
+    id_token = request.headers["id_token"]
+    user = auth.verify_id_token(id_token)
+    return user["uid"]
+
 def login():
-    pseudonym = request.values.get("pseudonym")
+    pseudonym = get_uid()
     if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
     firestore = Firestore()
     if not firestore.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
@@ -29,11 +34,8 @@ def login():
     return erg
 
 def register():
-    #id_token = request.headers["id_token"]
-    #user = auth.verify_id_token(id_token)
-    #pseudonym = user["uid"]
     erg = '{"return":"ko"}'
-    pseudonym = request.values.get("pseudonym")
+    pseudonym = get_uid()
     if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
     bildurl = request.values.get("bildurl")
     name = request.values.get("name")
