@@ -1,5 +1,10 @@
+import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_submittable_text_input.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_textinput_v1.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/text_date_picker.dart';
 import 'package:flutter/material.dart';
 
 enum Profile_Change_Data { email, password }
@@ -12,6 +17,9 @@ class Main_Profile extends StatefulWidget {
 }
 
 class _Main_ProfileState extends State<Main_Profile> {
+  TextEditingController _name_controller = TextEditingController();
+  TextEditingController _description_controller = TextEditingController();
+
   Future<void> _change_data(
       Profile_Change_Data pcd, BuildContext n_context) async {
     Widget _content() {
@@ -64,15 +72,22 @@ class _Main_ProfileState extends State<Main_Profile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    global_user_data = DB_User(sprachen: ["C#"]);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _screen_size = MediaQuery.of(context).size;
     bool _on_mobile = _screen_size.width < global_mobile_treshold;
 
-    return Stack(children: [
-      Column(
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: _on_mobile ? 70 : 10,
+            height: _on_mobile ? 10 : 10,
           ),
           SizedBox(
             width: _screen_size.width,
@@ -118,11 +133,52 @@ class _Main_ProfileState extends State<Main_Profile> {
             ),
           ),
           SizedBox(
-            height: _on_mobile ? 10 : 30,
+            height: _on_mobile ? 30 : 60,
           ),
+          SizedBox(
+            width: 300,
+            child: Column(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.orangeAccent,
+                  child: Text("Bild"),
+                ),
+                Own_Submittable_Text_Input(
+                  _name_controller,
+                  on_changed: (value) {},
+                  submitted: () {},
+                  aborted: () {},
+                  label_text: "Name",
+                  max_lines: 1,
+                ),
+                Own_Country_Select_Dropdown(
+                  on_change: (country) {},
+                ),
+                Text_Date_Picker(
+                  onValueChanged: (value) {},
+                  label: "Geburtsdatum",
+                  date: DateTime.now(),
+                  first_date: DateTime.now().subtract(Duration(days: 1000000)),
+                ),
+                Own_Coding_Language_Selection(
+                  coding_language_list: global_user_data.sprachen,
+                  on_change: () {},
+                ),
+                Own_Submittable_Text_Input(
+                  _description_controller,
+                  on_changed: (value) {},
+                  submitted: () {},
+                  aborted: () {},
+                  label_text: "Beschreibung",
+                ),
+              ],
+            ),
+          )
         ],
       ),
-    ]);
+    );
   }
 }
 

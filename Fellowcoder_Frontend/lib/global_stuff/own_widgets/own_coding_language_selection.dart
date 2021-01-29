@@ -1,0 +1,169 @@
+import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
+import 'package:flutter/material.dart';
+
+class Own_Coding_Language_Selection extends StatefulWidget {
+  List<dynamic> coding_language_list;
+  Function() on_change;
+  Own_Coding_Language_Selection(
+      {this.coding_language_list = const [], this.on_change});
+  @override
+  _Own_Coding_Language_SelectionState createState() =>
+      _Own_Coding_Language_SelectionState();
+}
+
+class _Own_Coding_Language_SelectionState
+    extends State<Own_Coding_Language_Selection> {
+  double _element_width = 140;
+  double _element_height = 50;
+
+  void _update() {
+    setState(() {});
+    widget.on_change();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      runSpacing: 10,
+      children: [
+        for (int i = 0; i < widget.coding_language_list.length; i++)
+          Own_Coding_Language_Selection_Element(
+            coding_language_list: widget.coding_language_list,
+            index: i,
+            width: _element_width,
+            height: _element_height,
+            update: _update,
+          ),
+        Own_Coding_Language_Selection_Add(
+          coding_language_list: widget.coding_language_list,
+          width: _element_width,
+          height: _element_height,
+          update: _update,
+        )
+      ],
+    );
+  }
+}
+
+class Own_Coding_Language_Selection_Add extends StatefulWidget {
+  List<dynamic> coding_language_list;
+  double width;
+  double height;
+  Function() update;
+  Own_Coding_Language_Selection_Add(
+      {this.coding_language_list, this.width, this.height, this.update});
+  @override
+  _Own_Coding_Language_Selection_AddState createState() =>
+      _Own_Coding_Language_Selection_AddState();
+}
+
+class _Own_Coding_Language_Selection_AddState
+    extends State<Own_Coding_Language_Selection_Add> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5), color: Colors.orangeAccent),
+      child: FlatButton(
+          onPressed: () {
+            setState(() {
+              widget.coding_language_list.add(
+                  global_coding_language_info[Coding_Language.python].name);
+            });
+            widget.update();
+          },
+          child: Icon(Icons.add)),
+    );
+  }
+}
+
+class Own_Coding_Language_Selection_Element extends StatefulWidget {
+  List<dynamic> coding_language_list;
+  int index;
+  double width;
+  double height;
+  Function() update;
+  Own_Coding_Language_Selection_Element(
+      {this.coding_language_list,
+      this.index,
+      this.width,
+      this.height,
+      this.update});
+  @override
+  _Own_Coding_Language_Selection_ElementState createState() =>
+      _Own_Coding_Language_Selection_ElementState();
+}
+
+class _Own_Coding_Language_Selection_ElementState
+    extends State<Own_Coding_Language_Selection_Element> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5), color: Colors.orangeAccent),
+      child: Row(
+        children: [
+          DropdownButton<String>(
+            value: widget.coding_language_list[widget.index],
+            icon: Icon(Icons.arrow_downward),
+            iconSize: 20,
+            elevation: 16,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black,
+            ),
+            /*underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),*/
+            onChanged: (String newValue) {
+              setState(() {
+                widget.coding_language_list[widget.index] = newValue;
+              });
+              widget.update();
+            },
+            items: Coding_Language.values.map((Coding_Language value) {
+              return DropdownMenuItem<String>(
+                value: global_coding_language_info[value].name,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Image.asset(
+                      global_coding_language_info[value].icon,
+                      width: 30,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(global_coding_language_info[value].name),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+          IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                setState(() {
+                  widget.coding_language_list.removeAt(widget.index);
+                });
+                widget.update();
+              })
+        ],
+      ),
+    );
+  }
+}

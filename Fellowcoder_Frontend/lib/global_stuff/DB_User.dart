@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 class DB_User {
   String id;
   bool verified;
+  String bildurl;
   DateTime registriert;
   DateTime lastlogin;
   DateTime geburtsdatum;
@@ -17,6 +18,7 @@ class DB_User {
   DB_User({
     this.id,
     this.verified,
+    this.bildurl,
     this.registriert,
     this.lastlogin,
     this.geburtsdatum,
@@ -41,10 +43,11 @@ class DB_User {
       geburtsdatum =
           DateFormat("yyyy-MM-dd hh:mm:ss").parse(json['geburtsdatum']);
     }
-    verified = json['land'];
-    verified = json['name'];
-    verified = json['vorname'];
-    verified = json['beschreibungstext'];
+    bildurl = json['bildurl'];
+    land = json['land'];
+    name = json['name'];
+    vorname = json['vorname'];
+    beschreibungstext = json['beschreibungstext'];
     sprachen = [];
     if (json['sprachen'] != null && json['sprachen'].length != 0) {
       List<dynamic> list = json['sprachen'];
