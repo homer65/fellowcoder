@@ -67,3 +67,29 @@ Future<String> refresh_id_token() async {
   }
   return "";
 }
+
+double calc_length_min(
+  double min_length,
+  double screen_percentage,
+  double screen_length,
+) {
+  // outputs a length with a minimum value
+  if (screen_percentage * screen_length < min_length) {
+    return min_length;
+  } else {
+    return screen_percentage * screen_length;
+  }
+}
+
+double calc_length_max(
+  double max_length,
+  double screen_percentage,
+  double screen_length,
+) {
+  // outputs a length with a maximum value
+  if (screen_percentage * screen_length > max_length) {
+    return max_length;
+  } else {
+    return screen_percentage * screen_length;
+  }
+}

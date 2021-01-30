@@ -82,6 +82,7 @@ class _LoginState extends State<Login> {
                       //print(_id_token);
                       //TODO: check feedback of login function backend
                       global_user_data = await Backend_Com().get_user();
+                      print(global_user_data.id);
                       global_usertype = Usertype.user;
                       Navigator.of(context).pushNamed(Homepage.route);
                     } catch (e) {

@@ -21,27 +21,30 @@ class Backend_Com {
     return json.decode(response.body);
   }
 
-  Future test_nachricht(String test_nachricht) async {
-    String url = _be_url + "/test_nachricht";
-    Map<String, dynamic> data = {"test_nachricht": test_nachricht};
-    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    return _response;
+  Future<String> get_image_from_storage(String image_name) async {
+    // gets an public link to view an image from the storage
+    String url =
+        _be_url + "/get_image_from_storage?image=" + image_name.toString();
+    String _storage_image = await Backend_Com().getdata(url);
+    return _storage_image;
   }
 
   Future create_user() async {
-    String url = _be_url + "/register.py";
+    /*String url = _be_url + "/register.py";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     print(_response);
-    return _response;
+    return _response;*/
+    return true;
   }
 
   Future<DB_User> get_user() async {
-    String url = _be_url + "/login.py";
+    /*String url = _be_url + "/login.py";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     print(_response);
-    return DB_User.fromJson(jsonDecode(_response));
+    return DB_User.fromJson(jsonDecode(_response));*/
+    return DB_User();
   }
 
   //TODO: userdaten einzeln ändern

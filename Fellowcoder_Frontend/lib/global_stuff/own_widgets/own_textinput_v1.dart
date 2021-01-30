@@ -38,6 +38,7 @@ class _Own_Textinput_V1State extends State<Own_Textinput_V1> {
       onChanged: (value) {
         widget.on_changed(value);
       },
+      onFieldSubmitted: (value) {},
     );
   }
 }
