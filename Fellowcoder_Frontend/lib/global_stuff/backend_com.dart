@@ -39,12 +39,12 @@ class Backend_Com {
   }
 
   Future<DB_User> get_user() async {
-    /*String url = _be_url + "/login.py";
+    String url = _be_url + "/login.py";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     print(_response);
-    return DB_User.fromJson(jsonDecode(_response));*/
-    return DB_User();
+    return DB_User.fromJson(jsonDecode(_response));
+    //return DB_User();
   }
 
   //TODO: userdaten einzeln ändern
