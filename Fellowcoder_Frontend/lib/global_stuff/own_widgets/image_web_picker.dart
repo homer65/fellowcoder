@@ -1,8 +1,10 @@
+import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/basic_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:html';
 import 'package:firebase/firebase.dart' as fb;
 
-/*
 class Image_Web_Picker extends StatefulWidget {
   String image; //"assets/images/default_pic.png"
   double width;
@@ -38,7 +40,7 @@ class Image_Web_Picker extends StatefulWidget {
     this.old_image_path,
     this.add_icon_alignment = Alignment.center,
     this.edit_icon_alignment = Alignment.topLeft,
-    this.default_image_asset = "assets/images/image_default.png",
+    this.default_image_asset = "assets/images/image_default.jpeg",
     /*this.delete_icon_alignment = Alignment.topRight*/
   });
   @override
@@ -64,17 +66,15 @@ class _Image_Web_PickerState extends State<Image_Web_Picker> {
   void _uploadToStorage() async {
     final dateTime = DateTime.now();
     String userId = "test_user_id";
-    switch (main_user) {
+    switch (global_usertype) {
       case Usertype.visitor:
-        userId = "test_user_id";
+        userId = "visitor_id";
         break;
-      case Usertype.private:
-        userId = global_private_data.id;
-        break;
-      case Usertype.host:
-        userId = global_host_data.id;
+      case Usertype.user:
+        userId = global_user_data.id;
         break;
       default:
+        userId = "error_no_user_or_visitor";
     }
     final path = '$userId/$dateTime';
     _uploadImage(
@@ -178,5 +178,3 @@ class _Image_Web_PickerState extends State<Image_Web_Picker> {
         ));
   }
 }
-*/
-*/

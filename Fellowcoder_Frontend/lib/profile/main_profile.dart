@@ -1,5 +1,6 @@
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/image_web_picker.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_submittable_text_input.dart';
@@ -74,7 +75,7 @@ class _Main_ProfileState extends State<Main_Profile> {
   @override
   void initState() {
     super.initState();
-    global_user_data = DB_User(sprachen: ["C#"]);
+    global_user_data = DB_User(sprachen: ["C#"], id: "testuser_from_frontend");
   }
 
   @override
@@ -139,6 +140,29 @@ class _Main_ProfileState extends State<Main_Profile> {
             width: 300,
             child: Column(
               children: [
+                Image_Web_Picker(
+                  key: ValueKey(global_user_data.bildurl),
+                  image: global_user_data.bildurl,
+                  old_image_path: global_user_data.bildurl,
+                  upload_begins: () {},
+                  upload_done: (name, link) async {
+                    print(name);
+                    print(link);
+                    /*setState(() {
+                            if (widget.private_data != null) {
+                              global_private_data.profile_image_link = link;
+                              global_private_data.profile_image = name;
+                            }
+                            _profile_image_val = link;
+                            _profile_image_path = name;
+                          });
+                          await Backend_Com()
+                              .private_user_change_data("Profile_Image", name);*/
+                  },
+                  picture_deleted: (name) async {
+                    print(name);
+                  },
+                ),
                 Container(
                   width: 50,
                   height: 50,

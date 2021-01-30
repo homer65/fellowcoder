@@ -11,6 +11,9 @@ Usertype global_usertype = Usertype.visitor;
 DB_User global_user_data;
 Map<String, dynamic> global_search_data;
 
+// Firebase Storage Bucket Link
+final String firebase_bucket_link = "gs://fellowcoder-org-dev.appspot.com";
+
 //Authentication START--------------------------------------------------------------------------
 final FirebaseAuth auth_firebase = FirebaseAuth.instance;
 //Authentication END--------------------------------------------------------------------------

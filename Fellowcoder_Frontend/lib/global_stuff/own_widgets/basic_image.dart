@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 class Basic_Image extends StatefulWidget {
   double width;
   double height;
-  String
-      image; // "assets/images/default_pic.png" // "assets/images/image_default.png"
+  String image; // "assets/images/image_default.jpg"
   BorderRadius border_radius;
   EdgeInsets padding;
   EdgeInsets margin;
@@ -27,7 +26,7 @@ class Basic_Image extends StatefulWidget {
       this.animation_duration = const Duration(milliseconds: 0),
       this.get_image_from_storage = false,
       this.key,
-      this.default_image_asset = "assets/images/image_default.png",
+      this.default_image_asset = "assets/images/image_default.jpeg",
       this.maximize = false,
       this.fit = BoxFit.cover,
       this.child = const SizedBox()});

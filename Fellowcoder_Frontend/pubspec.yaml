@@ -52,6 +52,7 @@ flutter:
   assets:
     - assets/countries/
     - assets/coding_languages/
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
