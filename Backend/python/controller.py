@@ -8,6 +8,7 @@ from firebase_admin import auth
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
+firestore = Firestore()
 
 @app.route('/<name>',methods=['GET','POST'])
 def controller(name):
@@ -26,7 +27,6 @@ def get_uid():
 def aendern():
     pseudonym = get_uid()
     if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
-    firestore = Firestore()
     if not firestore.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
     dict = firestore.get_Benutzer(pseudonym)
     feld = request.values.get("feld")
@@ -50,7 +50,6 @@ def aendern():
 def login():
     pseudonym = get_uid()
     if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
-    firestore = Firestore()
     if not firestore.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
     dict = firestore.get_Benutzer(pseudonym)
     dict_erg = {}
@@ -73,7 +72,6 @@ def register():
     geburtsdatum = request.values.get("geburtsdatum")
     registriert = time.time()
     lastlogin = registriert
-    firestore = Firestore()
     if firestore.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert schon"}'
     dict = {}
     dict["bildurl"] = bildurl
