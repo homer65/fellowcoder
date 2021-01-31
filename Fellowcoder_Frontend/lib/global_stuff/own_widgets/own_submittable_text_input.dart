@@ -8,7 +8,7 @@ class Own_Submittable_Text_Input extends StatefulWidget {
   String hint_text;
   bool autofocus;
   Function(String value) on_changed;
-  Function() submitted;
+  Function(String value) submitted;
   Function() aborted;
   Own_Submittable_Text_Input(this.controller,
       {this.max_lines,
@@ -60,7 +60,7 @@ class _Own_Submittable_Text_InputState
                         setState(() {
                           flag = widget.controller.text;
                         });
-                        widget.submitted();
+                        widget.submitted(widget.controller.text);
                       },
                     ),
                     IconButton(

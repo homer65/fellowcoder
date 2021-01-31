@@ -2,9 +2,10 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:flutter/material.dart';
 
 class Own_Country_Select_Dropdown extends StatefulWidget {
-  Country init_value;
-  Function(Country country) on_change;
-  Own_Country_Select_Dropdown({this.init_value = Country.ger, this.on_change});
+  String init_value;
+  Function(String country) on_change;
+  Own_Country_Select_Dropdown(
+      {this.init_value = "Deutschland", this.on_change});
   @override
   _Own_Country_Select_DropdownState createState() =>
       _Own_Country_Select_DropdownState();
@@ -12,7 +13,7 @@ class Own_Country_Select_Dropdown extends StatefulWidget {
 
 class _Own_Country_Select_DropdownState
     extends State<Own_Country_Select_Dropdown> {
-  Country dropdownValue;
+  String dropdownValue;
 
   @override
   void initState() {
@@ -22,7 +23,7 @@ class _Own_Country_Select_DropdownState
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<Country>(
+    return DropdownButton<String>(
       value: dropdownValue,
       icon: Icon(Icons.arrow_downward),
       iconSize: 24,
@@ -32,15 +33,15 @@ class _Own_Country_Select_DropdownState
         height: 2,
         color: Colors.deepPurpleAccent,
       ),*/
-      onChanged: (Country newValue) {
+      onChanged: (String newValue) {
         setState(() {
           dropdownValue = newValue;
         });
         widget.on_change(newValue);
       },
       items: Country.values.map((Country value) {
-        return DropdownMenuItem<Country>(
-          value: value,
+        return DropdownMenuItem<String>(
+          value: global_country_info[value].name,
           child: SizedBox(
             width: 276,
             child: Row(

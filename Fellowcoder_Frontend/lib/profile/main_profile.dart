@@ -1,4 +1,5 @@
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/image_web_picker.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
@@ -75,7 +76,8 @@ class _Main_ProfileState extends State<Main_Profile> {
   @override
   void initState() {
     super.initState();
-    global_user_data = DB_User(sprachen: ["C#"], id: "testuser_from_frontend");
+    _name_controller.text = global_user_data.name;
+    _description_controller.text = global_user_data.beschreibungstext;
   }
 
   @override
@@ -143,57 +145,74 @@ class _Main_ProfileState extends State<Main_Profile> {
                 Image_Web_Picker(
                   key: ValueKey(global_user_data.bildurl),
                   image: global_user_data.bildurl,
-                  old_image_path: global_user_data.bildurl,
+                  old_image_path: global_user_data.bild_name,
                   upload_begins: () {},
                   upload_done: (name, link) async {
-                    print(name);
-                    print(link);
-                    /*setState(() {
-                            if (widget.private_data != null) {
-                              global_private_data.profile_image_link = link;
-                              global_private_data.profile_image = name;
-                            }
-                            _profile_image_val = link;
-                            _profile_image_path = name;
-                          });
-                          await Backend_Com()
-                              .private_user_change_data("Profile_Image", name);*/
+                    setState(() {
+                      global_user_data.bild_name = name;
+                      global_user_data.bildurl = link;
+                    });
+                    Backend_Com()
+                        .change_userdata("bildurl", global_user_data.bildurl);
+                    Backend_Com().change_userdata(
+                        "bild_name", global_user_data.bild_name);
                   },
                   picture_deleted: (name) async {
-                    print(name);
+                    setState(() {
+                      global_user_data.bild_name = "";
+                      global_user_data.bildurl = "";
+                    });
+                    Backend_Com()
+                        .change_userdata("bildurl", global_user_data.bildurl);
+                    Backend_Com().change_userdata(
+                        "bild_name", global_user_data.bild_name);
                   },
-                ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.orangeAccent,
-                  child: Text("Bild"),
                 ),
                 Own_Submittable_Text_Input(
                   _name_controller,
                   on_changed: (value) {},
-                  submitted: () {},
+                  submitted: (value) {
+                    Backend_Com().change_userdata("name", value);
+                    global_user_data.name = value;
+                  },
                   aborted: () {},
                   label_text: "Name",
                   max_lines: 1,
                 ),
                 Own_Country_Select_Dropdown(
-                  on_change: (country) {},
+                  init_value: global_user_data.land,
+                  on_change: (country) {
+                    global_user_data.land = country;
+                    Backend_Com()
+                        .change_userdata("land", global_user_data.land);
+                  },
                 ),
                 Text_Date_Picker(
-                  onValueChanged: (value) {},
+                  onValueChanged: (value) {
+                    global_user_data.geburtsdatum = value;
+                    Backend_Com().change_userdata(
+                        "geburtsdatum", global_user_data.geburtsdatum);
+                  },
                   label: "Geburtsdatum",
-                  date: DateTime.now(),
-                  first_date: DateTime.now().subtract(Duration(days: 1000000)),
+                  date: global_user_data.geburtsdatum == null
+                      ? DateTime.now()
+                      : global_user_data.geburtsdatum,
+                  first_date: DateTime.now().subtract(Duration(days: 100000)),
                 ),
                 Own_Coding_Language_Selection(
                   coding_language_list: global_user_data.sprachen,
-                  on_change: () {},
+                  on_change: () {
+                    Backend_Com()
+                        .change_userdata("sprachen", global_user_data.sprachen);
+                  },
                 ),
                 Own_Submittable_Text_Input(
                   _description_controller,
                   on_changed: (value) {},
-                  submitted: () {},
+                  submitted: (value) {
+                    Backend_Com().change_userdata("beschreibungstext", value);
+                    global_user_data.beschreibungstext = value;
+                  },
                   aborted: () {},
                   label_text: "Beschreibung",
                 ),

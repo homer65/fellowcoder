@@ -93,15 +93,14 @@ class _RegisterState extends State<Register> {
                     setState(() {
                       _loading = true;
                     });
-                    try {
-                      if (_check_input()) {
+                    if (_check_input()) {
+                      try {
                         String _id_token = await registerWithEmailPassword(
                             _e_mail, _passwort_0);
-                        // TODO: check feedback of register function backend
-                        await Backend_Com().create_user();
-                        /*if (await Backend_Com().create_user()) {
+                        if (await Backend_Com().create_user() ==
+                            '{"return":"ok"}') {
                           global_usertype = Usertype.user;
-                          Navigator.of(context).pushNamed(Homepage.route);
+                          Navigator.of(context).popAndPushNamed(Homepage.route);
                         } else {
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text(
@@ -110,17 +109,16 @@ class _RegisterState extends State<Register> {
                             ),
                             duration: Duration(milliseconds: 1500),
                           ));
-                        }*/
-                        Navigator.of(context).pushNamed(Homepage.route);
+                        }
+                      } on Exception catch (e) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            e.toString(),
+                            textAlign: TextAlign.center,
+                          ),
+                          duration: Duration(milliseconds: 1500),
+                        ));
                       }
-                    } catch (e) {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          e.toString(),
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: Duration(milliseconds: 1500),
-                      ));
                     }
                     setState(() {
                       _loading = false;

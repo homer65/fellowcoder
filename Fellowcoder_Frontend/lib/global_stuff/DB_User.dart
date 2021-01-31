@@ -6,6 +6,7 @@ class DB_User {
   String id;
   bool verified;
   String bildurl;
+  String bild_name;
   DateTime registriert;
   DateTime lastlogin;
   DateTime geburtsdatum;
@@ -18,6 +19,7 @@ class DB_User {
   DB_User({
     this.id,
     this.verified,
+    this.bild_name,
     this.bildurl,
     this.registriert,
     this.lastlogin,
@@ -44,6 +46,7 @@ class DB_User {
           DateFormat("yyyy-MM-dd hh:mm:ss").parse(json['geburtsdatum']);
     }
     bildurl = json['bildurl'];
+    bild_name = json['bild_name'];
     land = json['land'];
     name = json['name'];
     vorname = json['vorname'];

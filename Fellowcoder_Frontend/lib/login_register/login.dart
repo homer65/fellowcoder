@@ -75,17 +75,13 @@ class _LoginState extends State<Login> {
                     setState(() {
                       _loading = true;
                     });
-
                     try {
                       String _id_token =
                           await signInWithEmailPassword(_e_mail, _passwort);
-                      //print(_id_token);
-                      //TODO: check feedback of login function backend
                       global_user_data = await Backend_Com().get_user();
-                      print(global_user_data.id);
                       global_usertype = Usertype.user;
-                      Navigator.of(context).pushNamed(Homepage.route);
-                    } catch (e) {
+                      Navigator.of(context).popAndPushNamed(Homepage.route);
+                    } on Exception catch (e) {
                       Scaffold.of(context).showSnackBar(SnackBar(
                         content: Text(
                           "Eingaben überprüfen.",

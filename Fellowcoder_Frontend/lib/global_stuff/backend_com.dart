@@ -30,22 +30,38 @@ class Backend_Com {
   }
 
   Future create_user() async {
-    /*String url = _be_url + "/register.py";
-    Map<String, dynamic> data = null;
+    String url = _be_url + "/register.py";
+    Map<String, dynamic> data = {
+      "name": null,
+      "vorname": null,
+      "bildurl": null,
+      "bild_name": null,
+      "geburtsdatum": null,
+      "land": "Deutschland",
+      "beschreibungstext": null,
+      "sprachen": [],
+      "registriert": DateTime.now().toString(),
+      "lastlogin": DateTime.now().toString(),
+    };
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     print(_response);
-    return _response;*/
-    return true;
+    return _response;
   }
 
   Future<DB_User> get_user() async {
     String url = _be_url + "/login.py";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    print(_response);
-    return DB_User.fromJson(jsonDecode(_response));
-    //return DB_User();
+    return DB_User.fromJson(_response["detail"]);
   }
 
-  //TODO: userdaten einzeln ändern
+  Future change_userdata(String feld, dynamic wert) async {
+    String url = _be_url + "/aendern.py";
+    if (feld == "geburtsdatum") {
+      wert = wert.toString();
+    }
+    Map<String, dynamic> data = {"feld": feld, "wert": wert};
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    return _response;
+  }
 }

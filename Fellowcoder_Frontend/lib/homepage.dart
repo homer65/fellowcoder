@@ -28,8 +28,8 @@ class _HomepageState extends State<Homepage> {
       child: Column(
         children: [
           Own_Country_Select_Dropdown(
-            on_change: (Country country) {
-              global_search_data["country"] = global_country_info[country].name;
+            on_change: (String country) {
+              global_search_data["country"] = country;
             },
           ),
           Own_Coding_Language_Selection(

@@ -1,5 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
+from global_functions import url_to_date
 
 global anzahl_init_firebase
 anzahl_init_firebase = 0
@@ -33,8 +34,23 @@ class Firestore:
 
     def set_Pseudonym(self,pseudonym,daten):
         self.db.collection('benutzer').document(pseudonym).set(daten)
+    
+    def update_Pseudonym(self,pseudonym,daten):
+        self.db.collection('benutzer').document(pseudonym).update(daten)
 
     def get_Benutzer(self,pseudonym):
         dokument_ref = self.db.collection('benutzer').document(pseudonym)
         dokument = dokument_ref.get()
         return dokument.to_dict()
+    
+    def aendern(self, pseudonym, feld, wert):
+        try:
+            if feld == "geburtsdatum":
+                wert = url_to_date(wert)
+            self.db.collection('benutzer').document(pseudonym).update({
+                feld: wert,
+            })
+            return '{"return":"ok"}'
+        except Exception as e:
+            print(e)
+            return '{"return":"ko"}'

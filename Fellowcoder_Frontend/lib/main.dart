@@ -47,7 +47,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   void initialise() async {
-    auth_firebase.authStateChanges().listen((User user) {
+    auth_firebase.authStateChanges().listen((User user) async {
       if (user == null) {
         //print('User is currently signed out!');
         setState(() {
@@ -55,6 +55,9 @@ class _MainState extends State<Main> {
         });
       } else {
         //print('User is signed in!');
+        if (global_user_data == null) {
+          global_user_data = await Backend_Com().get_user();
+        }
         setState(() {
           global_usertype = Usertype.user;
         });
