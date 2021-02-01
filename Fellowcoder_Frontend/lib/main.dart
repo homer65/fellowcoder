@@ -10,6 +10,7 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/homepage.dart';
 import 'package:Fellowcoder_Frontend/login_register/login.dart';
 import 'package:Fellowcoder_Frontend/login_register/register.dart';
+import 'package:Fellowcoder_Frontend/profile/chat_view.dart';
 import 'package:Fellowcoder_Frontend/profile/main_profile.dart';
 import 'package:Fellowcoder_Frontend/router.dart';
 import 'package:Fellowcoder_Frontend/search/search_result_page.dart';
@@ -101,6 +102,8 @@ Widget get_main_widget() {
       return Login();
     case Main_Profile.route:
       return Main_Profile();
+    case Chat_View.route:
+      return Chat_View();
     case About_Us.route:
       return About_Us();
     case Impressum.route:

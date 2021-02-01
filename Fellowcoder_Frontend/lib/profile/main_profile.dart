@@ -1,6 +1,7 @@
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/basic_image.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/image_web_picker.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
@@ -14,6 +15,9 @@ Map<String, dynamic> click_change_weekday_data;
 
 class Main_Profile extends StatefulWidget {
   static const String route = '/main_profile';
+  bool userview;
+  DB_User data;
+  Main_Profile({this.userview = false, this.data});
   @override
   _Main_ProfileState createState() => _Main_ProfileState();
 }
@@ -78,6 +82,8 @@ class _Main_ProfileState extends State<Main_Profile> {
     super.initState();
     _name_controller.text = global_user_data.name;
     _description_controller.text = global_user_data.beschreibungstext;
+    // TODO: remove; just for testing
+    widget.data = DB_User();
   }
 
   @override
@@ -92,49 +98,53 @@ class _Main_ProfileState extends State<Main_Profile> {
           SizedBox(
             height: _on_mobile ? 10 : 10,
           ),
-          SizedBox(
-            width: _screen_size.width,
-            child: Wrap(
-              alignment: WrapAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                        width: 250,
-                        child: Own_Textinput_V1(
-                          init_text: auth_firebase.currentUser.email,
-                          label: "E-Mail",
-                          enabled: false,
-                        )),
-                    IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          _change_data(Profile_Change_Data.email, context);
-                        })
-                  ],
+          widget.userview
+              ? Container()
+              : SizedBox(
+                  width: _screen_size.width,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                              width: 250,
+                              child: Own_Textinput_V1(
+                                init_text: auth_firebase.currentUser.email,
+                                label: "E-Mail",
+                                enabled: false,
+                              )),
+                          IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                _change_data(
+                                    Profile_Change_Data.email, context);
+                              })
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                              width: 250,
+                              child: Own_Textinput_V1(
+                                init_text: "xxxxxxxxx",
+                                label: "Passwort",
+                                enabled: false,
+                                obscure: true,
+                              )),
+                          IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                _change_data(
+                                    Profile_Change_Data.password, context);
+                              })
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                        width: 250,
-                        child: Own_Textinput_V1(
-                          init_text: "xxxxxxxxx",
-                          label: "Passwort",
-                          enabled: false,
-                          obscure: true,
-                        )),
-                    IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          _change_data(Profile_Change_Data.password, context);
-                        })
-                  ],
-                ),
-              ],
-            ),
-          ),
           SizedBox(
             height: _on_mobile ? 30 : 60,
           ),
@@ -142,34 +152,48 @@ class _Main_ProfileState extends State<Main_Profile> {
             width: 300,
             child: Column(
               children: [
-                Image_Web_Picker(
-                  key: ValueKey(global_user_data.bildurl),
-                  image: global_user_data.bildurl,
-                  old_image_path: global_user_data.bild_name,
-                  upload_begins: () {},
-                  upload_done: (name, link) async {
-                    setState(() {
-                      global_user_data.bild_name = name;
-                      global_user_data.bildurl = link;
-                    });
-                    Backend_Com()
-                        .change_userdata("bildurl", global_user_data.bildurl);
-                    Backend_Com().change_userdata(
-                        "bild_name", global_user_data.bild_name);
-                  },
-                  picture_deleted: (name) async {
-                    setState(() {
-                      global_user_data.bild_name = "";
-                      global_user_data.bildurl = "";
-                    });
-                    Backend_Com()
-                        .change_userdata("bildurl", global_user_data.bildurl);
-                    Backend_Com().change_userdata(
-                        "bild_name", global_user_data.bild_name);
-                  },
-                ),
+                widget.userview
+                    ? Basic_Image(
+                        widget.data.bildurl,
+                        width: 200,
+                        height: 200,
+                      )
+                    : Image_Web_Picker(
+                        key: ValueKey(global_user_data.bildurl),
+                        image: global_user_data.bildurl,
+                        old_image_path: global_user_data.bild_name,
+                        upload_begins: () {},
+                        upload_done: (name, link) async {
+                          setState(() {
+                            global_user_data.bild_name = name;
+                            global_user_data.bildurl = link;
+                          });
+                          Backend_Com().change_userdata(
+                              "bildurl", global_user_data.bildurl);
+                          Backend_Com().change_userdata(
+                              "bild_name", global_user_data.bild_name);
+                        },
+                        picture_deleted: (name) async {
+                          setState(() {
+                            global_user_data.bild_name = "";
+                            global_user_data.bildurl = "";
+                          });
+                          Backend_Com().change_userdata(
+                              "bildurl", global_user_data.bildurl);
+                          Backend_Com().change_userdata(
+                              "bild_name", global_user_data.bild_name);
+                        },
+                      ),
+                widget.userview
+                    ? RaisedButton(
+                        onPressed: () {},
+                        child: Text("Chat"),
+                        color: Colors.orangeAccent,
+                      )
+                    : Container(),
                 Own_Submittable_Text_Input(
                   _name_controller,
+                  enabled: !widget.userview,
                   on_changed: (value) {},
                   submitted: (value) {
                     Backend_Com().change_userdata("name", value);
@@ -180,6 +204,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                   max_lines: 1,
                 ),
                 Own_Country_Select_Dropdown(
+                  enabled: !widget.userview,
                   init_value: global_user_data.land,
                   on_change: (country) {
                     global_user_data.land = country;
@@ -188,6 +213,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                   },
                 ),
                 Text_Date_Picker(
+                  enabled: !widget.userview,
                   onValueChanged: (value) {
                     global_user_data.geburtsdatum = value;
                     Backend_Com().change_userdata(
@@ -200,6 +226,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                   first_date: DateTime.now().subtract(Duration(days: 100000)),
                 ),
                 Own_Coding_Language_Selection(
+                  enabled: !widget.userview,
                   coding_language_list: global_user_data.sprachen,
                   on_change: () {
                     Backend_Com()
@@ -208,6 +235,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                 ),
                 Own_Submittable_Text_Input(
                   _description_controller,
+                  enabled: !widget.userview,
                   on_changed: (value) {},
                   submitted: (value) {
                     Backend_Com().change_userdata("beschreibungstext", value);
@@ -218,7 +246,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
