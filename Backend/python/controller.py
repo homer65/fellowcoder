@@ -51,6 +51,7 @@ def get_image_from_storage():
 def get_uid():
     id_token = request.headers["id_token"]
     if id_token == None: return "myoggradio" 
+    print(id_token)
     user = auth.verify_id_token(id_token)
     return user["uid"]
 
