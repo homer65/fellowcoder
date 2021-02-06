@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 class Own_Coding_Language_Selection extends StatefulWidget {
   List<dynamic> coding_language_list;
   Function() on_change;
+  bool enabled;
   Own_Coding_Language_Selection(
-      {this.coding_language_list = const [], this.on_change});
+      {this.coding_language_list = const [],
+      this.on_change,
+      this.enabled = true});
   @override
   _Own_Coding_Language_SelectionState createState() =>
       _Own_Coding_Language_SelectionState();
@@ -38,13 +41,16 @@ class _Own_Coding_Language_SelectionState
             width: _element_width,
             height: _element_height,
             update: _update,
+            enabled: widget.enabled,
           ),
-        Own_Coding_Language_Selection_Add(
-          coding_language_list: widget.coding_language_list,
-          width: _element_width,
-          height: _element_height,
-          update: _update,
-        )
+        widget.enabled
+            ? Own_Coding_Language_Selection_Add(
+                coding_language_list: widget.coding_language_list,
+                width: _element_width,
+                height: _element_height,
+                update: _update,
+              )
+            : Container()
       ],
     );
   }
@@ -91,12 +97,14 @@ class Own_Coding_Language_Selection_Element extends StatefulWidget {
   double width;
   double height;
   Function() update;
+  bool enabled;
   Own_Coding_Language_Selection_Element(
       {this.coding_language_list,
       this.index,
       this.width,
       this.height,
-      this.update});
+      this.update,
+      this.enabled});
   @override
   _Own_Coding_Language_Selection_ElementState createState() =>
       _Own_Coding_Language_Selection_ElementState();
@@ -114,54 +122,79 @@ class _Own_Coding_Language_Selection_ElementState
           borderRadius: BorderRadius.circular(5), color: Colors.orangeAccent),
       child: Row(
         children: [
-          DropdownButton<String>(
-            value: widget.coding_language_list[widget.index],
-            icon: Icon(Icons.arrow_downward),
-            iconSize: 20,
-            elevation: 16,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.black,
-            ),
-            /*underline: Container(
+          widget.enabled
+              ? DropdownButton<String>(
+                  value: widget.coding_language_list[widget.index],
+                  icon: Icon(Icons.arrow_downward),
+                  iconSize: 20,
+                  elevation: 16,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
+                  /*underline: Container(
               height: 2,
               color: Colors.deepPurpleAccent,
             ),*/
-            onChanged: (String newValue) {
-              setState(() {
-                widget.coding_language_list[widget.index] = newValue;
-              });
-              widget.update();
-            },
-            items: Coding_Language.values.map((Coding_Language value) {
-              return DropdownMenuItem<String>(
-                value: global_coding_language_info[value].name,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 2,
-                    ),
-                    Image.asset(
-                      global_coding_language_info[value].icon,
-                      width: 30,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(global_coding_language_info[value].name),
-                  ],
+                  onChanged: (String newValue) {
+                    setState(() {
+                      widget.coding_language_list[widget.index] = newValue;
+                    });
+                    widget.update();
+                  },
+                  items: Coding_Language.values.map((Coding_Language value) {
+                    return DropdownMenuItem<String>(
+                      value: global_coding_language_info[value].name,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Image.asset(
+                            global_coding_language_info[value].icon,
+                            width: 30,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(global_coding_language_info[value].name),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                )
+              : SizedBox(
+                  //height: 50,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 2,
+                      ),
+                      Image.asset(
+                        global_coding_language_info.values
+                            .firstWhere((element) =>
+                                element.name ==
+                                widget.coding_language_list[widget.index])
+                            .icon,
+                        width: 30,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(widget.coding_language_list[widget.index]),
+                    ],
+                  ),
                 ),
-              );
-            }).toList(),
-          ),
-          IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  widget.coding_language_list.removeAt(widget.index);
-                });
-                widget.update();
-              })
+          widget.enabled
+              ? IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      widget.coding_language_list.removeAt(widget.index);
+                    });
+                    widget.update();
+                  })
+              : Container(),
         ],
       ),
     );

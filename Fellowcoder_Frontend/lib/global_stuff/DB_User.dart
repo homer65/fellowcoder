@@ -15,6 +15,7 @@ class DB_User {
   String vorname;
   List<String> sprachen;
   String beschreibungstext;
+  Map<String, List<String>> chats;
 
   DB_User({
     this.id,
@@ -29,6 +30,7 @@ class DB_User {
     this.vorname,
     this.sprachen,
     this.beschreibungstext,
+    this.chats,
   });
 
   DB_User.fromJson(Map<String, dynamic> json) {
@@ -58,5 +60,18 @@ class DB_User {
         sprachen.add(element);
       });
     }
+
+    //TODO: implement chats
+    /*chats = {};
+    if (json['chats'] != null &&
+        json['chats'].runtimeType != String &&
+        json['chats'] != "") {
+      chats["intent"] = json['chats']["intent"];
+      chats["price"] = json['chats']["price"];
+      Map<String, List<String>> list = json['sprachen'];
+      list.forEach((element) {
+        sprachen.add(element);
+      });
+    }*/
   }
 }

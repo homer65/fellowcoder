@@ -52,6 +52,7 @@ class Backend_Com {
     String url = _be_url + "/login.py";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    print(_response);
     return DB_User.fromJson(_response["detail"]);
   }
 

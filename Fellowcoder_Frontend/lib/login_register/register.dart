@@ -1,3 +1,4 @@
+import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
@@ -99,6 +100,7 @@ class _RegisterState extends State<Register> {
                             _e_mail, _passwort_0);
                         if (await Backend_Com().create_user() ==
                             '{"return":"ok"}') {
+                          global_user_data = await Backend_Com().get_user();
                           global_usertype = Usertype.user;
                           Navigator.of(context).popAndPushNamed(Homepage.route);
                         } else {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Own_Submittable_Text_Input extends StatefulWidget {
   TextEditingController controller;
+  bool enabled;
   int max_lines;
   TextStyle text_style;
   String label_text;
@@ -12,6 +13,7 @@ class Own_Submittable_Text_Input extends StatefulWidget {
   Function() aborted;
   Own_Submittable_Text_Input(this.controller,
       {this.max_lines,
+      this.enabled = true,
       this.text_style,
       this.label_text,
       this.hint_text,
@@ -38,6 +40,7 @@ class _Own_Submittable_Text_InputState
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.enabled,
       autofocus: widget.autofocus,
       maxLines: widget.max_lines,
       controller: widget.controller,
