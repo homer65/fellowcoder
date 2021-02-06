@@ -8,6 +8,7 @@ from firebase_admin import auth
 import datetime
 from global_functions import url_to_date
 
+debug=True
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 fs = Firestore()
@@ -17,10 +18,12 @@ fs = Firestore()
 
 @app.route('/<name>',methods=['GET','POST'])
 def controller(name):
+    if debug: print("Debug:controller:01: ",name)
     erg = '{"return":"ko","detail":"unbekannt"}'
     if name == "register.py": erg = register()
     elif name == "login.py": erg = login()
     elif name == "aendern.py": erg = aendern()
+    elif name == "suchen.py": erg = suchen()
     return erg 
 
 def get_storage_image(image):
@@ -51,33 +54,19 @@ def get_image_from_storage():
 def get_uid():
     id_token = request.headers["id_token"]
     if id_token == None: return "myoggradio" 
-    print(id_token)
+    if debug: print("Debug:get_uid:01: ",id_token)
     user = auth.verify_id_token(id_token)
     return user["uid"]
 
+def get_request_data():
+    erg = json.loads(request.data);
+    if debug: print("Debug:get_data:01: ",erg)
+    return erg
+    
 def aendern():
     pseudonym = get_uid()
-    return fs.aendern(pseudonym, json.loads(request.data)["feld"], json.loads(request.data)["wert"])
-    """if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
-    if not fs.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
-    dict = fs.get_Benutzer(pseudonym)
-    feld = request.values.get("feld")
-    if feld == None: return '{"return":"ko","detail":"feld nicht angegeben"}'
-    wert = request.values.get("wert")
-    ok = False
-    if feld == "beschreibungstext": ok = True
-    elif feld == "bildurl": ok = True
-    elif feld == "geburtsdatum": ok = True
-    elif feld == "land": ok = True
-    elif feld == "name": ok = True
-    elif feld == "vorname": ok = True
-    elif feld == "sprachen": ok = True
-    if ok:
-        dict[feld] = wert
-        fs.set_Pseudonym(pseudonym,dict)
-        return '{"return":"ok"}'
-    return '{"return":"ko","detail":"feld existiert nicht"}'"""
-        
+    data = get_request_data()
+    return fs.aendern(pseudonym, data["feld"], data["wert"])      
 
 def login():
     pseudonym = get_uid()
@@ -93,39 +82,20 @@ def login():
 
 
 def register():
-    #erg = '{"return":"ko"}'
     pseudonym = get_uid()
-    if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
-    """bildurl = json.loads(request.data)["bildurl"]#request.values.get("bildurl")
-    name = json.loads(request.data)["name"] #request.values.get("name")
-    vorname = json.loads(request.data)["vorname"] #request.values.get("vorname")
-    land = json.loads(request.data)["land"] #request.values.get("land")
-    #sprachen = json.loads(request.data)["sprachen"]
-    sprachen = json.loads(request.data)["sprachen"] #json.loads(request.values.get("sprachen"))
-    beschreibungstext = json.loads(request.data)["beschreibungstext"] #request.values.get("beschreibungstext")
-    geburtsdatum = json.loads(request.data)["geburtsdatum"] #request.values.get("geburtsdatum")
-    registriert = time.time()
-    lastlogin = registriert
-    if fs.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert schon"}'
-    dict = {}
-    dict["bildurl"] = bildurl
-    dict["name"] = name
-    dict["vorname"] = vorname
-    dict["land"] = land  
-    dict["sprachen"] = sprachen 
-    dict["geburtsdatum"] = geburtsdatum
-    dict["beschreibungstext"] = beschreibungstext 
-    dict["registriert"] = registriert 
-    dict["lastlogin"] = lastlogin"""
-    data = json.loads(request.data)
+    if pseudonym == None: return 
+    data = get_request_data()
     data["registriert"] = url_to_date(data["registriert"])
     data["lastlogin"] = url_to_date(data["lastlogin"])
-    #data = {"name": None, "vorname": None, "bildurl": None, "bild_name": None, "geburtsdatum": None, "land": None, "beschreibungstext": None, "sprachen": [], "registriert": datetime.datetime.now(), "lastlogin": datetime.datetime.now(),}
-    fs.set_Pseudonym(pseudonym, data)#dict) # ich würde eine Variable nicht genau so nennen wie schon ein Datentyp heißt
+    fs.set_Pseudonym(pseudonym, data)
     return '{"return":"ok"}'
-    #return erg
 
-
-
+def suchen():
+    data = get_request_data()
+    country = data["country"]
+    coding_languages=data["coding_languages"]
+    search_text=data["search_text"]
+    erg = fs.suchen(country,coding_languages.search_text)
+    return erg
 
 app.run()
