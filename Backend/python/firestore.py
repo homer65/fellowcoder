@@ -54,3 +54,26 @@ class Firestore:
         except Exception as e:
             print(e)
             return '{"return":"ko"}'
+        
+    def suchen(self,country,coding_languages,search_text):
+        erg = []
+        benutzer_ref = self.db.collection('benutzer')
+        benutzer = benutzer_ref.stream()
+        for doc in benutzer: 
+            data = doc.to_dict()
+            if self.test_suchkriterien(data,country,coding_languages,search_text): erg.append(data)
+        return erg
+    
+    def test_suchkriterien(self,data,country,coding_languages,search_text):
+        erg = True
+        if not country == "None":
+            if not data["land"] == country: erg = False
+        if not search_text == "None":
+            if not data["beschreibungstext"].find(search_text): erg = False
+        if not coding_languages == "None":
+            ok = False
+            for language in coding_languages:
+                for test_language in data["sprachen"]:
+                    if language == test_language: ok = True
+            if not ok: erg = False
+        return erg

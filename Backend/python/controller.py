@@ -53,7 +53,7 @@ def get_image_from_storage():
 
 def get_uid():
     id_token = request.headers["id_token"]
-    if id_token == None: return "myoggradio" 
+    if id_token == "myoggradio" : return "myoggradio" 
     if debug: print("Debug:get_uid:01: ",id_token)
     user = auth.verify_id_token(id_token)
     return user["uid"]
@@ -95,7 +95,7 @@ def suchen():
     country = data["country"]
     coding_languages=data["coding_languages"]
     search_text=data["search_text"]
-    erg = fs.suchen(country,coding_languages.search_text)
-    return erg
+    erg = fs.suchen(country,coding_languages,search_text)
+    return json.dumps(erg)
 
 app.run()
