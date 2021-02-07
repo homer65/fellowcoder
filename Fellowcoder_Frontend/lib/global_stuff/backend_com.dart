@@ -44,7 +44,6 @@ class Backend_Com {
       "lastlogin": DateTime.now().toString(),
     };
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    print(_response);
     return _response;
   }
 
@@ -52,7 +51,6 @@ class Backend_Com {
     String url = _be_url + "/login.py";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    print(_response);
     return DB_User.fromJson(_response["detail"]);
   }
 
@@ -63,6 +61,61 @@ class Backend_Com {
     }
     Map<String, dynamic> data = {"feld": feld, "wert": wert};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    return _response;
+  }
+
+  Future<List<DB_User>> get_search_data(
+    Map<String, dynamic> search_data,
+  ) async {
+    String url = _be_url + "/suchen.py";
+    Map<String, dynamic> data = search_data;
+    print(data);
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    print(_response);
+    _response = [
+      DB_User(
+          name: "Testnutzer1",
+          sprachen: ["C#"],
+          land: "Deutschland",
+          beschreibungstext: "asdyxc"),
+      DB_User(name: "Testnutzer2"),
+      DB_User(name: "Testnutzer3"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer")
+    ];
+    return _response;
+  }
+
+  //TODO: chateintrag_erstellen
+  //TODO: chateintrag_bei_nutzer_erstellen
+  //TODO: chatnachricht_hinzufügen
+
+  Future<List<Map<String, dynamic>>> get_complete_chat(
+    String chat_id,
+  ) async {
+    String url = _be_url + "/get_complete_chat.py";
+    /*Map<String, dynamic> data = {"chat_id": chat_id};
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    print(_response);*/
+    var _response = [
+      {"time": DateTime.now(), "user_id": "der", "text": "hi"},
+      {"time": DateTime.now(), "user_id": "ich", "text": "hallo"},
+      {"time": DateTime.now(), "user_id": "der", "text": "alles klar?"}
+    ];
     return _response;
   }
 }

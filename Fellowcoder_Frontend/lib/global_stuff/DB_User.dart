@@ -15,7 +15,7 @@ class DB_User {
   String vorname;
   List<String> sprachen;
   String beschreibungstext;
-  Map<String, List<String>> chats;
+  List<Map<String, dynamic>> chats;
 
   DB_User({
     this.id,
@@ -61,17 +61,16 @@ class DB_User {
       });
     }
 
-    //TODO: implement chats
-    /*chats = {};
+    chats = [];
     if (json['chats'] != null &&
         json['chats'].runtimeType != String &&
         json['chats'] != "") {
-      chats["intent"] = json['chats']["intent"];
-      chats["price"] = json['chats']["price"];
-      Map<String, List<String>> list = json['sprachen'];
-      list.forEach((element) {
-        sprachen.add(element);
+      json['chats'].forEach((element) {
+        chats.add(element);
       });
-    }*/
+      /*json['chats'].forEach((k, v) {
+        chats[k] = v;
+      });*/
+    }
   }
 }
