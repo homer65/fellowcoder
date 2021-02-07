@@ -8,6 +8,7 @@ import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_submittable_text_input.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_textinput_v1.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/text_date_picker.dart';
+import 'package:Fellowcoder_Frontend/profile/chat_view.dart';
 import 'package:flutter/material.dart';
 
 enum Profile_Change_Data { email, password }
@@ -23,6 +24,7 @@ class Main_Profile extends StatefulWidget {
 }
 
 class _Main_ProfileState extends State<Main_Profile> {
+  DB_User _user_data;
   TextEditingController _name_controller = TextEditingController();
   TextEditingController _description_controller = TextEditingController();
 
@@ -80,10 +82,13 @@ class _Main_ProfileState extends State<Main_Profile> {
   @override
   void initState() {
     super.initState();
-    _name_controller.text = global_user_data.name;
-    _description_controller.text = global_user_data.beschreibungstext;
-    // TODO: remove; just for testing
-    widget.data = DB_User();
+    if (widget.userview) {
+      _user_data = widget.data;
+    } else {
+      _user_data = global_user_data;
+    }
+    _name_controller.text = _user_data.name;
+    _description_controller.text = _user_data.beschreibungstext;
   }
 
   @override
@@ -154,39 +159,41 @@ class _Main_ProfileState extends State<Main_Profile> {
               children: [
                 widget.userview
                     ? Basic_Image(
-                        widget.data.bildurl,
+                        _user_data.bildurl,
                         width: 200,
                         height: 200,
                       )
                     : Image_Web_Picker(
-                        key: ValueKey(global_user_data.bildurl),
-                        image: global_user_data.bildurl,
-                        old_image_path: global_user_data.bild_name,
+                        key: ValueKey(_user_data.bildurl),
+                        image: _user_data.bildurl,
+                        old_image_path: _user_data.bild_name,
                         upload_begins: () {},
                         upload_done: (name, link) async {
                           setState(() {
-                            global_user_data.bild_name = name;
-                            global_user_data.bildurl = link;
+                            _user_data.bild_name = name;
+                            _user_data.bildurl = link;
                           });
+                          Backend_Com()
+                              .change_userdata("bildurl", _user_data.bildurl);
                           Backend_Com().change_userdata(
-                              "bildurl", global_user_data.bildurl);
-                          Backend_Com().change_userdata(
-                              "bild_name", global_user_data.bild_name);
+                              "bild_name", _user_data.bild_name);
                         },
                         picture_deleted: (name) async {
                           setState(() {
-                            global_user_data.bild_name = "";
-                            global_user_data.bildurl = "";
+                            _user_data.bild_name = "";
+                            _user_data.bildurl = "";
                           });
+                          Backend_Com()
+                              .change_userdata("bildurl", _user_data.bildurl);
                           Backend_Com().change_userdata(
-                              "bildurl", global_user_data.bildurl);
-                          Backend_Com().change_userdata(
-                              "bild_name", global_user_data.bild_name);
+                              "bild_name", _user_data.bild_name);
                         },
                       ),
                 widget.userview
                     ? RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Chat_View.route);
+                        },
                         child: Text("Chat"),
                         color: Colors.orangeAccent,
                       )
@@ -197,7 +204,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                   on_changed: (value) {},
                   submitted: (value) {
                     Backend_Com().change_userdata("name", value);
-                    global_user_data.name = value;
+                    _user_data.name = value;
                   },
                   aborted: () {},
                   label_text: "Name",
@@ -205,32 +212,31 @@ class _Main_ProfileState extends State<Main_Profile> {
                 ),
                 Own_Country_Select_Dropdown(
                   enabled: !widget.userview,
-                  init_value: global_user_data.land,
+                  init_value: _user_data.land,
                   on_change: (country) {
-                    global_user_data.land = country;
-                    Backend_Com()
-                        .change_userdata("land", global_user_data.land);
+                    _user_data.land = country;
+                    Backend_Com().change_userdata("land", _user_data.land);
                   },
                 ),
                 Text_Date_Picker(
                   enabled: !widget.userview,
                   onValueChanged: (value) {
-                    global_user_data.geburtsdatum = value;
+                    _user_data.geburtsdatum = value;
                     Backend_Com().change_userdata(
-                        "geburtsdatum", global_user_data.geburtsdatum);
+                        "geburtsdatum", _user_data.geburtsdatum);
                   },
                   label: "Geburtsdatum",
-                  date: global_user_data.geburtsdatum == null
+                  date: _user_data.geburtsdatum == null
                       ? DateTime.now()
-                      : global_user_data.geburtsdatum,
+                      : _user_data.geburtsdatum,
                   first_date: DateTime.now().subtract(Duration(days: 100000)),
                 ),
                 Own_Coding_Language_Selection(
                   enabled: !widget.userview,
-                  coding_language_list: global_user_data.sprachen,
+                  coding_language_list: _user_data.sprachen,
                   on_change: () {
                     Backend_Com()
-                        .change_userdata("sprachen", global_user_data.sprachen);
+                        .change_userdata("sprachen", _user_data.sprachen);
                   },
                 ),
                 Own_Submittable_Text_Input(
@@ -239,7 +245,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                   on_changed: (value) {},
                   submitted: (value) {
                     Backend_Com().change_userdata("beschreibungstext", value);
-                    global_user_data.beschreibungstext = value;
+                    _user_data.beschreibungstext = value;
                   },
                   aborted: () {},
                   label_text: "Beschreibung",

@@ -82,7 +82,7 @@ class _MainState extends State<Main> {
       body: Column(
         children: [
           Header(),
-          Expanded(key: UniqueKey(), child: get_main_widget()),
+          Expanded(key: UniqueKey(), child: get_main_widget(widget.arguments)),
           Footer(),
         ],
       ),
@@ -90,7 +90,7 @@ class _MainState extends State<Main> {
   }
 }
 
-Widget get_main_widget() {
+Widget get_main_widget(var arguments) {
   switch (global_active_route) {
     case Homepage.route:
       return Homepage();
@@ -101,7 +101,13 @@ Widget get_main_widget() {
     case Login.route:
       return Login();
     case Main_Profile.route:
-      return Main_Profile();
+      if (arguments == null) {
+        return Main_Profile();
+      }
+      return Main_Profile(
+        userview: arguments["userview"],
+        data: arguments["data"],
+      );
     case Chat_View.route:
       return Chat_View();
     case About_Us.route:

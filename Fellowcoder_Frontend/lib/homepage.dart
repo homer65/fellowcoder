@@ -1,3 +1,4 @@
+import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
@@ -15,9 +16,9 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     global_search_data = {
-      "country": "error",
+      "country": "Deutschland",
       "coding_languages": [],
-      "search_text": "",
+      "search_text": "TestBeschreibungstext",
     };
   }
 
@@ -54,7 +55,9 @@ class _HomepageState extends State<Homepage> {
             height: 50,
           ),
           RaisedButton(
-            onPressed: () {
+            onPressed: () async {
+              global_results_list =
+                  await Backend_Com().get_search_data(global_search_data);
               Navigator.of(context).pushNamed(Search_Result_Page.route);
             },
             child: Text("Suchen"),

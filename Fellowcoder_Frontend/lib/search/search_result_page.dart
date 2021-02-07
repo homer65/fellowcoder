@@ -1,7 +1,9 @@
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
+import 'package:Fellowcoder_Frontend/profile/main_profile.dart';
 import 'package:flutter/material.dart';
 
 class Search_Result_Page extends StatefulWidget {
@@ -12,31 +14,31 @@ class Search_Result_Page extends StatefulWidget {
 }
 
 class _Search_Result_PageState extends State<Search_Result_Page> {
-  List<DB_User> _results_list;
+  void initialise() async {
+    if (global_results_list == null) {
+      global_results_list = [];
+      global_results_list =
+          await Backend_Com().get_search_data(global_search_data);
+      if (this.mounted) {
+        setState(() {});
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _results_list = [
-      DB_User(name: "Testnutzer1"),
-      DB_User(name: "Testnutzer2"),
-      DB_User(name: "Testnutzer3"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer")
-    ];
+    if (global_search_data == null) {
+      global_search_data = {
+        "country": "Deutschland",
+        "coding_languages": [],
+        "search_text": "",
+      };
+    }
+    initialise();
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
+      initialise();
+    });*/
   }
 
   @override
@@ -88,7 +90,11 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
                       ),
                     ),
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        global_results_list = await Backend_Com()
+                            .get_search_data(global_search_data);
+                        setState(() {});
+                      },
                       child: Text("anwenden"),
                       color: Colors.orangeAccent,
                     )
@@ -100,9 +106,11 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return Search_Result_Page_List_Element(_results_list[index]);
+                return Search_Result_Page_List_Element(
+                    global_results_list[index]);
               },
-              childCount: _results_list.length,
+              childCount:
+                  global_results_list == null ? 0 : global_results_list.length,
             ),
           ),
         ],
@@ -127,7 +135,13 @@ class _Search_Result_Page_List_ElementState
       margin: EdgeInsets.all(10),
       height: 100,
       color: Colors.greenAccent,
-      child: Text(widget.result_user.name),
+      child: FlatButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(Main_Profile.route,
+              arguments: {"userview": true, "data": widget.result_user});
+        },
+        child: Text(widget.result_user.name),
+      ),
     );
   }
 }
