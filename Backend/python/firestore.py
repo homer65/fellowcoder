@@ -73,7 +73,7 @@ class Firestore:
                 erg = False
         if not search_text == "None":
             try:
-                if not data["beschreibungstext"].find(search_text): erg = False
+                if data["beschreibungstext"].find(search_text) == -1 : erg = False
             except:
                 erg = False
         if not coding_languages == "None":
