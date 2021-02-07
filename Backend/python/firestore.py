@@ -67,13 +67,22 @@ class Firestore:
     def test_suchkriterien(self,data,country,coding_languages,search_text):
         erg = True
         if not country == "None":
-            if not data["land"] == country: erg = False
+            try:
+                if not data["land"] == country: erg = False
+            except:
+                erg = False
         if not search_text == "None":
-            if not data["beschreibungstext"].find(search_text): erg = False
+            try:
+                if not data["beschreibungstext"].find(search_text): erg = False
+            except:
+                erg = False
         if not coding_languages == "None":
             ok = False
-            for language in coding_languages:
-                for test_language in data["sprachen"]:
-                    if language == test_language: ok = True
+            for language_key in coding_languages.keys():
+                try:
+                    for test_language_key in data["sprachen"].keys():
+                        if coding_languages[language_key] == data["sprachen"][test_language_key]: ok = True
+                except:
+                    ok = False
             if not ok: erg = False
         return erg

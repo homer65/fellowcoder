@@ -92,9 +92,18 @@ def register():
 
 def suchen():
     data = get_request_data()
-    country = data["country"]
-    coding_languages=data["coding_languages"]
-    search_text=data["search_text"]
+    try:
+        country = data["country"]
+    except:
+        country = "None"
+    try:
+        coding_languages = data["coding_languages"]
+    except:
+        coding_languages = "None"
+    try:
+        search_text=data["search_text"]
+    except:
+        search_text="None"
     erg = fs.suchen(country,coding_languages,search_text)
     return json.dumps(erg)
 
