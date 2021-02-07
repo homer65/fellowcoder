@@ -23,7 +23,7 @@ def controller(name):
     if name == "register.py": erg = register()
     elif name == "login.py": erg = login()
     elif name == "aendern.py": erg = aendern()
-    elif name == "suchen.py": erg = suchen()
+    elif name == "get_search_results.py": erg = get_search_results()
     return erg 
 
 def get_storage_image(image):
@@ -90,7 +90,7 @@ def register():
     fs.set_Pseudonym(pseudonym, data)
     return '{"return":"ok"}'
 
-def suchen():
+def get_search_results():
     data = get_request_data()
     try:
         country = data["country"]

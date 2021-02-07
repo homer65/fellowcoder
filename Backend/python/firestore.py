@@ -56,12 +56,12 @@ class Firestore:
             return '{"return":"ko"}'
         
     def suchen(self,country,coding_languages,search_text):
-        erg = []
+        erg = {}
         benutzer_ref = self.db.collection('benutzer')
         benutzer = benutzer_ref.stream()
-        for doc in benutzer: 
+        for doc in benutzer:
             data = doc.to_dict()
-            if self.test_suchkriterien(data,country,coding_languages,search_text): erg.append(data)
+            if self.test_suchkriterien(data,country,coding_languages,search_text): erg[doc.id] = data
         return erg
     
     def test_suchkriterien(self,data,country,coding_languages,search_text):
@@ -78,10 +78,10 @@ class Firestore:
                 erg = False
         if not coding_languages == "None":
             ok = False
-            for language_key in coding_languages.keys():
+            for language in coding_languages:
                 try:
                     for test_language_key in data["sprachen"].keys():
-                        if coding_languages[language_key] == data["sprachen"][test_language_key]: ok = True
+                        if language == data["sprachen"][test_language_key]: ok = True
                 except:
                     ok = False
             if not ok: erg = False
