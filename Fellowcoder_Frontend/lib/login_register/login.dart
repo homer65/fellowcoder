@@ -1,3 +1,4 @@
+import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
@@ -76,10 +77,11 @@ class _LoginState extends State<Login> {
                       _loading = true;
                     });
                     try {
+                      global_user_data =
+                          DB_User(); // create user data so it isnt null and it doesnt trigger the load in the firebase_auth listener in main.dart
                       String _id_token =
                           await signInWithEmailPassword(_e_mail, _passwort);
                       global_user_data = await Backend_Com().get_user();
-                      global_usertype = Usertype.user;
                       Navigator.of(context).popAndPushNamed(Homepage.route);
                     } on Exception catch (e) {
                       Scaffold.of(context).showSnackBar(SnackBar(

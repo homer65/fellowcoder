@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class Basic_Image extends StatefulWidget {
   double width;
   double height;
-  String image; // "assets/images/image_default.jpg"
+  String image; // "assets/images/image_default.jpeg"
   BorderRadius border_radius;
   EdgeInsets padding;
   EdgeInsets margin;

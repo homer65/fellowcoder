@@ -96,12 +96,13 @@ class _RegisterState extends State<Register> {
                     });
                     if (_check_input()) {
                       try {
+                        global_user_data =
+                            DB_User(); // create user data so it isnt null and it doesnt trigger the load in the firebase_auth listener in main.dart
                         String _id_token = await registerWithEmailPassword(
                             _e_mail, _passwort_0);
                         if (await Backend_Com().create_user() ==
                             '{"return":"ok"}') {
                           global_user_data = await Backend_Com().get_user();
-                          global_usertype = Usertype.user;
                           Navigator.of(context).popAndPushNamed(Homepage.route);
                         } else {
                           Scaffold.of(context).showSnackBar(SnackBar(

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cooky/cooky.dart' as cookie;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 Future<String> registerWithEmailPassword(String email, String password) async {
   // Initialize Firebase
@@ -93,4 +94,8 @@ double calc_length_max(
   } else {
     return screen_percentage * screen_length;
   }
+}
+
+DateTime string_to_date(String string) {
+  return DateFormat("yyyy-MM-dd hh:mm:ss").parse(string);
 }

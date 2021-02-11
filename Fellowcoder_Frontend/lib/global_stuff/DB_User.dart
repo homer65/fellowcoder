@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:intl/intl.dart';
 
 class DB_User {
@@ -37,15 +38,13 @@ class DB_User {
     id = json['Id'];
     verified = json['Verified'];
     if (json['registriert'] != null) {
-      registriert =
-          DateFormat("yyyy-MM-dd hh:mm:ss").parse(json['registriert']);
+      registriert = string_to_date(json['registriert']);
     }
     if (json['lastlogin'] != null) {
-      lastlogin = DateFormat("yyyy-MM-dd hh:mm:ss").parse(json['lastlogin']);
+      lastlogin = string_to_date(json['lastlogin']);
     }
     if (json['geburtsdatum'] != null) {
-      geburtsdatum =
-          DateFormat("yyyy-MM-dd hh:mm:ss").parse(json['geburtsdatum']);
+      geburtsdatum = string_to_date(json['geburtsdatum']);
     }
     bildurl = json['bildurl'];
     bild_name = json['bild_name'];

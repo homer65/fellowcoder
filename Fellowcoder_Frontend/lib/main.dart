@@ -4,6 +4,7 @@ import 'package:Fellowcoder_Frontend/frame/frame_pages/datenschutz.dart';
 import 'package:Fellowcoder_Frontend/frame/frame_pages/impressum.dart';
 import 'package:Fellowcoder_Frontend/frame/frame_pages/nutzungsbedingungen.dart';
 import 'package:Fellowcoder_Frontend/frame/header.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
@@ -49,14 +50,16 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   void initialise() async {
     auth_firebase.authStateChanges().listen((User user) async {
-      if (user == null) {
+      if (user == null && global_usertype != Usertype.visitor) {
         //print('User is currently signed out!');
         setState(() {
           global_usertype = Usertype.visitor;
         });
-      } else {
+      } else if (user != null && global_usertype != Usertype.user) {
         //print('User is signed in!');
         if (global_user_data == null) {
+          global_user_data =
+              DB_User(); // prevents requesting the userdata again when the listener fires several times
           global_user_data = await Backend_Com().get_user();
         }
         setState(() {

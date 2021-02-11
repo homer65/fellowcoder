@@ -112,9 +112,25 @@ class Backend_Com {
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     print(_response);*/
     var _response = [
-      {"time": DateTime.now(), "user_id": "der", "text": "hi"},
-      {"time": DateTime.now(), "user_id": "ich", "text": "hallo"},
-      {"time": DateTime.now(), "user_id": "der", "text": "alles klar?"}
+      {"time": DateTime.now().toString(), "user_id": "der", "text": "hi"},
+      {"time": DateTime.now().toString(), "user_id": "ich", "text": "hallo"},
+      {
+        "time": DateTime.now().toString(),
+        "user_id": "der",
+        "text": "alles klar?"
+      },
+      {
+        "time": DateTime.now().toString(),
+        "user_id": "ich",
+        "text":
+            """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis est dui, at laoreet est malesuada a. Pellentesque rhoncus euismod lacus nec mollis. Morbi fermentum eros a velit vestibulum, vel dictum enim finibus. Etiam in urna mi. Nullam ac blandit neque. Suspendisse non viverra risus. Suspendisse porta turpis urna, id volutpat sem tempor eu. Sed neque diam, fermentum sit amet egestas eu, elementum non felis.
+
+Maecenas id ligula at nunc suscipit laoreet nec tristique ligula. Quisque consectetur condimentum lacus in pulvinar. Aenean malesuada, nibh sed facilisis mattis, orci ante dapibus turpis, vitae aliquet sapien arcu at massa. Pellentesque pellentesque facilisis turpis commodo pulvinar. Mauris quam eros, tempus id sem vel, aliquam tristique neque. Curabitur ante neque, interdum vel egestas eu, egestas quis dolor. Fusce neque risus, auctor non bibendum vel, faucibus quis nibh.
+
+Mauris accumsan euismod nisi eu efficitur. Vestibulum cursus nec felis ac tristique. Vestibulum ut commodo nibh. Integer fringilla egestas felis, a iaculis magna dapibus eu. Curabitur placerat quam quis massa varius mollis. Sed laoreet libero eget molestie placerat. Vestibulum et diam eu dui imperdiet ornare. Duis in commodo sapien. Nam ornare mi at odio ornare, sed dignissim ante lobortis. Cras vel placerat tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis in tortor eget mi iaculis cursus in eget massa.
+
+Mauris cursus risus vitae sodales hendrerit. Praesent dictum interdum posuere. Nam lobortis ornare ex, in pharetra arcu eleifend pulvinar. Donec euismod, tortor nec luctus fringilla, purus dui rhoncus dui, eget feugiat felis urna id mi. Nulla luctus eros mi, sed volutpat quam hendrerit at. Sed dui lorem, aliquet nec massa at, gravida venenatis turpis. Vivamus rutrum, erat sagittis maximus venenatis, augue augue maximus nisl, non venenatis mauris libero eu tellus. Donec eu dolor dolor. Duis id feugiat augue. Sed non purus et sem mollis aliquam. Interdum et malesuada fames ac ante ipsum primis in faucibus."""
+      }
     ];
     return _response;
   }
