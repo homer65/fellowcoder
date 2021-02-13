@@ -105,6 +105,6 @@ def get_search_results():
     except:
         search_text="None"
     erg = fs.suchen(country,coding_languages,search_text)
-    return json.dumps(erg)
+    return json.dumps(erg,default=str)
 
 app.run()
