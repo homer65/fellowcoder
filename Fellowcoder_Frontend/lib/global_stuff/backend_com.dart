@@ -67,7 +67,7 @@ class Backend_Com {
   Future<List<DB_User>> get_search_data(
     Map<String, dynamic> search_data,
   ) async {
-    String url = _be_url + "/suchen.py";
+    String url = _be_url + "/get_search_results.py";
     Map<String, dynamic> data = search_data;
     print(data);
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));

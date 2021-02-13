@@ -18,7 +18,7 @@ class _HomepageState extends State<Homepage> {
     global_search_data = {
       "country": "Deutschland",
       "coding_languages": [],
-      "search_text": "TestBeschreibungstext",
+      "search_text": "",
     };
   }
 
