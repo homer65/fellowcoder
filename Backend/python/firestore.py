@@ -54,7 +54,20 @@ class Firestore:
         except Exception as e:
             print(e)
             return '{"return":"ko"}'
-        
+    
+    def addChat(self, pseudonym, chatid):
+        dokument_ref = self.db.collection('benutzer').document(pseudonym)
+        dokument = dokument_ref.get()
+        if dokument.exists:
+            pydokument = dokument.to_dict()
+            try:
+                chats = pydokument["chats"]
+            except:
+                chats = []
+            chats.append(chatid)
+            self.db.collection('benutzer').document(pseudonym).update({"chats":chats})
+            return
+       
     def suchen(self,country,coding_languages,search_text):
         erg = {}
         benutzer_ref = self.db.collection('benutzer')

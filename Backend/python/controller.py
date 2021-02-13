@@ -24,6 +24,7 @@ def controller(name):
     elif name == "login.py": erg = login()
     elif name == "aendern.py": erg = aendern()
     elif name == "get_search_results.py": erg = get_search_results()
+    elif name == "chateintrag_erstellen.py": erg = chateintrag_erstellen()
     return erg 
 
 def get_storage_image(image):
@@ -109,5 +110,14 @@ def get_search_results():
     if search_text == "" : search_text = "None"
     erg = fs.suchen(country,coding_languages,search_text)
     return json.dumps(erg,default=str)
+
+def chateintrag_erstellen():
+    pseudonym = get_uid()
+    data = get_request_data()
+    partner = data["id"]
+    chatid = pseudonym + partner
+    fs.addChat(pseudonym,chatid)
+    fs.addChat(partner,chatid)
+    return '{"return":"ok"}'
 
 app.run()
