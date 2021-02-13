@@ -104,6 +104,9 @@ def get_search_results():
         search_text=data["search_text"]
     except:
         search_text="None"
+    if country == "" : country = "None"
+    if coding_languages == [] : coding_languages = "None"
+    if search_text == "" : search_text = "None"
     erg = fs.suchen(country,coding_languages,search_text)
     return json.dumps(erg,default=str)
 
