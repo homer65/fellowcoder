@@ -81,6 +81,7 @@ class _MainState extends State<Main> {
     bool _on_mobile = _screen_size.width < global_mobile_treshold;
 
     return Scaffold(
+      backgroundColor: global_color_background_1,
       //drawer: Main_Drawer(),
       body: Column(
         children: [

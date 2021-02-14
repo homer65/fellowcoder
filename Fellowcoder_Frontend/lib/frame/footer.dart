@@ -11,37 +11,73 @@ class Footer extends StatefulWidget {
 }
 
 class _FooterState extends State<Footer> {
+  double _main_font_size = 14;
   @override
   Widget build(BuildContext context) {
     final _screen_size = MediaQuery.of(context).size;
     bool _on_mobile = _screen_size.width < global_mobile_treshold;
     return Container(
-      height: 20,
-      color: Colors.grey,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FlatButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(About_Us.route);
-              },
-              child: Text("About Us")),
-          FlatButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(Datenschutz.route);
-              },
-              child: Text("Datenschutz")),
-          FlatButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(Impressum.route);
-              },
-              child: Text("Impressum")),
-          FlatButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(Nutzungsbedingungen.route);
-              },
-              child: Text("Nutzungsbedingungen")),
-        ],
+      alignment: Alignment.center,
+      height: 25,
+      width: _screen_size.width,
+      decoration: BoxDecoration(
+          //color: Colors.grey,
+          border: Border(top: BorderSide(color: Colors.black, width: 1.0))),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ButtonTheme(
+          minWidth: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(About_Us.route);
+                  },
+                  child: Text(
+                    "About Us",
+                    style: TextStyle(
+                        fontSize: _on_mobile
+                            ? _main_font_size * 0.75
+                            : _main_font_size),
+                  )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Datenschutz.route);
+                  },
+                  child: Text(
+                    "Datenschutz",
+                    style: TextStyle(
+                        fontSize: _on_mobile
+                            ? _main_font_size * 0.75
+                            : _main_font_size),
+                  )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Impressum.route);
+                  },
+                  child: Text(
+                    "Impressum",
+                    style: TextStyle(
+                        fontSize: _on_mobile
+                            ? _main_font_size * 0.75
+                            : _main_font_size),
+                  )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(Nutzungsbedingungen.route);
+                  },
+                  child: Text(
+                    "Nutzungsbedingungen",
+                    style: TextStyle(
+                        fontSize: _on_mobile
+                            ? _main_font_size * 0.75
+                            : _main_font_size),
+                  )),
+            ],
+          ),
+        ),
       ),
     );
   }

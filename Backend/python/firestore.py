@@ -93,8 +93,8 @@ class Firestore:
             ok = False
             for language in coding_languages:
                 try:
-                    for test_language_key in data["sprachen"].keys():
-                        if language == data["sprachen"][test_language_key]: ok = True
+                    for test_language_key in data["sprachen"]:
+                        if language == test_language_key: ok = True
                 except:
                     ok = False
             if not ok: erg = False

@@ -1,6 +1,7 @@
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/basic_image.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
 import 'package:Fellowcoder_Frontend/profile/main_profile.dart';
@@ -51,7 +52,7 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
             leading: Container(),
             floating: true,
             title: Text(''),
-            backgroundColor: Colors.transparent,
+            backgroundColor: global_color_background_1,
             stretch: true,
             expandedHeight: 142 +
                 ((global_search_data["coding_languages"].length + 1) / 2)
@@ -95,8 +96,11 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
                             .get_search_data(global_search_data);
                         setState(() {});
                       },
-                      child: Text("anwenden"),
-                      color: Colors.orangeAccent,
+                      child: Text(
+                        "anwenden",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: global_color_highlight_1,
                     )
                   ],
                 ),
@@ -130,17 +134,62 @@ class Search_Result_Page_List_Element extends StatefulWidget {
 class _Search_Result_Page_List_ElementState
     extends State<Search_Result_Page_List_Element> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
-      height: 100,
-      color: Colors.greenAccent,
+      //height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: global_color_background_1,
+        border: Border.all(color: global_color_highlight_1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(1, 1), // changes position of shadow
+          ),
+        ],
+      ),
       child: FlatButton(
         onPressed: () {
           Navigator.of(context).pushNamed(Main_Profile.route,
               arguments: {"userview": true, "data": widget.result_user});
         },
-        child: Text(widget.result_user.name),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Basic_Image(
+                    widget.result_user.bildurl,
+                    margin: EdgeInsets.all(0),
+                    padding: EdgeInsets.all(0),
+                    width: 80,
+                    height: 80,
+                    border_radius: BorderRadius.circular(40),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(widget.result_user.name == null
+                      ? "NULL"
+                      : widget.result_user.name),
+                ],
+              ),
+              Own_Coding_Language_Selection(
+                coding_language_list: widget.result_user.sprachen,
+                enabled: false,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

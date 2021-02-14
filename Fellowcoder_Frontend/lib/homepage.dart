@@ -17,53 +17,60 @@ class _HomepageState extends State<Homepage> {
     super.initState();
     global_search_data = {
       "country": "Deutschland",
-      "coding_languages": [],
+      "coding_languages": ["Python"],
       "search_text": "",
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      alignment: Alignment.center,
       width: 300,
-      child: Column(
-        children: [
-          Own_Country_Select_Dropdown(
-            on_change: (String country) {
-              global_search_data["country"] = country;
-            },
-          ),
-          Own_Coding_Language_Selection(
-            coding_language_list: global_search_data["coding_languages"],
-            on_change: () {},
-          ),
-          TextFormField(
-            autofocus: false,
-            maxLines: null,
-            controller: null,
-            style: TextStyle(),
-            onChanged: (value) {
-              setState(() {
-                global_search_data["search_text"] = value;
-              });
-            },
-            decoration: InputDecoration(
-              labelText: "Suchtext",
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Own_Country_Select_Dropdown(
+              on_change: (String country) {
+                global_search_data["country"] = country;
+              },
             ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          RaisedButton(
-            onPressed: () async {
-              global_results_list =
-                  await Backend_Com().get_search_data(global_search_data);
-              Navigator.of(context).pushNamed(Search_Result_Page.route);
-            },
-            child: Text("Suchen"),
-            color: Colors.orangeAccent,
-          )
-        ],
+            Own_Coding_Language_Selection(
+              coding_language_list: global_search_data["coding_languages"],
+              on_change: () {},
+            ),
+            TextFormField(
+              autofocus: false,
+              maxLines: null,
+              controller: null,
+              style: TextStyle(),
+              onChanged: (value) {
+                setState(() {
+                  global_search_data["search_text"] = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: "Suchtext",
+              ),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            RaisedButton(
+              onPressed: () async {
+                global_results_list =
+                    await Backend_Com().get_search_data(global_search_data);
+                Navigator.of(context).pushNamed(Search_Result_Page.route);
+              },
+              child: Text(
+                "Suchen",
+                style: TextStyle(color: Colors.white),
+              ),
+              color: global_color_highlight_1,
+            )
+          ],
+        ),
       ),
     );
   }

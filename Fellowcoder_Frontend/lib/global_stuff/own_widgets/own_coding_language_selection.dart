@@ -77,7 +77,17 @@ class _Own_Coding_Language_Selection_AddState
       height: widget.height,
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5), color: Colors.orangeAccent),
+        borderRadius: BorderRadius.circular(5),
+        color: global_color_highlight_1,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(1, 1), // changes position of shadow
+          ),
+        ],
+      ),
       child: FlatButton(
           onPressed: () {
             setState(() {
@@ -86,7 +96,10 @@ class _Own_Coding_Language_Selection_AddState
             });
             widget.update();
           },
-          child: Icon(Icons.add)),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          )),
     );
   }
 }
@@ -119,19 +132,33 @@ class _Own_Coding_Language_Selection_ElementState
       height: widget.height,
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5), color: Colors.orangeAccent),
+        borderRadius: BorderRadius.circular(5),
+        color: global_color_highlight_1,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(1, 1), // changes position of shadow
+          ),
+        ],
+      ),
       child: Row(
         children: [
           widget.enabled
               ? DropdownButton<String>(
                   value: widget.coding_language_list[widget.index],
-                  icon: Icon(Icons.arrow_downward),
+                  icon: Icon(
+                    Icons.arrow_downward,
+                    color: Colors.white,
+                  ),
                   iconSize: 20,
                   elevation: 16,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
+                  dropdownColor: global_color_highlight_1.withOpacity(1),
                   /*underline: Container(
               height: 2,
               color: Colors.deepPurpleAccent,
@@ -181,13 +208,22 @@ class _Own_Coding_Language_Selection_ElementState
                       SizedBox(
                         width: 10,
                       ),
-                      Text(widget.coding_language_list[widget.index]),
+                      Text(
+                        widget.coding_language_list[widget.index],
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                 ),
           widget.enabled
               ? IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
                     setState(() {
                       widget.coding_language_list.removeAt(widget.index);

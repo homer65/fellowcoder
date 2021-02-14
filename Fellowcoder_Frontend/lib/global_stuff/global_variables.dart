@@ -1,5 +1,7 @@
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 double global_mobile_treshold = 700;
 
@@ -18,6 +20,11 @@ final String firebase_bucket_link = "gs://fellowcoder-org-dev.appspot.com";
 //Authentication START--------------------------------------------------------------------------
 final FirebaseAuth auth_firebase = FirebaseAuth.instance;
 //Authentication END--------------------------------------------------------------------------
+
+//Color variables START-----------------------------------------------------------------------
+Color global_color_highlight_1 = Color.fromRGBO(100, 100, 100, 0.75);
+Color global_color_background_1 = Color.fromRGBO(250, 250, 250, 1);
+//Color variables END-----------------------------------------------------------------------
 
 //Country variables START-----------------------------------------------------------------------
 enum Country { ger, swe, esp }

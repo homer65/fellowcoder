@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
           _loading
               ? CircularProgressIndicator()
               : RaisedButton(
-                  color: Colors.orangeAccent,
+                  color: global_color_highlight_1,
                   onPressed: () async {
                     setState(() {
                       _loading = true;
@@ -96,7 +96,10 @@ class _LoginState extends State<Login> {
                       _loading = false;
                     });
                   },
-                  child: Text("Login"),
+                  child: Text(
+                    "Login",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
         ],
       ),

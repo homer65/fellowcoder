@@ -195,7 +195,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                           Navigator.of(context).pushNamed(Chat_View.route);
                         },
                         child: Text("Chat"),
-                        color: Colors.orangeAccent,
+                        color: global_color_highlight_1,
                       )
                     : Container(),
                 Own_Submittable_Text_Input(

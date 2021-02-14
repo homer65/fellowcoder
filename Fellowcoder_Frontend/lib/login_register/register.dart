@@ -89,7 +89,7 @@ class _RegisterState extends State<Register> {
           _loading
               ? CircularProgressIndicator()
               : RaisedButton(
-                  color: Colors.orangeAccent,
+                  color: global_color_highlight_1,
                   onPressed: () async {
                     setState(() {
                       _loading = true;
@@ -127,7 +127,8 @@ class _RegisterState extends State<Register> {
                       _loading = false;
                     });
                   },
-                  child: Text("Registrierung abschließen"),
+                  child: Text("Registrierung abschließen",
+                      style: TextStyle(color: Colors.white)),
                 )
         ],
       ),

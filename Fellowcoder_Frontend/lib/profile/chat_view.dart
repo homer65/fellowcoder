@@ -18,7 +18,9 @@ class _Chat_ViewState extends State<Chat_View> {
   @override
   void initState() {
     super.initState();
-    _active_chat = global_user_data.chats[0]["chat_id"];
+    if (global_user_data.chats.length > 0) {
+      _active_chat = global_user_data.chats[0]["chat_id"];
+    }
   }
 
   @override
@@ -30,6 +32,7 @@ class _Chat_ViewState extends State<Chat_View> {
             controller: _pc,
             children: [
               Chat_View_Select(
+                active_chat: _active_chat,
                 selected_chat: (selected_chat) {
                   setState(() {
                     _active_chat = selected_chat;
@@ -47,6 +50,7 @@ class _Chat_ViewState extends State<Chat_View> {
               Expanded(
                   flex: 1,
                   child: Chat_View_Select(
+                    active_chat: _active_chat,
                     selected_chat: (selected_chat) {
                       setState(() {
                         _active_chat = selected_chat;
@@ -61,7 +65,8 @@ class _Chat_ViewState extends State<Chat_View> {
 
 class Chat_View_Select extends StatefulWidget {
   Function(String selected_chat) selected_chat;
-  Chat_View_Select({this.selected_chat});
+  String active_chat;
+  Chat_View_Select({this.selected_chat, this.active_chat});
   @override
   _Chat_View_SelectState createState() => _Chat_View_SelectState();
 }
@@ -85,55 +90,60 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
             right: BorderSide(width: _on_mobile ? 0 : 1.0, color: Colors.black),
           ),
         ),
-        child: ListView(
-          children: [
-            for (Map<String, dynamic> element in global_user_data.chats)
-              Container(
-                height: 60,
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      width: 1.0,
-                      color: Colors.black,
-                    ),
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                child: FlatButton(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Basic_Image(
-                        "assets/images/image_default.jpeg",
-                        padding: EdgeInsets.all(5),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(element["partner_name"]),
-                      Expanded(
-                        child: SizedBox(),
-                      ),
-                      Text(
-                        "letzte Zeit / Datum",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    widget.selected_chat(element["chat_id"]);
-                  },
-                ),
+        child: widget.active_chat == null
+            ? Text(
+                "noch keine Chats",
+                textAlign: TextAlign.center,
               )
-          ],
-        ));
+            : ListView(
+                children: [
+                  for (Map<String, dynamic> element in global_user_data.chats)
+                    Container(
+                      height: 60,
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            width: 1.0,
+                            color: Colors.black,
+                          ),
+                          bottom: BorderSide(
+                            width: 1.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      child: FlatButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Basic_Image(
+                              "assets/images/image_default.jpeg",
+                              padding: EdgeInsets.all(5),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(element["partner_name"]),
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                            Text(
+                              "letzte Zeit / Datum",
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          widget.selected_chat(element["chat_id"]);
+                        },
+                      ),
+                    )
+                ],
+              ));
   }
 }
 
@@ -155,7 +165,9 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
 
   void _get_chat() async {
     _chat = [];
-    _chat = await Backend_Com().get_complete_chat(widget.selected_chat);
+    if (widget.selected_chat != null) {
+      _chat = await Backend_Com().get_complete_chat(widget.selected_chat);
+    }
     setState(() {});
   }
 
@@ -173,42 +185,44 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
                 ],
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.5),
-                border: Border(
-                  top: BorderSide(width: 1.0, color: Colors.black),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      maxLines: 2,
-                      decoration: InputDecoration(hintText: "Nachricht"),
+            _chat.length < 1
+                ? Container()
+                : Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.5),
+                      border: Border(
+                        top: BorderSide(width: 1.0, color: Colors.black),
+                      ),
                     ),
-                  )),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    width: 70,
-                    height: 70,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Icon(
-                        Icons.send,
-                        //color: Colors.white,
-                      ),
-                      color: Colors.orangeAccent,
-                      onPressed: () {},
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            maxLines: 2,
+                            decoration: InputDecoration(hintText: "Nachricht"),
+                          ),
+                        )),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          width: 70,
+                          height: 70,
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                            ),
+                            color: global_color_highlight_1,
+                            onPressed: () {},
+                          ),
+                        )
+                      ],
                     ),
                   )
-                ],
-              ),
-            )
           ],
         ));
   }

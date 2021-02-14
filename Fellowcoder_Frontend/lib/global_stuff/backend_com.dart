@@ -33,7 +33,6 @@ class Backend_Com {
     String url = _be_url + "/register.py";
     Map<String, dynamic> data = {
       "name": null,
-      "vorname": null,
       "bildurl": null,
       "bild_name": null,
       "geburtsdatum": null,
@@ -70,9 +69,13 @@ class Backend_Com {
     String url = _be_url + "/get_search_results.py";
     Map<String, dynamic> data = search_data;
     print(data);
-    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    print(_response);
-    _response = [
+    Map _response1 = (await Backend_Com().postdata(url, jsonEncode(data)));
+    print(_response1);
+    List<DB_User> _response = [];
+    _response1.values.forEach((value) {
+      _response.add(DB_User.fromJson(value));
+    });
+    /*_response = [
       DB_User(
           name: "Testnutzer1",
           sprachen: ["C#"],
@@ -96,7 +99,7 @@ class Backend_Com {
       DB_User(name: "Testnutzer"),
       DB_User(name: "Testnutzer"),
       DB_User(name: "Testnutzer")
-    ];
+    ];*/
     return _response;
   }
 
