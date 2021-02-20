@@ -1,6 +1,8 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
 from global_functions import url_to_date
+from test.test_tempfile import TestGetCandidateNames
+from datetime import datetime
 
 global anzahl_init_firebase
 anzahl_init_firebase = 0
@@ -55,7 +57,7 @@ class Firestore:
             print(e)
             return '{"return":"ko"}'
     
-    def addChat(self, pseudonym, chatid):
+    def addChatToUser(self, pseudonym, chatid, partner):
         dokument_ref = self.db.collection('benutzer').document(pseudonym)
         dokument = dokument_ref.get()
         if dokument.exists:
@@ -64,10 +66,17 @@ class Firestore:
                 chats = pydokument["chats"]
             except:
                 chats = []
-            chats.append(chatid)
+            chats.append([chatid,partner])
             self.db.collection('benutzer').document(pseudonym).update({"chats":chats})
             return
-       
+    
+    def addChat(self, chatid, user):
+        daten = []
+        jetzt = datetime.now()
+        daten.append({"time":jetzt,"user":user,"text":""})
+        self.db.collection('chats').document(chatid).set(daten) 
+        return
+          
     def suchen(self,country,coding_languages,search_text):
         erg = {}
         benutzer_ref = self.db.collection('benutzer')

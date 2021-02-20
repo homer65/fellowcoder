@@ -116,8 +116,9 @@ def chateintrag_erstellen():
     data = get_request_data()
     partner = data["id"]
     chatid = pseudonym + partner
-    fs.addChat(pseudonym,chatid)
-    fs.addChat(partner,chatid)
+    fs.addChatToUser(pseudonym,chatid,partner)
+    fs.addChatToUser(partner,chatid,pseudonym)
+    fs.addChat(chatid,pseudonym)
     return '{"return":"ok"}'
 
 app.run()
