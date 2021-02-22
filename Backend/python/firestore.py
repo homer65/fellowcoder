@@ -65,18 +65,27 @@ class Firestore:
             try:
                 chats = pydokument["chats"]
             except:
-                chats = []
-            chats.append([chatid,partner])
+                chats = {}
+            chats[chatid] = partner
             self.db.collection('benutzer').document(pseudonym).update({"chats":chats})
             return
-    
+
     def addChat(self, chatid, user):
-        daten = []
-        jetzt = datetime.now()
-        daten.append({"time":jetzt,"user":user,"text":""})
+        daten = {}
+        jetzt = str(datetime.now())
+        daten[jetzt] = {"user":user,"text":""}
         self.db.collection('chats').document(chatid).set(daten) 
         return
-          
+    
+    def addChatNachricht(self, pseudonym, chatid, nachricht):
+        dokument_ref = self.db.collection('chats').document(chatid)
+        dokument = dokument_ref.get()
+        if dokument.exists:
+            pydokument = dokument.to_dict()
+            jetzt = str(datetime.now())
+            pydokument[jetzt] = {"user":pseudonym,"text":nachricht}
+            self.db.collection('chats').document(chatid).set(pydokument)
+    
     def suchen(self,country,coding_languages,search_text):
         erg = {}
         benutzer_ref = self.db.collection('benutzer')
