@@ -26,6 +26,7 @@ def controller(name):
     elif name == "get_search_results.py": erg = get_search_results()
     elif name == "chateintrag_erstellen.py": erg = chateintrag_erstellen()
     elif name == "chatnachricht_hinzufuegen.py": erg = chatnachricht_hinzufuegen()
+    elif name == "chateintrag_daten_lesen.py": erg = chateintrag_daten_lesen()
     return erg 
 
 def get_storage_image(image):
@@ -129,5 +130,12 @@ def chatnachricht_hinzufuegen():
     nachricht = data["nachricht"]
     fs.addChatNachricht(pseudonym,chatid,nachricht)
     return '{"return":"ok"}'
+
+def chateintrag_daten_lesen():
+    # pseudonym = get_uid()
+    data = get_request_data()
+    chatid = data["chat_id"]
+    chat = fs.getChat(chatid)
+    return json.dumps(chat,default=str)
 
 app.run()

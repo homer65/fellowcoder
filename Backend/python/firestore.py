@@ -85,6 +85,15 @@ class Firestore:
             jetzt = str(datetime.now())
             pydokument[jetzt] = {"user":pseudonym,"text":nachricht}
             self.db.collection('chats').document(chatid).set(pydokument)
+            
+    def getChat(self, chatid):
+        dokument_ref = self.db.collection('chats').document(chatid)
+        dokument = dokument_ref.get()
+        if dokument.exists:
+            pydokument = dokument.to_dict()
+            return pydokument
+        else:
+            return {"return":"ko"}
     
     def suchen(self,country,coding_languages,search_text):
         erg = {}
