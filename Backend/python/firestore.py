@@ -58,6 +58,8 @@ class Firestore:
             return '{"return":"ko"}'
     
     def addChatToUser(self, pseudonym, chatid, partner):
+        benutzer = self.get_Benutzer(partner)
+        partner_name = benutzer["name"]
         dokument_ref = self.db.collection('benutzer').document(pseudonym)
         dokument = dokument_ref.get()
         if dokument.exists:
@@ -65,16 +67,13 @@ class Firestore:
             try:
                 chats = pydokument["chats"]
             except:
-                chats = {}
-            chats[chatid] = partner
+                chats = []
+            chats.append({"chat_id":chatid,"partner_id":partner,"partner_name":partner_name})
             self.db.collection('benutzer').document(pseudonym).update({"chats":chats})
             return
-
+    
     def addChat(self, chatid, user):
-        daten = {}
-        jetzt = str(datetime.now())
-        daten[jetzt] = {"user":user,"text":""}
-        self.db.collection('chats').document(chatid).set(daten) 
+        self.db.collection('chats').document(chatid).set({"messages": []}) 
         return
     
     def addChatNachricht(self, pseudonym, chatid, nachricht):
@@ -82,9 +81,12 @@ class Firestore:
         dokument = dokument_ref.get()
         if dokument.exists:
             pydokument = dokument.to_dict()
+            pyarray = pydokument["messages"]
             jetzt = str(datetime.now())
-            pydokument[jetzt] = {"user":pseudonym,"text":nachricht}
+            pyarray.append({"time":jetzt,"user_id":pseudonym,"text":nachricht})
+            pydokument["messages"] = pyarray
             self.db.collection('chats').document(chatid).set(pydokument)
+        return
             
     def getChat(self, chatid):
         dokument_ref = self.db.collection('chats').document(chatid)
