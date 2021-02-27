@@ -19,7 +19,6 @@ class _HeaderState extends State<Header> {
   @override
   void initState() {
     super.initState();
-    print("header");
   }
 
   @override

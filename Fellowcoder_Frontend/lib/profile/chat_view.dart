@@ -156,6 +156,8 @@ class Chat_View_Messages extends StatefulWidget {
 
 class _Chat_View_MessagesState extends State<Chat_View_Messages> {
   List<Map<String, dynamic>> _chat;
+  TextEditingController _message_controller = TextEditingController();
+  ScrollController _scroll_controller = ScrollController();
 
   @override
   void initState() {
@@ -166,9 +168,17 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
   void _get_chat() async {
     _chat = [];
     if (widget.selected_chat != null) {
-      _chat = await Backend_Com().get_complete_chat(widget.selected_chat);
+      _chat = await Backend_Com().chateintrag_daten_lesen(widget.selected_chat);
     }
     setState(() {});
+  }
+
+  void _scroll_down() {
+    _scroll_controller.animateTo(
+      _scroll_controller.position.maxScrollExtent,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   @override
@@ -179,6 +189,7 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
           children: [
             Expanded(
               child: ListView(
+                controller: _scroll_controller,
                 children: [
                   for (Map<String, dynamic> e in _chat)
                     Chat_View_Messages_Element(e)
@@ -200,6 +211,7 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
                             child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            controller: _message_controller,
                             maxLines: 2,
                             decoration: InputDecoration(hintText: "Nachricht"),
                           ),
@@ -217,7 +229,21 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
                               color: Colors.white,
                             ),
                             color: global_color_highlight_1,
-                            onPressed: () {},
+                            onPressed: () async {
+                              await Backend_Com().chatnachricht_hinzufuegen(
+                                  widget.selected_chat,
+                                  _message_controller.text);
+                              Map<String, String> _temp = {
+                                "time": DateTime.now().toString(),
+                                "user_id": "ich",
+                                "text": _message_controller.text
+                              };
+                              setState(() {});
+                              _chat.add(_temp);
+                              _message_controller.text = "";
+                              WidgetsBinding.instance
+                                  .addPostFrameCallback((_) => _scroll_down());
+                            },
                           ),
                         )
                       ],

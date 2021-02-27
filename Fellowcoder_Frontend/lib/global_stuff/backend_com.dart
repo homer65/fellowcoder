@@ -103,18 +103,28 @@ class Backend_Com {
     return _response;
   }
 
-  //TODO: chateintrag_erstellen
-  //TODO: chateintrag_bei_nutzer_erstellen
-  //TODO: chatnachricht_hinzufügen
+  Future chateintrag_erstellen(String partner_id) async {
+    String url = _be_url + "/chateintrag_erstellen.py";
+    Map<String, dynamic> data = {"id": partner_id};
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    return _response;
+  }
 
-  Future<List<Map<String, dynamic>>> get_complete_chat(
+  Future chatnachricht_hinzufuegen(String chat_id, String nachricht) async {
+    String url = _be_url + "/chatnachricht_hinzufuegen.py";
+    Map<String, dynamic> data = {"chat_id": chat_id, "nachricht": nachricht};
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    return _response;
+  }
+
+  Future<List<Map<String, dynamic>>> chateintrag_daten_lesen(
     String chat_id,
   ) async {
-    String url = _be_url + "/get_complete_chat.py";
-    /*Map<String, dynamic> data = {"chat_id": chat_id};
+    String url = _be_url + "/chateintrag_daten_lesen.py";
+    Map<String, dynamic> data = {"chat_id": chat_id};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    print(_response);*/
-    var _response = [
+    print(_response);
+    _response = [
       {"time": DateTime.now().toString(), "user_id": "der", "text": "hi"},
       {"time": DateTime.now().toString(), "user_id": "ich", "text": "hallo"},
       {
