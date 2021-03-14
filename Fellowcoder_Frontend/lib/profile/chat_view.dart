@@ -42,7 +42,7 @@ class _Chat_ViewState extends State<Chat_View> {
                       curve: Curves.easeIn);
                 },
               ),
-              Chat_View_Messages(_active_chat)
+              Chat_View_Messages(_active_chat, ValueKey(_active_chat))
             ],
           )
         : Row(
@@ -57,7 +57,10 @@ class _Chat_ViewState extends State<Chat_View> {
                       });
                     },
                   )),
-              Expanded(flex: 4, child: Chat_View_Messages(_active_chat)),
+              Expanded(
+                  flex: 4,
+                  child:
+                      Chat_View_Messages(_active_chat, ValueKey(_active_chat))),
             ],
           );
   }
@@ -149,7 +152,8 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
 
 class Chat_View_Messages extends StatefulWidget {
   String selected_chat;
-  Chat_View_Messages(this.selected_chat);
+  Key key;
+  Chat_View_Messages(this.selected_chat, this.key);
   @override
   _Chat_View_MessagesState createState() => _Chat_View_MessagesState();
 }
@@ -196,59 +200,56 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
                 ],
               ),
             ),
-            _chat.length < 1
-                ? Container()
-                : Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.5),
-                      border: Border(
-                        top: BorderSide(width: 1.0, color: Colors.black),
-                      ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.5),
+                border: Border(
+                  top: BorderSide(width: 1.0, color: Colors.black),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _message_controller,
+                      maxLines: 2,
+                      decoration: InputDecoration(hintText: "Nachricht"),
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: _message_controller,
-                            maxLines: 2,
-                            decoration: InputDecoration(hintText: "Nachricht"),
-                          ),
-                        )),
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          width: 70,
-                          height: 70,
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                            ),
-                            color: global_color_highlight_1,
-                            onPressed: () async {
-                              await Backend_Com().chatnachricht_hinzufuegen(
-                                  widget.selected_chat,
-                                  _message_controller.text);
-                              Map<String, String> _temp = {
-                                "time": DateTime.now().toString(),
-                                "user_id": "ich",
-                                "text": _message_controller.text
-                              };
-                              setState(() {});
-                              _chat.add(_temp);
-                              _message_controller.text = "";
-                              WidgetsBinding.instance
-                                  .addPostFrameCallback((_) => _scroll_down());
-                            },
-                          ),
-                        )
-                      ],
+                  )),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    width: 70,
+                    height: 70,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
+                      color: global_color_highlight_1,
+                      onPressed: () async {
+                        await Backend_Com().chatnachricht_hinzufuegen(
+                            widget.selected_chat, _message_controller.text);
+                        Map<String, String> _temp = {
+                          "time": DateTime.now().toString(),
+                          "user_id": "ich",
+                          "text": _message_controller.text
+                        };
+                        setState(() {});
+                        _chat.add(_temp);
+                        _message_controller.text = "";
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((_) => _scroll_down());
+                      },
                     ),
                   )
+                ],
+              ),
+            )
           ],
         ));
   }
@@ -269,7 +270,7 @@ class _Chat_View_Messages_ElementState
   @override
   void initState() {
     super.initState();
-    _own_message = widget.message["user_id"] == "ich";
+    _own_message = widget.message["user_id"] == global_user_data.id;
   }
 
   @override

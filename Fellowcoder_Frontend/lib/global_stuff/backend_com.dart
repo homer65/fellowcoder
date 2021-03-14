@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:cooky/cooky.dart' as cookie;
 
 class Backend_Com {
-  static String _be_url = "http://127.0.0.1:5000";
+  static String _be_url =
+      "http://127.0.0.1:5000"; // http://127.0.0.1:5000 // https://python-be-qw2twiy6eq-ey.a.run.app
 
   Future getdata(String url) async {
     refresh_id_token();
@@ -68,9 +69,9 @@ class Backend_Com {
   ) async {
     String url = _be_url + "/get_search_results.py";
     Map<String, dynamic> data = search_data;
-    print(data);
+    //print(data);
     Map _response1 = (await Backend_Com().postdata(url, jsonEncode(data)));
-    print(_response1);
+    //print(_response1);
     List<DB_User> _response = [];
     _response1.values.forEach((value) {
       _response.add(DB_User.fromJson(value));
@@ -105,7 +106,7 @@ class Backend_Com {
 
   Future chateintrag_erstellen(String partner_id) async {
     String url = _be_url + "/chateintrag_erstellen.py";
-    Map<String, dynamic> data = {"id": partner_id};
+    Map<String, dynamic> data = {"Id": partner_id};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     return _response;
   }
@@ -122,29 +123,18 @@ class Backend_Com {
   ) async {
     String url = _be_url + "/chateintrag_daten_lesen.py";
     Map<String, dynamic> data = {"chat_id": chat_id};
-    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    List<dynamic> _response =
+        (await Backend_Com().postdata(url, jsonEncode(data)))["messages"];
     print(_response);
-    _response = [
-      {"time": DateTime.now().toString(), "user_id": "der", "text": "hi"},
-      {"time": DateTime.now().toString(), "user_id": "ich", "text": "hallo"},
-      {
-        "time": DateTime.now().toString(),
-        "user_id": "der",
-        "text": "alles klar?"
-      },
-      {
-        "time": DateTime.now().toString(),
-        "user_id": "ich",
-        "text":
-            """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis est dui, at laoreet est malesuada a. Pellentesque rhoncus euismod lacus nec mollis. Morbi fermentum eros a velit vestibulum, vel dictum enim finibus. Etiam in urna mi. Nullam ac blandit neque. Suspendisse non viverra risus. Suspendisse porta turpis urna, id volutpat sem tempor eu. Sed neque diam, fermentum sit amet egestas eu, elementum non felis.
-
-Maecenas id ligula at nunc suscipit laoreet nec tristique ligula. Quisque consectetur condimentum lacus in pulvinar. Aenean malesuada, nibh sed facilisis mattis, orci ante dapibus turpis, vitae aliquet sapien arcu at massa. Pellentesque pellentesque facilisis turpis commodo pulvinar. Mauris quam eros, tempus id sem vel, aliquam tristique neque. Curabitur ante neque, interdum vel egestas eu, egestas quis dolor. Fusce neque risus, auctor non bibendum vel, faucibus quis nibh.
-
-Mauris accumsan euismod nisi eu efficitur. Vestibulum cursus nec felis ac tristique. Vestibulum ut commodo nibh. Integer fringilla egestas felis, a iaculis magna dapibus eu. Curabitur placerat quam quis massa varius mollis. Sed laoreet libero eget molestie placerat. Vestibulum et diam eu dui imperdiet ornare. Duis in commodo sapien. Nam ornare mi at odio ornare, sed dignissim ante lobortis. Cras vel placerat tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis in tortor eget mi iaculis cursus in eget massa.
-
-Mauris cursus risus vitae sodales hendrerit. Praesent dictum interdum posuere. Nam lobortis ornare ex, in pharetra arcu eleifend pulvinar. Donec euismod, tortor nec luctus fringilla, purus dui rhoncus dui, eget feugiat felis urna id mi. Nulla luctus eros mi, sed volutpat quam hendrerit at. Sed dui lorem, aliquet nec massa at, gravida venenatis turpis. Vivamus rutrum, erat sagittis maximus venenatis, augue augue maximus nisl, non venenatis mauris libero eu tellus. Donec eu dolor dolor. Duis id feugiat augue. Sed non purus et sem mollis aliquam. Interdum et malesuada fames ac ante ipsum primis in faucibus."""
-      }
-    ];
-    return _response;
+    List<Map<String, dynamic>> _response_format = [];
+    Map<String, dynamic> _respone_element;
+    _response.forEach((value) {
+      _respone_element = {};
+      value.forEach((key, value) {
+        _respone_element[key] = value;
+      });
+      _response_format.add(_respone_element);
+    });
+    return _response_format;
   }
 }

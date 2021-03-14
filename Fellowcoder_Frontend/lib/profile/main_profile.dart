@@ -191,7 +191,14 @@ class _Main_ProfileState extends State<Main_Profile> {
                       ),
                 widget.userview
                     ? RaisedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          await Backend_Com()
+                              .chateintrag_erstellen(_user_data.id);
+                          global_user_data.chats.add({
+                            "chat_id": global_user_data.id + _user_data.id,
+                            "partner_name": _user_data.name,
+                            "partner_id": _user_data.id
+                          });
                           Navigator.of(context).pushNamed(Chat_View.route);
                         },
                         child: Text("Chat"),
