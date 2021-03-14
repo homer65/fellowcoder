@@ -57,7 +57,7 @@ def get_image_from_storage():
 
 def get_uid():
     id_token = request.headers["id_token"]
-    if id_token == "myoggradio" : return "myoggradio" 
+    if id_token == "myoggradio" : return "Af865fHT2ZWaXhrAvuPCnOPX8Ki1" 
     if debug: print("Debug:get_uid:01: ",id_token)
     user = auth.verify_id_token(id_token)
     return user["uid"]
@@ -95,6 +95,7 @@ def register():
     return '{"return":"ok"}'
 
 def get_search_results():
+    pseudonym = get_uid()
     data = get_request_data()
     try:
         country = data["country"]
@@ -111,7 +112,7 @@ def get_search_results():
     if country == "" : country = "None"
     if coding_languages == [] : coding_languages = "None"
     if search_text == "" : search_text = "None"
-    erg = fs.suchen(country,coding_languages,search_text)
+    erg = fs.suchen(country,coding_languages,search_text,pseudonym)
     return json.dumps(erg,default=str)
 
 def chateintrag_erstellen():
