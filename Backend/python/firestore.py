@@ -97,13 +97,14 @@ class Firestore:
         else:
             return {"return":"ko"}
     
-    def suchen(self,country,coding_languages,search_text):
+    def suchen(self,country,coding_languages,search_text,pseudonym):
         erg = {}
         benutzer_ref = self.db.collection('benutzer')
         benutzer = benutzer_ref.stream()
         for doc in benutzer:
             data = doc.to_dict()
-            if self.test_suchkriterien(data,country,coding_languages,search_text): erg[doc.id] = data
+            if not pseudonym == doc.id:
+                if self.test_suchkriterien(data,country,coding_languages,search_text): erg[doc.id] = data
         return erg
     
     def test_suchkriterien(self,data,country,coding_languages,search_text):
