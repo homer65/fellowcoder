@@ -87,7 +87,10 @@ class _RegisterState extends State<Register> {
             ],
           ),
           _loading
-              ? CircularProgressIndicator()
+              ? CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
+                )
               : RaisedButton(
                   color: global_color_highlight_1,
                   onPressed: () async {
@@ -100,11 +103,12 @@ class _RegisterState extends State<Register> {
                             DB_User(); // create user data so it isnt null and it doesnt trigger the load in the firebase_auth listener in main.dart
                         String _id_token = await registerWithEmailPassword(
                             _e_mail, _passwort_0);
-                        if (await Backend_Com().create_user() ==
-                            '{"return":"ok"}') {
+                        if ((await Backend_Com().create_user()).toString() ==
+                            '{return: ok}') {
                           global_user_data = await Backend_Com().get_user();
                           Navigator.of(context).popAndPushNamed(Homepage.route);
                         } else {
+                          global_user_data = null;
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text(
                               "Nutzer konnte nicht erstellt werden. Bitte erneut versuchen.",
@@ -114,6 +118,7 @@ class _RegisterState extends State<Register> {
                           ));
                         }
                       } on Exception catch (e) {
+                        global_user_data = null;
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text(
                             e.toString(),

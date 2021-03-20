@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
@@ -44,8 +46,10 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
 
   @override
   Widget build(BuildContext context) {
+    final _screen_size = MediaQuery.of(context).size;
+    bool _on_mobile = _screen_size.width < global_mobile_treshold;
     return SizedBox(
-      width: 300,
+      //width: 300,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -62,52 +66,59 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
               background: SizedBox(
                 width: 300,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Own_Country_Select_Dropdown(
-                      on_change: (String country) {
-                        global_search_data["country"] = country;
-                      },
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Own_Country_Select_Dropdown(
+                          on_change: (String country) {
+                            global_search_data["country"] = country;
+                          },
+                        ),
+                        Own_Coding_Language_Selection(
+                          on_change: () {
+                            setState(() {});
+                          },
+                          coding_language_list:
+                              global_search_data["coding_languages"],
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: TextFormField(
+                            autofocus: false,
+                            maxLines: null,
+                            controller: null,
+                            style: TextStyle(),
+                            onChanged: (value) {
+                              setState(() {
+                                global_search_data["search_text"] = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              labelText: "Suchtext",
+                            ),
+                          ),
+                        ),
+                        RaisedButton(
+                          onPressed: () async {
+                            global_results_list = await Backend_Com()
+                                .get_search_data(global_search_data);
+                            setState(() {});
+                          },
+                          child: Text(
+                            "anwenden",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: global_color_highlight_1,
+                        )
+                      ],
                     ),
-                    Own_Coding_Language_Selection(
-                      on_change: () {
-                        setState(() {});
-                      },
-                      coding_language_list:
-                          global_search_data["coding_languages"],
-                    ),
-                    TextFormField(
-                      autofocus: false,
-                      maxLines: null,
-                      controller: null,
-                      style: TextStyle(),
-                      onChanged: (value) {
-                        setState(() {
-                          global_search_data["search_text"] = value;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: "Suchtext",
-                      ),
-                    ),
-                    RaisedButton(
-                      onPressed: () async {
-                        global_results_list = await Backend_Com()
-                            .get_search_data(global_search_data);
-                        setState(() {});
-                      },
-                      child: Text(
-                        "anwenden",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: global_color_highlight_1,
-                    )
                   ],
                 ),
               ),
             ),
           ),
-          SliverList(
+          /*SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Search_Result_Page_List_Element(
@@ -116,6 +127,14 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
               childCount:
                   global_results_list == null ? 0 : global_results_list.length,
             ),
+          ),*/
+          SliverGrid.count(
+            crossAxisCount: max(1, (_screen_size.width / 300).toInt()),
+            childAspectRatio: 0.9,
+            children: [
+              for (DB_User i in global_results_list)
+                Search_Result_Page_List_Element(i)
+            ],
           ),
         ],
       ),
@@ -142,6 +161,7 @@ class _Search_Result_Page_List_ElementState
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
+      width: 300,
       //height: 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -164,6 +184,7 @@ class _Search_Result_Page_List_ElementState
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -178,14 +199,20 @@ class _Search_Result_Page_List_ElementState
                   SizedBox(
                     width: 10,
                   ),
-                  Text(widget.result_user.name == null
-                      ? "NULL"
-                      : widget.result_user.name),
+                  Expanded(
+                    child: Text(widget.result_user.name == null
+                        ? "NULL"
+                        : widget.result_user.name),
+                  ),
                 ],
               ),
-              Own_Coding_Language_Selection(
-                coding_language_list: widget.result_user.sprachen,
-                enabled: false,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Own_Coding_Language_Selection(
+                    coding_language_list: widget.result_user.sprachen,
+                    enabled: false,
+                  ),
+                ),
               )
             ],
           ),

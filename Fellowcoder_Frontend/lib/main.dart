@@ -18,6 +18,7 @@ import 'package:Fellowcoder_Frontend/search/search_result_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cooky/cooky.dart' as cookie;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,9 +50,13 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   void initialise() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance; // init firestore
     auth_firebase.authStateChanges().listen((User user) async {
       if (user == null && global_usertype != Usertype.visitor) {
         //print('User is currently signed out!');
+        try {
+          logout(); // logout just in case the id_token is still saved
+        } catch (e) {}
         setState(() {
           global_usertype = Usertype.visitor;
         });
@@ -62,6 +67,7 @@ class _MainState extends State<Main> {
               DB_User(); // prevents requesting the userdata again when the listener fires several times
           global_user_data = await Backend_Com().get_user();
         }
+        global_rebuild_controller.add(true);
         setState(() {
           global_usertype = Usertype.user;
         });

@@ -69,7 +69,10 @@ class _LoginState extends State<Login> {
             ],
           ),
           _loading
-              ? CircularProgressIndicator()
+              ? CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
+                )
               : RaisedButton(
                   color: global_color_highlight_1,
                   onPressed: () async {

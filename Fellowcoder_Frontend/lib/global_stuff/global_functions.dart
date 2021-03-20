@@ -14,14 +14,11 @@ Future<String> registerWithEmailPassword(String email, String password) async {
   String _id_token = await user.getIdToken();
   cookie.set("id_token", _id_token);
   cookie.set("refresh_token", user.refreshToken);
-  //TODO: create userdata locally after registers
-
   return _id_token;
 }
 
 Future<String> signInWithEmailPassword(String email, String password) async {
   // Initialize Firebase
-  //await Firebase.initializeApp();
   final UserCredential userCredential =
       await auth_firebase.signInWithEmailAndPassword(
     email: email,

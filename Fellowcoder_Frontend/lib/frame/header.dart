@@ -19,6 +19,9 @@ class _HeaderState extends State<Header> {
   @override
   void initState() {
     super.initState();
+    global_rebuild_controller.stream.listen((data) {
+      setState(() {});
+    });
   }
 
   @override

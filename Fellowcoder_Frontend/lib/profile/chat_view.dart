@@ -4,6 +4,7 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/basic_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Chat_View extends StatefulWidget {
   static const String route = '/chat_view';
@@ -14,12 +15,27 @@ class Chat_View extends StatefulWidget {
 class _Chat_ViewState extends State<Chat_View> {
   String _active_chat;
   PageController _pc = PageController();
+  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    if (global_user_data.chats.length > 0) {
-      _active_chat = global_user_data.chats[0]["chat_id"];
+    global_rebuild_controller.stream.listen((data) {
+      if (global_user_data.name != null) {
+        if (global_user_data.chats.length > 0) {
+          _active_chat = global_user_data.chats[0]["chat_id"];
+        }
+        _loading = false;
+        setState(() {});
+      }
+    });
+    if (global_user_data != null) {
+      if (global_user_data.name != null) {
+        _loading = false;
+        if (global_user_data.chats.length > 0) {
+          _active_chat = global_user_data.chats[0]["chat_id"];
+        }
+      }
     }
   }
 
@@ -27,42 +43,48 @@ class _Chat_ViewState extends State<Chat_View> {
   Widget build(BuildContext context) {
     final _screen_size = MediaQuery.of(context).size;
     bool _on_mobile = _screen_size.width < global_mobile_treshold;
-    return _on_mobile
-        ? PageView(
-            controller: _pc,
-            children: [
-              Chat_View_Select(
-                active_chat: _active_chat,
-                selected_chat: (selected_chat) {
-                  setState(() {
-                    _active_chat = selected_chat;
-                  });
-                  _pc.animateToPage(1,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.easeIn);
-                },
-              ),
-              Chat_View_Messages(_active_chat, ValueKey(_active_chat))
-            ],
+    return _loading
+        ? Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
+            ),
           )
-        : Row(
-            children: [
-              Expanded(
-                  flex: 1,
-                  child: Chat_View_Select(
+        : _on_mobile
+            ? PageView(
+                controller: _pc,
+                children: [
+                  Chat_View_Select(
                     active_chat: _active_chat,
                     selected_chat: (selected_chat) {
                       setState(() {
                         _active_chat = selected_chat;
                       });
+                      _pc.animateToPage(1,
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeIn);
                     },
-                  )),
-              Expanded(
-                  flex: 4,
-                  child:
-                      Chat_View_Messages(_active_chat, ValueKey(_active_chat))),
-            ],
-          );
+                  ),
+                  Chat_View_Messages(_active_chat, ValueKey(_active_chat))
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Chat_View_Select(
+                        active_chat: _active_chat,
+                        selected_chat: (selected_chat) {
+                          setState(() {
+                            _active_chat = selected_chat;
+                          });
+                        },
+                      )),
+                  Expanded(
+                      flex: 4,
+                      child: Chat_View_Messages(
+                          _active_chat, ValueKey(_active_chat))),
+                ],
+              );
   }
 }
 
@@ -117,6 +139,9 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
                         ),
                       ),
                       child: FlatButton(
+                        color: element["chat_id"] == widget.active_chat
+                            ? Colors.orangeAccent.withOpacity(0.5)
+                            : Colors.transparent,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -167,6 +192,18 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
   void initState() {
     super.initState();
     _get_chat();
+    Stream documentStream = FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.selected_chat)
+        .snapshots();
+    documentStream.listen((documentSnapshot) {
+      DocumentSnapshot ds = documentSnapshot;
+      _chat = [];
+      ds.data()["messages"].forEach((value) {
+        _chat.add(value);
+      });
+      setState(() {});
+    });
   }
 
   void _get_chat() async {
@@ -226,17 +263,17 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      child: Icon(
-                        Icons.send,
-                        color: Colors.white,
-                      ),
-                      color: global_color_highlight_1,
+                      child:
+                          Icon(Icons.send, color: Colors.black //Colors.white,
+                              ),
+                      color: Colors.greenAccent
+                          .withOpacity(1), //global_color_highlight_1,
                       onPressed: () async {
                         await Backend_Com().chatnachricht_hinzufuegen(
                             widget.selected_chat, _message_controller.text);
                         Map<String, String> _temp = {
                           "time": DateTime.now().toString(),
-                          "user_id": "ich",
+                          "user_id": global_user_data.id,
                           "text": _message_controller.text
                         };
                         setState(() {});
@@ -288,7 +325,9 @@ class _Chat_View_Messages_ElementState
           width: 290,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: Colors.orangeAccent.withOpacity(0.4),
+            color: _own_message
+                ? Colors.greenAccent.withOpacity(0.4)
+                : Colors.orangeAccent.withOpacity(0.4),
           ),
           child: Stack(
             children: [

@@ -6,7 +6,7 @@ import 'package:cooky/cooky.dart' as cookie;
 
 class Backend_Com {
   static String _be_url =
-      "http://127.0.0.1:5000"; // http://127.0.0.1:5000 // https://python-be-qw2twiy6eq-ey.a.run.app
+      "https://python-be-qw2twiy6eq-ey.a.run.app"; // http://127.0.0.1:5000 // https://python-be-qw2twiy6eq-ey.a.run.app
 
   Future getdata(String url) async {
     refresh_id_token();
@@ -125,7 +125,7 @@ class Backend_Com {
     Map<String, dynamic> data = {"chat_id": chat_id};
     List<dynamic> _response =
         (await Backend_Com().postdata(url, jsonEncode(data)))["messages"];
-    print(_response);
+    //print(_response);
     List<Map<String, dynamic>> _response_format = [];
     Map<String, dynamic> _respone_element;
     _response.forEach((value) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +15,9 @@ Usertype global_usertype = Usertype.visitor;
 DB_User global_user_data;
 Map<String, dynamic> global_search_data;
 List<DB_User> global_results_list;
+
+StreamController<bool> global_rebuild_controller =
+    StreamController<bool>.broadcast();
 
 // Firebase Storage Bucket Link
 final String firebase_bucket_link = "gs://fellowcoder-org-dev.appspot.com";
