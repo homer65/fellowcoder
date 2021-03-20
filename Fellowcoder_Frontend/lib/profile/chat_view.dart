@@ -101,6 +101,20 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
   void initState() {
     super.initState();
     //print(global_user_data.chats);
+    Stream documentStream = FirebaseFirestore.instance
+        .collection('benutzer')
+        .doc(global_user_data.id)
+        .snapshots();
+    documentStream.listen((documentSnapshot) {
+      DocumentSnapshot ds = documentSnapshot;
+      global_user_data.chats = [];
+      ds.data()["chats"].forEach((value) {
+        global_user_data.chats.add(value);
+      });
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override

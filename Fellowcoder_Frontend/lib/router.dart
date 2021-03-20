@@ -11,9 +11,9 @@ import 'package:cooky/cooky.dart' as cookie;
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case Main_Profile.route:
-      if (cookie.get("id_token") == null ||
-          cookie.get("id_token") ==
-              "" /*global_usertype == Usertype.visitor && settings.arguments == null*/) {
+      if ((cookie.get("id_token") == null || cookie.get("id_token") == "") &&
+          settings.arguments ==
+              null /*global_usertype == Usertype.visitor && settings.arguments == null*/) {
         return _default_PageRoute(
             RouteSettings(name: Register.route, arguments: settings.arguments));
       }

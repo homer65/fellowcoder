@@ -34,13 +34,14 @@
   <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-storage.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-analytics.js"></script> !!!!!production!!!!! -->
 
   <!-- TODO: Add SDKs for Firebase products that you want to use
       https://firebase.google.com/docs/web/setup#available-libraries -->
 
   <script>
     // Your web app's Firebase configuration
-    var firebaseConfig = {
+    var firebaseConfig = { // !!!!!development!!!!!
       apiKey: "AIzaSyCAEoXBNoWlcQW4tw_nPUX4dOVKB_3T0k0",
       authDomain: "fellowcoder-org-dev.firebaseapp.com",
       projectId: "fellowcoder-org-dev",
@@ -48,8 +49,18 @@
       messagingSenderId: "569238122777",
       appId: "1:569238122777:web:87e353c5a6c4e409c69588"
     };
+    /*var firebaseConfig = { // !!!!!production!!!!!
+      apiKey: "AIzaSyDh46LulrKnZzTmLEFfiP8tGq_lZvXU9C4",
+      authDomain: "fellowcoder-org.firebaseapp.com",
+      projectId: "fellowcoder-org",
+      storageBucket: "fellowcoder-org.appspot.com",
+      messagingSenderId: "734028759042",
+      appId: "1:734028759042:web:4ac6506b5f6166d9fea71b",
+      measurementId: "G-3K62KNNWD3"
+    };*/
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+    //firebase.analytics(); // !!!!!production!!!!!
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>

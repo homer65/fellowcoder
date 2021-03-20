@@ -12,7 +12,9 @@
                 "-d",
                 "chrome",
                 "--web-port",
-                "8686"
+                "8686",
+                "--web-renderer",
+                "html"
             ]
         }
     ]
