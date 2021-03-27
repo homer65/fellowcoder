@@ -6,7 +6,7 @@ import 'package:cooky/cooky.dart' as cookie;
 
 class Backend_Com {
   static String _be_url =
-      "http://127.0.0.1:5000"; // http://127.0.0.1:5000 // https://python-be-qw2twiy6eq-ey.a.run.app (development) //  (production)
+      "http://127.0.0.1:5000"; // http://127.0.0.1:5000 // https://python-be-qw2twiy6eq-ey.a.run.app (development) //  https://python-be-xql2dlgaqa-ey.a.run.app (production)
 
   Future getdata(String url) async {
     refresh_id_token();

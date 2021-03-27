@@ -48,8 +48,8 @@ Future<String> refresh_id_token() async {
   // refreshes the session id token with the refresh id token
   if (cookie.get("refresh_token") != null) {
     String _refresh_token = cookie.get("refresh_token");
-    String url =
-        "https://securetoken.googleapis.com/v1/token?key=" + FIREBASE_API_KEY;
+    String url = "https://securetoken.googleapis.com/v1/token?key=" +
+        FIREBASE_API_KEY; // FIREBASE_API_KEY // FIREBASE_API_KEY_2
     Map<String, dynamic> data = {
       "grant_type": "refresh_token",
       "refresh_token": _refresh_token

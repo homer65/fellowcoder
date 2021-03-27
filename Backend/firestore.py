@@ -18,9 +18,9 @@ class Firestore:
         self.db = firestore.client()
 
     def init_firestore_app(self):
-        cred = credentials.Certificate("key.json")
+        cred = credentials.Certificate("key.json") # "key.json" # "key2.json"
         self.default_app = firebase_admin.initialize_app(cred, {
-        'storageBucket': u'fellowcoder-org-dev.appspot.com' 
+        'storageBucket': u'fellowcoder-org-dev.appspot.com' # u'fellowcoder-org-dev.appspot.com'  # u'fellowcoder-org.appspot.com' 
         })
         self.default_bucket = storage.bucket()
 
