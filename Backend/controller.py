@@ -120,10 +120,15 @@ def chateintrag_erstellen():
     data = get_request_data()
     partner = data["Id"]
     chatid = pseudonym + partner
-    fs.addChatToUser(pseudonym,chatid,partner)
-    fs.addChatToUser(partner,chatid,pseudonym)
-    fs.addChat(chatid,pseudonym)
-    return '{"return":"ok"}'
+    ok = True
+    rc = fs.addChatToUser(pseudonym,chatid,partner)
+    if not rc: ok = False
+    rc = fs.addChatToUser(partner,chatid,pseudonym)
+    if not rc: ok = False
+    if ok:
+        fs.addChat(chatid,pseudonym)
+        return '{"return":"ok"}'
+    return '{"return":"ko"}'
 
 def chatnachricht_hinzufuegen():
     pseudonym = get_uid()

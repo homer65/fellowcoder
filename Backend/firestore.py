@@ -68,9 +68,16 @@ class Firestore:
                 chats = pydokument["chats"]
             except:
                 chats = []
-            chats.append({"chat_id":chatid,"partner_id":partner,"partner_name":partner_name})
-            self.db.collection('benutzer').document(pseudonym).update({"chats":chats})
-            return
+            gibtsschon = False
+            for chat in chats:
+                testid = chat["chat_id"]
+                if testid == chatid:
+                    gibtsschon = True
+            if not gibtsschon:
+                chats.append({"chat_id":chatid,"partner_id":partner,"partner_name":partner_name})
+                self.db.collection('benutzer').document(pseudonym).update({"chats":chats})
+                return True
+            return False
     
     def addChat(self, chatid, user):
         self.db.collection('chats').document(chatid).set({"messages": []}) 
