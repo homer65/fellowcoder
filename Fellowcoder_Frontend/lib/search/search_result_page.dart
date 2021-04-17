@@ -6,6 +6,8 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/basic_image.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_group_goal_select.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_group_person_select.dart';
 import 'package:Fellowcoder_Frontend/profile/main_profile.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +38,8 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
         "country": "Deutschland",
         "coding_languages": [],
         "search_text": "",
+        "group_person_select": "Person",
+        "group_goal_select": "Team",
       };
     }
     initialise();
@@ -58,7 +62,7 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
             title: Text(''),
             backgroundColor: global_color_background_1,
             stretch: true,
-            expandedHeight: 142 +
+            expandedHeight: 200 +
                 ((global_search_data["coding_languages"].length + 1) / 2)
                         .round() *
                     70,
@@ -82,6 +86,31 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
                           coding_language_list:
                               global_search_data["coding_languages"],
                         ),
+                        Wrap(
+                          runSpacing: 10,
+                          children: [
+                            Own_Group_Person_Select(
+                              init_gps: Group_Person_Select.person,
+                              on_change: (value) {
+                                setState(() {
+                                  global_search_data["group_person_select"] =
+                                      global_group_person_select_info[value]
+                                          .name;
+                                });
+                              },
+                            ),
+                            Own_Group_Goal_Select(
+                              greyed_out:
+                                  global_search_data["group_person_select"] ==
+                                      "Person",
+                              init_ggs: Group_Goal_Select.team,
+                              on_change: (value) {
+                                global_search_data["group_goal_select"] =
+                                    global_group_goal_select_info[value].name;
+                              },
+                            ),
+                          ],
+                        ),
                         SizedBox(
                           width: 300,
                           child: TextFormField(
@@ -98,6 +127,9 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
                               labelText: "Suchtext",
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 5,
                         ),
                         RaisedButton(
                           onPressed: () async {

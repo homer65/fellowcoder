@@ -2,6 +2,8 @@ import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_country_select_dropdown.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_group_goal_select.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_group_person_select.dart';
 import 'package:Fellowcoder_Frontend/search/search_result_page.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,8 @@ class _HomepageState extends State<Homepage> {
       "country": "Deutschland",
       "coding_languages": ["Python"],
       "search_text": "",
+      "group_person_select": "Person",
+      "group_goal_select": "Team",
     };
   }
 
@@ -32,6 +36,7 @@ class _HomepageState extends State<Homepage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Own_Country_Select_Dropdown(
+              init_value: global_search_data["country"],
               on_change: (String country) {
                 global_search_data["country"] = country;
               },
@@ -39,6 +44,29 @@ class _HomepageState extends State<Homepage> {
             Own_Coding_Language_Selection(
               coding_language_list: global_search_data["coding_languages"],
               on_change: () {},
+            ),
+            Wrap(
+              runSpacing: 10,
+              children: [
+                Own_Group_Person_Select(
+                  init_gps: Group_Person_Select.person,
+                  on_change: (value) {
+                    setState(() {
+                      global_search_data["group_person_select"] =
+                          global_group_person_select_info[value].name;
+                    });
+                  },
+                ),
+                Own_Group_Goal_Select(
+                  greyed_out:
+                      global_search_data["group_person_select"] == "Person",
+                  init_ggs: Group_Goal_Select.team,
+                  on_change: (value) {
+                    global_search_data["group_goal_select"] =
+                        global_group_goal_select_info[value].name;
+                  },
+                ),
+              ],
             ),
             TextFormField(
               autofocus: false,
