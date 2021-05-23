@@ -35,10 +35,57 @@ class _Own_Group_Person_SelectState extends State<Own_Group_Person_Select> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(5),
-      width: 140,
-      height: 50,
-      child: Stack(
+        margin: EdgeInsets.all(5),
+        width: 300,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              width: 140,
+              height: 50,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        return gps == Group_Person_Select.person
+                            ? global_color_highlight_2
+                            : global_color_highlight_1;
+                      },
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      gps = Group_Person_Select.person;
+                    });
+                    widget.on_change(gps);
+                  },
+                  child: Text("Person")),
+            ),
+            SizedBox(
+              width: 140,
+              height: 50,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        return gps == Group_Person_Select.group
+                            ? global_color_highlight_2
+                            : global_color_highlight_1;
+                      },
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      gps = Group_Person_Select.group;
+                    });
+                    widget.on_change(gps);
+                  },
+                  child: Text("Gruppe")),
+            ),
+          ],
+        )
+
+        /*Stack(
         children: [
           DropdownButton<Group_Person_Select>(
             value: gps,
@@ -84,7 +131,7 @@ class _Own_Group_Person_SelectState extends State<Own_Group_Person_Select> {
             }).toList(),
           ),
         ],
-      ),
-    );
+      ),*/
+        );
   }
 }

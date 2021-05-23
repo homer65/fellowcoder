@@ -50,7 +50,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   void initialise() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance; // init firestore
+    /*FirebaseFirestore firestore = FirebaseFirestore.instance; // init firestore
     auth_firebase.authStateChanges().listen((User user) async {
       if (user == null && global_usertype != Usertype.visitor) {
         //print('User is currently signed out!');
@@ -72,12 +72,18 @@ class _MainState extends State<Main> {
           global_usertype = Usertype.user;
         });
       }
-    });
+    });*/
   }
 
   @override
   void initState() {
     super.initState();
+    global_language_streamController.stream.listen((value) {
+      setState(() {});
+    });
+    global_theme_mode_streamController.stream.listen((value) {
+      setState(() {});
+    });
     initialise();
   }
 
@@ -102,6 +108,8 @@ class _MainState extends State<Main> {
 
 Widget get_main_widget(var arguments) {
   switch (global_active_route) {
+    case Main.route:
+      return Container();
     case Homepage.route:
       return Homepage();
     case Search_Result_Page.route:

@@ -35,39 +35,6 @@ class _HomepageState extends State<Homepage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Own_Country_Select_Dropdown(
-              init_value: global_search_data["country"],
-              on_change: (String country) {
-                global_search_data["country"] = country;
-              },
-            ),
-            Own_Coding_Language_Selection(
-              coding_language_list: global_search_data["coding_languages"],
-              on_change: () {},
-            ),
-            Wrap(
-              runSpacing: 10,
-              children: [
-                Own_Group_Person_Select(
-                  init_gps: Group_Person_Select.person,
-                  on_change: (value) {
-                    setState(() {
-                      global_search_data["group_person_select"] =
-                          global_group_person_select_info[value].name;
-                    });
-                  },
-                ),
-                Own_Group_Goal_Select(
-                  greyed_out:
-                      global_search_data["group_person_select"] == "Person",
-                  init_ggs: Group_Goal_Select.team,
-                  on_change: (value) {
-                    global_search_data["group_goal_select"] =
-                        global_group_goal_select_info[value].name;
-                  },
-                ),
-              ],
-            ),
             TextFormField(
               autofocus: false,
               maxLines: null,
@@ -82,6 +49,33 @@ class _HomepageState extends State<Homepage> {
                 labelText: "Suchtext",
               ),
             ),
+            Own_Group_Person_Select(
+              init_gps: Group_Person_Select.person,
+              on_change: (value) {
+                setState(() {
+                  global_search_data["group_person_select"] =
+                      global_group_person_select_info[value].name;
+                });
+              },
+            ),
+            Own_Group_Goal_Select(
+              greyed_out: global_search_data["group_person_select"] == "Person",
+              init_ggs: Group_Goal_Select.team,
+              on_change: (value) {
+                global_search_data["group_goal_select"] =
+                    global_group_goal_select_info[value].name;
+              },
+            ),
+            Own_Country_Select_Dropdown(
+              init_value: global_search_data["country"],
+              on_change: (String country) {
+                global_search_data["country"] = country;
+              },
+            ),
+            Own_Coding_Language_Selection(
+              coding_language_list: global_search_data["coding_languages"],
+              on_change: () {},
+            ),
             SizedBox(
               height: 50,
             ),
@@ -91,11 +85,14 @@ class _HomepageState extends State<Homepage> {
                     await Backend_Com().get_search_data(global_search_data);
                 Navigator.of(context).pushNamed(Search_Result_Page.route);
               },
-              child: Text(
-                "Suchen",
-                style: TextStyle(color: Colors.white),
+              color: global_color_highlight_2,
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Text(
+                  "Suchen",
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
-              color: global_color_highlight_1,
             )
           ],
         ),

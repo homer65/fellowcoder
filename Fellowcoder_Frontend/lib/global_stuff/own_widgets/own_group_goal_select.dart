@@ -39,7 +39,7 @@ class _Own_Group_Goal_SelectState extends State<Own_Group_Goal_Select> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(5),
-      width: 140,
+      width: 300,
       height: 50,
       child: Stack(
         children: [
@@ -70,7 +70,7 @@ class _Own_Group_Goal_SelectState extends State<Own_Group_Goal_Select> {
               return DropdownMenuItem<Group_Goal_Select>(
                 value: value,
                 child: SizedBox(
-                  width: 120,
+                  width: 270,
                   child: Row(
                     children: [
                       SizedBox(
@@ -88,7 +88,7 @@ class _Own_Group_Goal_SelectState extends State<Own_Group_Goal_Select> {
           ),
           widget.greyed_out
               ? Container(
-                  width: 140,
+                  width: 300,
                   height: 50,
                   color: Colors.grey.withOpacity(0.5),
                 )

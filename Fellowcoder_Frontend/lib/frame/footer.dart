@@ -42,6 +42,11 @@ class _FooterState extends State<Footer> {
                             ? _main_font_size * 0.75
                             : _main_font_size),
                   )),
+              Container(
+                width: 1,
+                height: 20,
+                color: Colors.black,
+              ),
               FlatButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(Datenschutz.route);
@@ -53,6 +58,11 @@ class _FooterState extends State<Footer> {
                             ? _main_font_size * 0.75
                             : _main_font_size),
                   )),
+              Container(
+                width: 1,
+                height: 20,
+                color: Colors.black,
+              ),
               FlatButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(Impressum.route);
@@ -64,6 +74,11 @@ class _FooterState extends State<Footer> {
                             ? _main_font_size * 0.75
                             : _main_font_size),
                   )),
+              Container(
+                width: 1,
+                height: 20,
+                color: Colors.black,
+              ),
               FlatButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(Nutzungsbedingungen.route);

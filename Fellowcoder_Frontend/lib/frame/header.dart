@@ -1,5 +1,6 @@
 import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_page_language_switch.dart';
 import 'package:Fellowcoder_Frontend/homepage.dart';
 import 'package:Fellowcoder_Frontend/login_register/login.dart';
 import 'package:Fellowcoder_Frontend/login_register/register.dart';
@@ -58,53 +59,62 @@ class _HeaderState extends State<Header> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(Chat_View.route);
-                    },
-                    child: Icon(
-                      Icons.chat,
-                      size:
-                          _on_mobile ? _main_icon_size * 0.8 : _main_icon_size,
-                    ) /*Text(
+                Own_Page_Language_Switch(),
+                global_usertype == Usertype.user
+                    ? FlatButton(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Chat_View.route);
+                        },
+                        child: Icon(
+                          Icons.chat,
+                          size: _on_mobile
+                              ? _main_icon_size * 0.8
+                              : _main_icon_size,
+                        ) /*Text(
                       "Chats",
                       style: TextStyle(
                           fontSize: _on_mobile
                               ? _main_font_size * 0.8
                               : _main_font_size),
                     )*/
-                    ),
-                FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(Main_Profile.route);
-                    },
-                    child: Icon(
-                      Icons.person,
-                      size:
-                          _on_mobile ? _main_icon_size * 0.8 : _main_icon_size,
-                    )
-                    /*Text(
+                        )
+                    : Container(),
+                global_usertype == Usertype.user
+                    ? FlatButton(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Main_Profile.route);
+                        },
+                        child: Icon(
+                          Icons.person,
+                          size: _on_mobile
+                              ? _main_icon_size * 0.8
+                              : _main_icon_size,
+                        )
+                        /*Text(
                       "Profil",
                       style: TextStyle(
                           fontSize: _on_mobile
                               ? _main_font_size * 0.8
                               : _main_font_size),
                     )*/
-                    ),
-                FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(Register.route);
-                    },
-                    child: Text(
-                      "Register",
-                      style: TextStyle(
-                          fontSize: _on_mobile
-                              ? _main_font_size * 0.8
-                              : _main_font_size),
-                    )),
+                        )
+                    : Container(),
+                global_usertype == Usertype.visitor
+                    ? FlatButton(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Register.route);
+                        },
+                        child: Text(
+                          "Register",
+                          style: TextStyle(
+                              fontSize: _on_mobile
+                                  ? _main_font_size * 0.8
+                                  : _main_font_size),
+                        ))
+                    : Container(),
                 global_usertype == Usertype.visitor
                     ? FlatButton(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
