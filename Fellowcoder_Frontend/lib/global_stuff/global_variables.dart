@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 double global_mobile_treshold = 700;
-
 String global_active_route = "/";
 
 enum Usertype { visitor, user }
@@ -28,14 +27,17 @@ final FirebaseAuth auth_firebase = FirebaseAuth.instance;
 //Authentication END--------------------------------------------------------------------------
 
 //Color variables START-----------------------------------------------------------------------
-Color global_color_highlight_1 = Color.fromRGBO(100, 100, 100, 0.75);
-Color global_color_highlight_2 = Color.fromRGBO(220, 220, 100, 1);
 Color global_color_background_1 = Color.fromRGBO(250, 250, 250, 1);
+Color global_color_1 = Color.fromRGBO(220, 220, 100, 1);
+Color global_color_2 = Color.fromRGBO(192, 242, 97, 1);
+Color global_color_3 = Color.fromRGBO(204, 204, 204, 1);
+Color global_color_4 = Color.fromRGBO(138, 138, 138, 1);
+Color global_color_5 = Color.fromRGBO(0, 0, 0, 1);
 //Color variables END-----------------------------------------------------------------------
 
 //Language variables START-----------------------------------------------------------------------
 enum Global_Language { ger, eng }
-Global_Language global_language = Global_Language.ger;
+Global_Language global_language = Global_Language.eng;
 
 StreamController<Global_Language> global_language_streamController =
     StreamController.broadcast();
@@ -75,7 +77,7 @@ final Map<Global_Theme_Mode, Theme_Mode_Info> global_theme_mode_info = {
 //Theme Mode variables END-----------------------------------------------------------------------
 
 //Country variables START-----------------------------------------------------------------------
-enum Country { ger, swe, esp }
+enum Country { all, ger, swe, esp }
 
 class Country_Info {
   String name;
@@ -84,10 +86,10 @@ class Country_Info {
 }
 
 final Map<Country, Country_Info> global_country_info = {
-  Country.ger:
-      Country_Info(name: "Deutschland", icon: "assets/countries/ger.png"),
-  Country.swe: Country_Info(name: "Schweden", icon: "assets/countries/swe.png"),
-  Country.esp: Country_Info(name: "Spanien", icon: "assets/countries/esp.png"),
+  Country.all: Country_Info(name: "All", icon: "assets/countries/all.png"),
+  Country.ger: Country_Info(name: "Germany", icon: "assets/countries/ger.png"),
+  Country.swe: Country_Info(name: "Sweden", icon: "assets/countries/swe.png"),
+  Country.esp: Country_Info(name: "Spain", icon: "assets/countries/esp.png"),
 };
 //Country variables END-----------------------------------------------------------------------
 

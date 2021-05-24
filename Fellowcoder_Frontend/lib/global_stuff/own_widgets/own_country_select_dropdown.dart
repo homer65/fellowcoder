@@ -2,11 +2,17 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:flutter/material.dart';
 
 class Own_Country_Select_Dropdown extends StatefulWidget {
+  double width;
+  double height;
   String init_value;
   bool enabled;
   Function(String country) on_change;
   Own_Country_Select_Dropdown(
-      {this.init_value = "Deutschland", this.on_change, this.enabled = true});
+      {this.init_value = "Germany",
+      this.on_change,
+      this.enabled = true,
+      this.width = 300,
+      this.height = 50});
   @override
   _Own_Country_Select_DropdownState createState() =>
       _Own_Country_Select_DropdownState();
@@ -45,7 +51,7 @@ class _Own_Country_Select_DropdownState
               return DropdownMenuItem<String>(
                 value: global_country_info[value].name,
                 child: SizedBox(
-                  width: 276,
+                  width: widget.width - 25,
                   child: Row(
                     children: [
                       Image.asset(
@@ -66,8 +72,8 @@ class _Own_Country_Select_DropdownState
             }).toList(),
           )
         : SizedBox(
-            width: 276,
-            height: 50,
+            width: widget.width - 25,
+            height: widget.height,
             child: Row(
               children: [
                 Image.asset(

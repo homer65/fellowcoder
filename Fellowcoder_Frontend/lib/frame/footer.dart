@@ -36,7 +36,9 @@ class _FooterState extends State<Footer> {
                     Navigator.of(context).pushNamed(About_Us.route);
                   },
                   child: Text(
-                    "About Us",
+                    global_language == Global_Language.ger
+                        ? "über uns"
+                        : "About us",
                     style: TextStyle(
                         fontSize: _on_mobile
                             ? _main_font_size * 0.75
@@ -52,7 +54,9 @@ class _FooterState extends State<Footer> {
                     Navigator.of(context).pushNamed(Datenschutz.route);
                   },
                   child: Text(
-                    "Datenschutz",
+                    global_language == Global_Language.ger
+                        ? "Datenschutz"
+                        : "Privacy policy",
                     style: TextStyle(
                         fontSize: _on_mobile
                             ? _main_font_size * 0.75
@@ -68,7 +72,9 @@ class _FooterState extends State<Footer> {
                     Navigator.of(context).pushNamed(Impressum.route);
                   },
                   child: Text(
-                    "Impressum",
+                    global_language == Global_Language.ger
+                        ? "Impressum"
+                        : "Legal notice",
                     style: TextStyle(
                         fontSize: _on_mobile
                             ? _main_font_size * 0.75
@@ -84,7 +90,9 @@ class _FooterState extends State<Footer> {
                     Navigator.of(context).pushNamed(Nutzungsbedingungen.route);
                   },
                   child: Text(
-                    "Nutzungsbedingungen",
+                    global_language == Global_Language.ger
+                        ? "Nutzungsbedingungen"
+                        : "Terms of use",
                     style: TextStyle(
                         fontSize: _on_mobile
                             ? _main_font_size * 0.75

@@ -21,10 +21,24 @@ class _RegisterState extends State<Register> {
   bool _loading = false;
 
   bool _check_input() {
+    if (_e_mail.length < 4) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(
+          global_language == Global_Language.ger
+              ? "Bitte gültige E-Mailadresse eingeben."
+              : "Please enter a valid e-mail address.",
+          textAlign: TextAlign.center,
+        ),
+        duration: Duration(milliseconds: 1500),
+      ));
+      return false;
+    }
     if (_passwort_0.length < 6) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(
-          "Das Passwort ist zu kurz.",
+          global_language == Global_Language.ger
+              ? "Das Passwort ist zu kurz."
+              : "Password is too short.",
           textAlign: TextAlign.center,
         ),
         duration: Duration(milliseconds: 1500),
@@ -34,7 +48,9 @@ class _RegisterState extends State<Register> {
     if (_passwort_0 != _passwort_1) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(
-          "Die Passwörter sind nicht identisch.",
+          global_language == Global_Language.ger
+              ? "Die Passwörter sind nicht identisch."
+              : "The passwords are not identical.",
           textAlign: TextAlign.center,
         ),
         duration: Duration(milliseconds: 1500),
@@ -55,20 +71,29 @@ class _RegisterState extends State<Register> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            "Registrieren",
-            style: TextStyle(fontSize: 30),
-          ),
-          Own_Textinput_V1(
-            label: "E-Mail",
-            on_changed: (value) {
-              _e_mail = value;
-            },
+            global_language == Global_Language.ger
+                ? "Registrieren"
+                : "Register",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Own_Textinput_V1(
-                label: "Passwort",
+                label: global_language == Global_Language.ger
+                    ? "E-Mail"
+                    : "E-Mail",
+                on_changed: (value) {
+                  _e_mail = value;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Own_Textinput_V1(
+                label: global_language == Global_Language.ger
+                    ? "Passwort"
+                    : "Password",
                 obscure: true,
                 on_changed: (value) {
                   _passwort_0 = value;
@@ -78,7 +103,9 @@ class _RegisterState extends State<Register> {
                 height: 10,
               ),
               Own_Textinput_V1(
-                label: "Passwort wiederholen",
+                label: global_language == Global_Language.ger
+                    ? "Passwort wiederholen"
+                    : "Repeat password",
                 obscure: true,
                 on_changed: (value) {
                   _passwort_1 = value;
@@ -92,7 +119,7 @@ class _RegisterState extends State<Register> {
                       AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
                 )
               : RaisedButton(
-                  color: global_color_highlight_1,
+                  color: global_color_1,
                   onPressed: () async {
                     setState(() {
                       _loading = true;
@@ -111,7 +138,9 @@ class _RegisterState extends State<Register> {
                           global_user_data = null;
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text(
-                              "Nutzer konnte nicht erstellt werden. Bitte erneut versuchen.",
+                              global_language == Global_Language.ger
+                                  ? "Nutzer konnte nicht erstellt werden. Bitte erneut versuchen."
+                                  : "User could not be created. Please try again.",
                               textAlign: TextAlign.center,
                             ),
                             duration: Duration(milliseconds: 1500),
@@ -132,8 +161,19 @@ class _RegisterState extends State<Register> {
                       _loading = false;
                     });
                   },
-                  child: Text("Registrierung abschließen",
-                      style: TextStyle(color: Colors.white)),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 300,
+                    height: 50,
+                    child: Text(
+                        global_language == Global_Language.ger
+                            ? "Registrierung abschließen"
+                            : "Complete registration",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                  ),
                 )
         ],
       ),

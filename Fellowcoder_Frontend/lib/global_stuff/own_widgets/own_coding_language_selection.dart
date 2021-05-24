@@ -78,7 +78,7 @@ class _Own_Coding_Language_Selection_AddState
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: global_color_highlight_1)
+          border: Border.all(color: global_color_4)
           /*color: global_color_highlight_1,
         boxShadow: [
           BoxShadow(
@@ -135,7 +135,7 @@ class _Own_Coding_Language_Selection_ElementState
       padding: EdgeInsets.only(left: 2),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: global_color_highlight_1)
+          border: Border.all(color: global_color_4)
           /*color: global_color_highlight_1,
         boxShadow: [
           BoxShadow(

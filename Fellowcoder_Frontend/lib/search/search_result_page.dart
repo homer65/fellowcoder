@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
+import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/basic_image.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_coding_language_selection.dart';
@@ -19,6 +20,9 @@ class Search_Result_Page extends StatefulWidget {
 }
 
 class _Search_Result_PageState extends State<Search_Result_Page> {
+  TextEditingController _search_text_controller = TextEditingController();
+  bool _settings_expanded = false;
+
   void initialise() async {
     if (global_results_list == null) {
       global_results_list = [];
@@ -35,13 +39,15 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
     super.initState();
     if (global_search_data == null) {
       global_search_data = {
-        "country": "Deutschland",
+        "country": "All",
         "coding_languages": [],
         "search_text": "",
         "group_person_select": "Person",
         "group_goal_select": "Team",
       };
     }
+    _search_text_controller.text = global_search_data["search_text"];
+
     initialise();
     /*WidgetsBinding.instance.addPostFrameCallback((_) {
       initialise();
@@ -51,9 +57,13 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
   @override
   Widget build(BuildContext context) {
     final _screen_size = MediaQuery.of(context).size;
-    bool _on_mobile = _screen_size.width < global_mobile_treshold;
+    bool _on_mobile =
+        _screen_size.width < global_mobile_treshold ? true : false;
+
+    double _width_1 = calc_length_max(800, 0.95, _screen_size.width);
+    double _width_2 = calc_length_max(300, 0.90, _screen_size.width);
+
     return SizedBox(
-      //width: 300,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -63,34 +73,100 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
             backgroundColor: global_color_background_1,
             stretch: true,
             expandedHeight: 200 +
-                ((global_search_data["coding_languages"].length + 1) / 2)
-                        .round() *
-                    70,
+                (_settings_expanded
+                    ? 160 +
+                        ((global_search_data["coding_languages"].length + 1) /
+                                    2)
+                                .round() *
+                            70
+                    : 0),
             flexibleSpace: FlexibleSpaceBar(
-              background: SizedBox(
-                width: 300,
-                child: Column(
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Own_Country_Select_Dropdown(
-                          on_change: (String country) {
-                            global_search_data["country"] = country;
+              background: Column(
+                children: [
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: global_color_1,
+                              width: 4,
+                            ),
+                            borderRadius: BorderRadius.circular(5)),
+                        width: _width_1,
+                        child: TextFormField(
+                          cursorColor: global_color_1,
+                          autofocus: false,
+                          maxLines: 1,
+                          controller: _search_text_controller,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 24),
+                          onChanged: (value) {
+                            setState(() {
+                              global_search_data["search_text"] = value;
+                            });
                           },
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              hintStyle: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey.withOpacity(0.7)),
+                              hintText: global_language == Global_Language.ger
+                                  ? "Gib einen bestimmten Namen ein oder lass es frei um alle zu finden"
+                                  : "Insert a certain name or leave blank to find all",
+                              alignLabelWithHint: false),
                         ),
-                        Own_Coding_Language_Selection(
-                          on_change: () {
-                            setState(() {});
-                          },
-                          coding_language_list:
-                              global_search_data["coding_languages"],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          setState(() {
+                            _settings_expanded = !_settings_expanded;
+                          });
+                        },
+                        style: ButtonStyle(),
+                        child: SizedBox(
+                          width: _width_2,
+                          child: Text(
+                              global_language == Global_Language.ger
+                                  ? "weitere Einstellungen:"
+                                  : "further settings:",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black)),
                         ),
-                        Wrap(
-                          runSpacing: 10,
+                      ),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        height: _settings_expanded ? null : 4,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: global_color_4,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Column(
                           children: [
+                            SizedBox(
+                              height: 5,
+                            ),
                             Own_Group_Person_Select(
-                              init_gps: Group_Person_Select.person,
+                              width: _width_2,
+                              init_gps:
+                                  global_search_data["group_person_select"] ==
+                                          "Person"
+                                      ? Group_Person_Select.person
+                                      : Group_Person_Select.group,
                               on_change: (value) {
                                 setState(() {
                                   global_search_data["group_person_select"] =
@@ -99,54 +175,88 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
                                 });
                               },
                             ),
+                            SizedBox(
+                              height: 1,
+                            ),
                             Own_Group_Goal_Select(
+                              width: _width_2,
                               greyed_out:
                                   global_search_data["group_person_select"] ==
-                                      "Person",
-                              init_ggs: Group_Goal_Select.team,
+                                      global_group_person_select_info[
+                                              Group_Person_Select.person]
+                                          .name,
+                              init_ggs: global_search_data[
+                                          "group_goal_select"] ==
+                                      global_group_goal_select_info[
+                                              Group_Goal_Select.team]
+                                          .name
+                                  ? Group_Goal_Select.team
+                                  : global_search_data["group_goal_select"] ==
+                                          global_group_goal_select_info[
+                                                  Group_Goal_Select.forum]
+                                              .name
+                                      ? Group_Goal_Select.forum
+                                      : Group_Goal_Select.discussion,
                               on_change: (value) {
                                 global_search_data["group_goal_select"] =
                                     global_group_goal_select_info[value].name;
                               },
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Own_Country_Select_Dropdown(
+                              width: _width_2,
+                              init_value: global_search_data["country"],
+                              on_change: (String country) {
+                                global_search_data["country"] = country;
+                              },
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              width: _width_2 + 12,
+                              child: Own_Coding_Language_Selection(
+                                coding_language_list:
+                                    global_search_data["coding_languages"],
+                                on_change: () {
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
                           ],
                         ),
-                        SizedBox(
-                          width: 300,
-                          child: TextFormField(
-                            autofocus: false,
-                            maxLines: null,
-                            controller: null,
-                            style: TextStyle(),
-                            onChanged: (value) {
-                              setState(() {
-                                global_search_data["search_text"] = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              labelText: "Suchtext",
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        RaisedButton(
-                          onPressed: () async {
-                            global_results_list = await Backend_Com()
-                                .get_search_data(global_search_data);
-                            setState(() {});
-                          },
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      RaisedButton(
+                        onPressed: () async {
+                          global_results_list = await Backend_Com()
+                              .get_search_data(global_search_data);
+                          setState(() {});
+                        },
+                        color: global_color_1,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: _width_2,
+                          padding: const EdgeInsets.all(15),
                           child: Text(
-                            "anwenden",
-                            style: TextStyle(color: Colors.white),
+                            global_language == Global_Language.ger
+                                ? "anwenden"
+                                : "apply",
+                            style: TextStyle(color: Colors.white, fontSize: 25),
                           ),
-                          color: global_color_highlight_1,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
@@ -198,7 +308,7 @@ class _Search_Result_Page_List_ElementState
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         color: global_color_background_1,
-        border: Border.all(color: global_color_highlight_1),
+        border: Border.all(color: global_color_4),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),

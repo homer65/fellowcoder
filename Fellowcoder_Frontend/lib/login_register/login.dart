@@ -28,15 +28,17 @@ class _LoginState extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            "Login",
-            style: TextStyle(fontSize: 30),
+            global_language == Global_Language.ger ? "Login" : "Login",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Own_Textinput_V1(
                 init_text: _e_mail,
-                label: "E-Mail",
+                label: global_language == Global_Language.ger
+                    ? "E-Mail"
+                    : "E-Mail",
                 on_changed: (value) {
                   _e_mail = value;
                 },
@@ -44,17 +46,19 @@ class _LoginState extends State<Login> {
               FlatButton(
                   onPressed: () {},
                   child: Text(
-                    "noch kein Profil?",
+                    global_language == Global_Language.ger
+                        ? "noch kein Profil?"
+                        : "no profile yet?",
                     style: TextStyle(fontSize: 12),
-                  ))
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
+                  )),
+              SizedBox(
+                height: 10,
+              ),
               Own_Textinput_V1(
                 init_text: _passwort,
-                label: "Passwort",
+                label: global_language == Global_Language.ger
+                    ? "Passwort"
+                    : "Password",
                 obscure: true,
                 on_changed: (value) {
                   _passwort = value;
@@ -63,10 +67,16 @@ class _LoginState extends State<Login> {
               FlatButton(
                   onPressed: () {},
                   child: Text(
-                    "Passwort vergessen?",
+                    global_language == Global_Language.ger
+                        ? "Passwort vergessen?"
+                        : "Password forgotten?",
                     style: TextStyle(fontSize: 12),
                   ))
             ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [],
           ),
           _loading
               ? CircularProgressIndicator(
@@ -74,7 +84,7 @@ class _LoginState extends State<Login> {
                       AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
                 )
               : RaisedButton(
-                  color: global_color_highlight_1,
+                  color: global_color_1,
                   onPressed: () async {
                     setState(() {
                       _loading = true;
@@ -89,7 +99,9 @@ class _LoginState extends State<Login> {
                     } on Exception catch (e) {
                       Scaffold.of(context).showSnackBar(SnackBar(
                         content: Text(
-                          "Eingaben überprüfen.",
+                          global_language == Global_Language.ger
+                              ? "Eingaben überprüfen."
+                              : "Check inputs.",
                           textAlign: TextAlign.center,
                         ),
                         duration: Duration(milliseconds: 1500),
@@ -99,9 +111,18 @@ class _LoginState extends State<Login> {
                       _loading = false;
                     });
                   },
-                  child: Text(
-                    "Login",
-                    style: TextStyle(color: Colors.white),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 300,
+                    height: 50,
+                    child: Text(
+                        global_language == Global_Language.ger
+                            ? "Login"
+                            : "Login",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
                   ),
                 )
         ],

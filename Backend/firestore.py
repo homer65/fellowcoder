@@ -110,14 +110,14 @@ class Firestore:
         benutzer = benutzer_ref.stream()
         for doc in benutzer:
             data = doc.to_dict()
-            data["Id"] = doc.id
+            data["Id"] = doc.id 
             if not pseudonym == doc.id:
                 if self.test_suchkriterien(data,country,coding_languages,search_text): erg[doc.id] = data
         return erg
     
     def test_suchkriterien(self,data,country,coding_languages,search_text):
         erg = True
-        if not country == "None":
+        if not country == "None" and not country == "All":
             try:
                 if not data["land"] == country: erg = False
             except:

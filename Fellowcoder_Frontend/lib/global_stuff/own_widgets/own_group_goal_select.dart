@@ -1,6 +1,7 @@
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:flutter/material.dart';
 
+// -----------------------------------------------------------------------------
 enum Group_Goal_Select { team, forum, discussion }
 
 class Group_Goal_Select_Info {
@@ -14,15 +15,20 @@ final Map<Group_Goal_Select, Group_Goal_Select_Info>
   Group_Goal_Select.forum: Group_Goal_Select_Info(name: "Forum"),
   Group_Goal_Select.discussion: Group_Goal_Select_Info(name: "Diskussion"),
 };
+// -----------------------------------------------------------------------------
 
 class Own_Group_Goal_Select extends StatefulWidget {
+  double width;
+  double height;
   bool greyed_out;
   Group_Goal_Select init_ggs;
   Function(Group_Goal_Select) on_change;
   Own_Group_Goal_Select(
       {this.init_ggs = Group_Goal_Select.team,
       this.on_change,
-      this.greyed_out = false});
+      this.greyed_out = false,
+      this.width = 300,
+      this.height = 50});
   @override
   _Own_Group_Goal_SelectState createState() => _Own_Group_Goal_SelectState();
 }
@@ -37,10 +43,10 @@ class _Own_Group_Goal_SelectState extends State<Own_Group_Goal_Select> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5),
-      width: 300,
-      height: 50,
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      width: widget.width,
+      height: widget.greyed_out ? 0 : widget.height,
       child: Stack(
         children: [
           DropdownButton<Group_Goal_Select>(
@@ -70,7 +76,7 @@ class _Own_Group_Goal_SelectState extends State<Own_Group_Goal_Select> {
               return DropdownMenuItem<Group_Goal_Select>(
                 value: value,
                 child: SizedBox(
-                  width: 270,
+                  width: widget.width - 20,
                   child: Row(
                     children: [
                       SizedBox(
@@ -86,13 +92,13 @@ class _Own_Group_Goal_SelectState extends State<Own_Group_Goal_Select> {
               );
             }).toList(),
           ),
-          widget.greyed_out
+          /*widget.greyed_out
               ? Container(
-                  width: 300,
+                  width: widget.width,
                   height: 50,
                   color: Colors.grey.withOpacity(0.5),
                 )
-              : Container(),
+              : Container(),*/
         ],
       ),
     );

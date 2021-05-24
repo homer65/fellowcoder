@@ -1,6 +1,7 @@
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:flutter/material.dart';
 
+// -----------------------------------------------------------------------------
 enum Group_Person_Select { group, person }
 
 class Group_Person_Select_Info {
@@ -13,12 +14,18 @@ final Map<Group_Person_Select, Group_Person_Select_Info>
   Group_Person_Select.group: Group_Person_Select_Info(name: "Gruppe"),
   Group_Person_Select.person: Group_Person_Select_Info(name: "Person"),
 };
+// -----------------------------------------------------------------------------
 
 class Own_Group_Person_Select extends StatefulWidget {
   Group_Person_Select init_gps;
+  double width;
+  double height;
   Function(Group_Person_Select) on_change;
   Own_Group_Person_Select(
-      {this.init_gps = Group_Person_Select.person, this.on_change});
+      {this.init_gps = Group_Person_Select.person,
+      this.on_change,
+      this.width = 300,
+      this.height = 50});
   @override
   _Own_Group_Person_SelectState createState() =>
       _Own_Group_Person_SelectState();
@@ -35,21 +42,20 @@ class _Own_Group_Person_SelectState extends State<Own_Group_Person_Select> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(5),
-        width: 300,
+        width: widget.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(
-              width: 140,
-              height: 50,
+              width: (widget.width - 10) / 2,
+              height: widget.height,
               child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
                         return gps == Group_Person_Select.person
-                            ? global_color_highlight_2
-                            : global_color_highlight_1;
+                            ? global_color_1.withOpacity(0.8)
+                            : global_color_4.withOpacity(0.8);
                       },
                     ),
                   ),
@@ -59,18 +65,20 @@ class _Own_Group_Person_SelectState extends State<Own_Group_Person_Select> {
                     });
                     widget.on_change(gps);
                   },
-                  child: Text("Person")),
+                  child: Text(global_language == Global_Language.ger
+                      ? "Person"
+                      : "Person")),
             ),
             SizedBox(
-              width: 140,
-              height: 50,
+              width: (widget.width - 10) / 2,
+              height: widget.height,
               child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
                         return gps == Group_Person_Select.group
-                            ? global_color_highlight_2
-                            : global_color_highlight_1;
+                            ? global_color_1.withOpacity(0.8)
+                            : global_color_4.withOpacity(0.8);
                       },
                     ),
                   ),
@@ -80,7 +88,9 @@ class _Own_Group_Person_SelectState extends State<Own_Group_Person_Select> {
                     });
                     widget.on_change(gps);
                   },
-                  child: Text("Gruppe")),
+                  child: Text(global_language == Global_Language.ger
+                      ? "Gruppe"
+                      : "Group")),
             ),
           ],
         )

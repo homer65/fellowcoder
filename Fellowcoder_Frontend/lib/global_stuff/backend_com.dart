@@ -30,6 +30,31 @@ class Backend_Com {
     return _storage_image;
   }
 
+// START interactions ----------------------------------------------------------
+  Future<List<DB_User>> get_search_data(
+    Map<String, dynamic> search_data,
+  ) async {
+    String url = _be_url + "/get_search_data";
+    Map<String, dynamic> data = search_data;
+    Map _response1 = (await Backend_Com().postdata(url, jsonEncode(data)));
+    List<DB_User> _response = [];
+    _response1.values.forEach((value) {
+      _response.add(DB_User.fromJson(value));
+    });
+    /*_response = [
+      DB_User(
+          name: "Testnutzer1",
+          sprachen: ["C#"],
+          land: "Deutschland",
+          beschreibungstext: "asdyxc"),
+      DB_User(name: "Testnutzer2"),
+      DB_User(name: "Testnutzer3"),
+      DB_User(name: "Testnutzer"),
+      DB_User(name: "Testnutzer"),
+    ];*/
+    return _response;
+  }
+
   Future create_user() async {
     String url = _be_url + "/register.py";
     Map<String, dynamic> data = {
@@ -61,46 +86,6 @@ class Backend_Com {
     }
     Map<String, dynamic> data = {"feld": feld, "wert": wert};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    return _response;
-  }
-
-  Future<List<DB_User>> get_search_data(
-    Map<String, dynamic> search_data,
-  ) async {
-    String url = _be_url + "/get_search_results.py";
-    Map<String, dynamic> data = search_data;
-    //print(data);
-    Map _response1 = (await Backend_Com().postdata(url, jsonEncode(data)));
-    //print(_response1);
-    List<DB_User> _response = [];
-    _response1.values.forEach((value) {
-      _response.add(DB_User.fromJson(value));
-    });
-    /*_response = [
-      DB_User(
-          name: "Testnutzer1",
-          sprachen: ["C#"],
-          land: "Deutschland",
-          beschreibungstext: "asdyxc"),
-      DB_User(name: "Testnutzer2"),
-      DB_User(name: "Testnutzer3"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer"),
-      DB_User(name: "Testnutzer")
-    ];*/
     return _response;
   }
 
@@ -137,4 +122,5 @@ class Backend_Com {
     });
     return _response_format;
   }
+// END interactions ----------------------------------------------------------
 }
