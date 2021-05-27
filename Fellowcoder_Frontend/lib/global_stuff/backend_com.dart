@@ -56,13 +56,13 @@ class Backend_Com {
   }
 
   Future create_user() async {
-    String url = _be_url + "/register.py";
+    String url = _be_url + "/create_user";
     Map<String, dynamic> data = {
       "name": null,
       "bildurl": null,
       "bild_name": null,
       "geburtsdatum": null,
-      "land": "Deutschland",
+      "land": "Germany",
       "beschreibungstext": null,
       "sprachen": [],
       "registriert": DateTime.now().toString(),
@@ -73,7 +73,7 @@ class Backend_Com {
   }
 
   Future<DB_User> get_user() async {
-    String url = _be_url + "/login.py";
+    String url = _be_url + "/get_user";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     return DB_User.fromJson(_response["detail"]);

@@ -11,16 +11,18 @@ String global_active_route = "/";
 enum Usertype { visitor, user }
 Usertype global_usertype = Usertype.visitor;
 
-DB_User global_user_data;
-Map<String, dynamic> global_search_data;
-List<DB_User> global_results_list;
-
 StreamController<bool> global_rebuild_controller =
     StreamController<bool>.broadcast();
 
 // Firebase Storage Bucket Link
 final String firebase_bucket_link =
     "gs://fellowcoder-org-dev.appspot.com"; // "gs://fellowcoder-org-dev.appspot.com" // "gs://fellowcoder-org.appspot.com"
+
+//Global Data START--------------------------------------------------------------------------
+DB_User global_user_data;
+Map<String, dynamic> global_search_data;
+List<DB_User> global_results_list;
+//Global Data END--------------------------------------------------------------------------
 
 //Authentication START--------------------------------------------------------------------------
 final FirebaseAuth auth_firebase = FirebaseAuth.instance;

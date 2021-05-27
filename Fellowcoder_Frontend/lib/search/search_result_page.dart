@@ -270,14 +270,29 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
                   global_results_list == null ? 0 : global_results_list.length,
             ),
           ),*/
-          SliverGrid.count(
+          /*SliverGrid.count(
             crossAxisCount: max(1, (_screen_size.width / 300).toInt()),
             childAspectRatio: 0.9,
             children: [
               for (DB_User i in global_results_list)
                 Search_Result_Page_List_Element(i)
             ],
-          ),
+          ),*/
+          SliverList(
+              delegate: SliverChildListDelegate([
+            Center(
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                children: [
+                  for (DB_User i in global_results_list)
+                    Search_Result_Page_List_Element(
+                      i,
+                      user_group: false,
+                    )
+                ],
+              ),
+            ),
+          ])),
         ],
       ),
     );
@@ -286,7 +301,8 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
 
 class Search_Result_Page_List_Element extends StatefulWidget {
   DB_User result_user;
-  Search_Result_Page_List_Element(this.result_user);
+  bool user_group; // true = group
+  Search_Result_Page_List_Element(this.result_user, {this.user_group = false});
   @override
   _Search_Result_Page_List_ElementState createState() =>
       _Search_Result_Page_List_ElementState();
@@ -294,9 +310,15 @@ class Search_Result_Page_List_Element extends StatefulWidget {
 
 class _Search_Result_Page_List_ElementState
     extends State<Search_Result_Page_List_Element> {
+  String _country_flag = "";
   @override
   void initState() {
     super.initState();
+    try {
+      _country_flag = global_country_info.values
+          .firstWhere((element) => element.name == widget.result_user.land)
+          .icon;
+    } catch (e) {}
   }
 
   @override
@@ -304,7 +326,7 @@ class _Search_Result_Page_List_ElementState
     return Container(
       margin: EdgeInsets.all(10),
       width: 300,
-      //height: 100,
+      height: 350,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         color: global_color_background_1,
@@ -318,47 +340,162 @@ class _Search_Result_Page_List_ElementState
           ),
         ],
       ),
-      child: FlatButton(
+      child: TextButton(
+        style: TextButton.styleFrom(
+            padding: EdgeInsets.all(0),
+            textStyle: TextStyle(color: Colors.black)),
         onPressed: () {
           Navigator.of(context).pushNamed(Main_Profile.route,
               arguments: {"userview": true, "data": widget.result_user});
         },
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Basic_Image(
-                    widget.result_user.bildurl,
-                    margin: EdgeInsets.all(0),
-                    padding: EdgeInsets.all(0),
-                    width: 80,
-                    height: 80,
-                    border_radius: BorderRadius.circular(40),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Text(widget.result_user.name == null
-                        ? "NULL"
-                        : widget.result_user.name),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Own_Coding_Language_Selection(
-                    coding_language_list: widget.result_user.sprachen,
-                    enabled: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                Basic_Image(
+                  widget.result_user.bildurl,
+                  margin: EdgeInsets.all(0),
+                  padding: EdgeInsets.all(0),
+                  width: 300,
+                  height: 250,
+                  border_radius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5)),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: global_color_4),
+                    child: Icon(
+                      widget.user_group ? Icons.group : Icons.person,
+                      color: global_color_1,
+                    ),
                   ),
                 ),
-              )
-            ],
-          ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      //color: global_color_4
+                    ),
+                    child: Image.asset(_country_flag),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 3,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  widget.result_user.name == null
+                      ? "-"
+                      : widget.result_user.name,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                Expanded(
+                  child: SizedBox(),
+                ),
+                Text(
+                  widget.result_user.geburtsdatum == null
+                      ? "-"
+                      : (DateTime.now().year -
+                              widget.result_user.geburtsdatum.year)
+                          .toString(),
+                  style: TextStyle(color: Colors.black),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child:
+                    /*Own_Coding_Language_Selection(
+                  coding_language_list: widget.result_user.sprachen,
+                  enabled: false,
+                ),*/
+                    Center(
+                  child: Wrap(
+                    direction: Axis.vertical,
+                    alignment: WrapAlignment.start,
+                    children: [
+                      for (String i in widget.result_user.sprachen)
+                        Coding_Language_Element(i)
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class Coding_Language_Element extends StatefulWidget {
+  String coding_language;
+  Coding_Language_Element(this.coding_language);
+  @override
+  _Coding_Language_ElementState createState() =>
+      _Coding_Language_ElementState();
+}
+
+class _Coding_Language_ElementState extends State<Coding_Language_Element> {
+  String _icon = "";
+  String _name = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _name = widget.coding_language;
+    try {
+      _icon = global_coding_language_info.values
+          .firstWhere((element) => element.name == widget.coding_language)
+          .icon;
+    } catch (e) {}
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      height: 25,
+      width: 80,
+      child: Row(
+        children: [
+          Image.asset(_icon),
+          SizedBox(
+            width: 3,
+          ),
+          Text(
+            _name,
+            style: TextStyle(color: Colors.black),
+          )
+        ],
       ),
     );
   }

@@ -32,7 +32,7 @@ class _HeaderState extends State<Header> {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-          //color: Colors.grey,
+          color: global_color_1.withOpacity(0.7),
           border: Border(bottom: BorderSide(color: Colors.black, width: 1.0))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

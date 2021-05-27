@@ -115,8 +115,7 @@ class _RegisterState extends State<Register> {
           ),
           _loading
               ? CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
+                  valueColor: AlwaysStoppedAnimation<Color>(global_color_1),
                 )
               : RaisedButton(
                   color: global_color_1,

@@ -80,8 +80,7 @@ class _LoginState extends State<Login> {
           ),
           _loading
               ? CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
+                  valueColor: AlwaysStoppedAnimation<Color>(global_color_1),
                 )
               : RaisedButton(
                   color: global_color_1,

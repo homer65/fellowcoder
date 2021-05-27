@@ -30,6 +30,7 @@ def controller(name):
     elif name == "chateintrag_daten_lesen.py": erg = chateintrag_daten_lesen()
     return erg """
 
+# START other functions --------------------------------------------------------------------------------------------------------------------
 def get_storage_image(image):
     # START possible solution to prohibit a backend error by loading an event incorrectly --------------
     if image == "" or image == None:
@@ -61,7 +62,7 @@ def get_uid():
     else:
         user = auth.verify_id_token(id_token)
         return user["uid"]
-
+# END other functions --------------------------------------------------------------------------------------------------------------------
 
 
 # START interactions --------------------------------------------------------------------------------------------------------------------
@@ -87,18 +88,18 @@ def get_search_data():
     erg = fs.suchen(country,coding_languages,search_text,pseudonym)
     return json.dumps(erg,default=str)
 
-    
-def get_request_data():
-    erg = json.loads(request.data);
-    if debug: print("Debug:get_data:01: ",erg)
-    return erg
-    
-def aendern():
+@app.route('/create_user', methods=["POST", "GET"])
+def create_user():
     pseudonym = get_uid()
+    if pseudonym == None: return '{"return":"nok"}'
     data = get_request_data()
-    return fs.aendern(pseudonym, data["feld"], data["wert"])      
+    data["registriert"] = url_to_date(data["registriert"])
+    data["lastlogin"] = url_to_date(data["lastlogin"])
+    fs.set_Pseudonym(pseudonym, data)
+    return '{"return":"ok"}'
 
-def login():
+@app.route('/get_user', methods=["POST", "GET"])
+def get_user():
     pseudonym = get_uid()
     if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
     if not fs.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
@@ -110,15 +111,21 @@ def login():
     erg = json.dumps(dict_erg, default=str, indent = 4)
     return erg
 
-
-def register():
+    
+def get_request_data():
+    erg = json.loads(request.data);
+    if debug: print("Debug:get_data:01: ",erg)
+    return erg
+    
+def aendern():
     pseudonym = get_uid()
-    if pseudonym == None: return 
     data = get_request_data()
-    data["registriert"] = url_to_date(data["registriert"])
-    data["lastlogin"] = url_to_date(data["lastlogin"])
-    fs.set_Pseudonym(pseudonym, data)
-    return '{"return":"ok"}'
+    return fs.aendern(pseudonym, data["feld"], data["wert"])      
+
+
+
+
+
 
 
 
@@ -151,7 +158,6 @@ def chateintrag_daten_lesen():
     chatid = data["chat_id"]
     chat = fs.getChat(chatid)
     return json.dumps(chat,default=str)
-
 # END interactions --------------------------------------------------------------------------------------------------------------------
 
 

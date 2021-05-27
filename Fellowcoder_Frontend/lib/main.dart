@@ -50,7 +50,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   void initialise() async {
-    /*FirebaseFirestore firestore = FirebaseFirestore.instance; // init firestore
+    FirebaseFirestore firestore = FirebaseFirestore.instance; // init firestore
     auth_firebase.authStateChanges().listen((User user) async {
       if (user == null && global_usertype != Usertype.visitor) {
         //print('User is currently signed out!');
@@ -72,7 +72,7 @@ class _MainState extends State<Main> {
           global_usertype = Usertype.user;
         });
       }
-    });*/
+    });
   }
 
   @override

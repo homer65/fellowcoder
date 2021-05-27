@@ -21,7 +21,7 @@ class _FooterState extends State<Footer> {
       height: 25,
       width: _screen_size.width,
       decoration: BoxDecoration(
-          //color: Colors.grey,
+          color: global_color_1.withOpacity(0.7),
           border: Border(top: BorderSide(color: Colors.black, width: 1.0))),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,

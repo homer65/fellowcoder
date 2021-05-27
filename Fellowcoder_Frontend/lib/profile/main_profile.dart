@@ -227,7 +227,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                                     .pushNamed(Chat_View.route);
                               },
                               child: Text("Chat"),
-                              color: global_color_4,
+                              color: global_color_1,
                             )
                           : Container(),
                       Own_Submittable_Text_Input(
