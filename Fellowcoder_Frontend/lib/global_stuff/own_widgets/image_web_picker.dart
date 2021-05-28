@@ -24,6 +24,7 @@ class Image_Web_Picker extends StatefulWidget {
   //Alignment delete_icon_alignment;
   String
       old_image_path; // path to old image so it can be deleted and replaced no image will be deleted when this is null or an empty string
+  bool shadow;
   Image_Web_Picker({
     this.image,
     this.width = 200,
@@ -41,6 +42,7 @@ class Image_Web_Picker extends StatefulWidget {
     this.add_icon_alignment = Alignment.center,
     this.edit_icon_alignment = Alignment.topLeft,
     this.default_image_asset = "assets/images/image_default.jpeg",
+    this.shadow = false,
     /*this.delete_icon_alignment = Alignment.topRight*/
   });
   @override
@@ -135,6 +137,7 @@ class _Image_Web_PickerState extends State<Image_Web_Picker> {
                 get_image_from_storage: widget.get_image_from_storage,
                 key: widget.key,
                 default_image_asset: widget.default_image_asset,
+                shadow: widget.shadow,
               ),
               widget.image == null || widget.image == ""
                   ? Container(

@@ -76,11 +76,14 @@ class Backend_Com {
     String url = _be_url + "/get_user";
     Map<String, dynamic> data = null;
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    if (_response["return"] == "nok") {
+      return null;
+    }
     return DB_User.fromJson(_response["detail"]);
   }
 
   Future change_userdata(String feld, dynamic wert) async {
-    String url = _be_url + "/aendern.py";
+    String url = _be_url + "/change_userdata";
     if (feld == "geburtsdatum") {
       wert = wert.toString();
     }
@@ -90,14 +93,14 @@ class Backend_Com {
   }
 
   Future chateintrag_erstellen(String partner_id) async {
-    String url = _be_url + "/chateintrag_erstellen.py";
+    String url = _be_url + "/chateintrag_erstellen";
     Map<String, dynamic> data = {"Id": partner_id};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     return _response;
   }
 
   Future chatnachricht_hinzufuegen(String chat_id, String nachricht) async {
-    String url = _be_url + "/chatnachricht_hinzufuegen.py";
+    String url = _be_url + "/chatnachricht_hinzufuegen";
     Map<String, dynamic> data = {"chat_id": chat_id, "nachricht": nachricht};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     return _response;
@@ -106,7 +109,7 @@ class Backend_Com {
   Future<List<Map<String, dynamic>>> chateintrag_daten_lesen(
     String chat_id,
   ) async {
-    String url = _be_url + "/chateintrag_daten_lesen.py";
+    String url = _be_url + "/chateintrag_daten_lesen";
     Map<String, dynamic> data = {"chat_id": chat_id};
     List<dynamic> _response =
         (await Backend_Com().postdata(url, jsonEncode(data)))["messages"];

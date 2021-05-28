@@ -84,7 +84,9 @@ class _HomepageState extends State<Homepage>
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
                     hintStyle: TextStyle(
-                        fontSize: 16, color: Colors.grey.withOpacity(0.7)),
+                      fontSize: 16,
+                      color: Colors.grey.withOpacity(0.7),
+                    ),
                     hintText: global_language == Global_Language.ger
                         ? "Gib einen bestimmten Namen ein oder lass es frei um alle zu finden"
                         : "Insert a certain name or leave blank to find all",

@@ -58,10 +58,15 @@ def get_image_from_storage():
 
 def get_uid():
     id_token = request.headers["id_token"]
-    if id_token == "null" : return ""
+    if id_token == "null" : return None
     else:
         user = auth.verify_id_token(id_token)
         return user["uid"]
+
+def get_request_data():
+    erg = json.loads(request.data);
+    if debug: print("Debug:get_data:01: ",erg)
+    return erg
 # END other functions --------------------------------------------------------------------------------------------------------------------
 
 
@@ -101,7 +106,7 @@ def create_user():
 @app.route('/get_user', methods=["POST", "GET"])
 def get_user():
     pseudonym = get_uid()
-    if pseudonym == None: return '{"return":"ko","detail":"Kein Pseudonym vorgegeben"}'
+    if pseudonym == None: return '{"return":"nok","detail":"Kein Pseudonym vorgegeben"}'
     if not fs.has_Pseudonym(pseudonym): return '{"return":"ko","detail":"Pseudonym existiert nicht"}'
     data = fs.get_Benutzer(pseudonym)
     data["Id"] = pseudonym
@@ -111,24 +116,13 @@ def get_user():
     erg = json.dumps(dict_erg, default=str, indent = 4)
     return erg
 
-    
-def get_request_data():
-    erg = json.loads(request.data);
-    if debug: print("Debug:get_data:01: ",erg)
-    return erg
-    
-def aendern():
+@app.route('/change_userdata', methods=["POST", "GET"])
+def change_userdata():
     pseudonym = get_uid()
     data = get_request_data()
-    return fs.aendern(pseudonym, data["feld"], data["wert"])      
+    return fs.aendern(pseudonym, data["feld"], data["wert"])
 
-
-
-
-
-
-
-
+@app.route('/chateintrag_erstellen', methods=["POST", "GET"])
 def chateintrag_erstellen():
     pseudonym = get_uid()
     data = get_request_data()
@@ -144,6 +138,7 @@ def chateintrag_erstellen():
         return '{"return":"ok"}'
     return '{"return":"ko"}'
 
+@app.route('/chatnachricht_hinzufuegen', methods=["POST", "GET"])
 def chatnachricht_hinzufuegen():
     pseudonym = get_uid()
     data = get_request_data()
@@ -152,6 +147,7 @@ def chatnachricht_hinzufuegen():
     fs.addChatNachricht(pseudonym,chatid,nachricht)
     return '{"return":"ok"}'
 
+@app.route('/chateintrag_daten_lesen', methods=["POST", "GET"])
 def chateintrag_daten_lesen():
     # pseudonym = get_uid()
     data = get_request_data()

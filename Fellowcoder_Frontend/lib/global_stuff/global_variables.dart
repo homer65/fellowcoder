@@ -31,6 +31,8 @@ final FirebaseAuth auth_firebase = FirebaseAuth.instance;
 //Color variables START-----------------------------------------------------------------------
 Color global_color_background_1 = Color.fromRGBO(250, 250, 250, 1);
 Color global_color_1 = Color.fromRGBO(220, 220, 100, 1);
+Color global_color_1_1 = Color.fromRGBO(200, 200, 80, 1);
+Color global_color_1_2 = Color.fromRGBO(250, 250, 130, 1);
 Color global_color_2 = Color.fromRGBO(192, 242, 97, 1);
 Color global_color_3 = Color.fromRGBO(204, 204, 204, 1);
 Color global_color_4 = Color.fromRGBO(138, 138, 138, 1);

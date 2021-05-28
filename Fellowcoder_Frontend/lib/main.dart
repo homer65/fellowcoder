@@ -52,6 +52,7 @@ class _MainState extends State<Main> {
   void initialise() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance; // init firestore
     auth_firebase.authStateChanges().listen((User user) async {
+      //print(user);
       if (user == null && global_usertype != Usertype.visitor) {
         //print('User is currently signed out!');
         try {
@@ -65,7 +66,16 @@ class _MainState extends State<Main> {
         if (global_user_data == null) {
           global_user_data =
               DB_User(); // prevents requesting the userdata again when the listener fires several times
-          global_user_data = await Backend_Com().get_user();
+          var _user_data = await Backend_Com().get_user();
+          if (_user_data == null) {
+            logout();
+            setState(() {
+              global_usertype = Usertype.visitor;
+            });
+            return;
+          } else {
+            global_user_data = await Backend_Com().get_user();
+          }
         }
         global_rebuild_controller.add(true);
         setState(() {

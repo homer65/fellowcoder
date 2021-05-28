@@ -124,7 +124,7 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
     return Container(
         height: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.2),
+          color: global_color_4.withOpacity(0.2),
           border: Border(
             right: BorderSide(width: _on_mobile ? 0 : 1.0, color: Colors.black),
           ),
@@ -137,51 +137,64 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
             : ListView(
                 children: [
                   for (Map<String, dynamic> element in global_user_data.chats)
-                    Container(
-                      height: 60,
-                      margin: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            width: 1.0,
-                            color: Colors.black,
-                          ),
-                          bottom: BorderSide(
-                            width: 1.0,
-                            color: Colors.black,
-                          ),
+                    TextButton(
+                      style: ButtonStyle(
+                          textStyle: MaterialStateProperty.all(
+                              TextStyle(color: Colors.black))),
+                      onPressed: () {
+                        widget.selected_chat(element["chat_id"]);
+                      },
+                      child: Container(
+                        height: 60,
+                        margin: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              bottomLeft: Radius.circular(30),
+                              topRight: Radius.circular(5),
+                              bottomRight: Radius.circular(5)),
+                          color: element["chat_id"] == widget.active_chat
+                              ? global_color_1
+                              : global_color_4.withOpacity(0.7),
+                          /*border: Border(
+                            top: BorderSide(
+                              width: 1.0,
+                              color: Colors.black,
+                            ),
+                            bottom: BorderSide(
+                              width: 1.0,
+                              color: Colors.black,
+                            ),
+                          ),*/
                         ),
-                      ),
-                      child: FlatButton(
-                        color: element["chat_id"] == widget.active_chat
-                            ? Colors.orangeAccent.withOpacity(0.5)
-                            : Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        child: Stack(
                           children: [
-                            Basic_Image(
-                              "assets/images/image_default.jpeg",
-                              padding: EdgeInsets.all(5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Basic_Image(
+                                  "assets/images/image_default.jpeg",
+                                  padding: EdgeInsets.all(5),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(element["partner_name"],
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold)),
+                              ],
                             ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text(element["partner_name"]),
-                            Expanded(
-                              child: SizedBox(),
-                            ),
-                            Text(
-                              "letzte Zeit / Datum",
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            SizedBox(
-                              width: 5,
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Text(
+                                "letzte Zeit / Datum  ",
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.black),
+                              ),
                             ),
                           ],
                         ),
-                        onPressed: () {
-                          widget.selected_chat(element["chat_id"]);
-                        },
                       ),
                     )
                 ],
@@ -239,70 +252,72 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.orangeAccent.withOpacity(0.005),
         child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                controller: _scroll_controller,
-                children: [
-                  for (Map<String, dynamic> e in _chat)
-                    Chat_View_Messages_Element(e)
-                ],
+      children: [
+        Expanded(
+          child: ListView(
+            controller: _scroll_controller,
+            children: [
+              for (Map<String, dynamic> e in _chat)
+                Chat_View_Messages_Element(e)
+            ],
+          ),
+        ),
+        Container(
+          height: 80,
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              color: global_color_1.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(40)),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 20,
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.5),
-                border: Border(
-                  top: BorderSide(width: 1.0, color: Colors.black),
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _message_controller,
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                      hintText: global_language == Global_Language.ger
+                          ? "Nachricht"
+                          : "Message"),
                 ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: _message_controller,
-                      maxLines: 2,
-                      decoration: InputDecoration(hintText: "Nachricht"),
-                    ),
-                  )),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    width: 70,
-                    height: 70,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+              )),
+              Container(
+                //padding: EdgeInsets.all(5),
+                width: 80,
+                height: 80,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                  child: Icon(Icons.send, color: Colors.black //Colors.white,
                       ),
-                      child:
-                          Icon(Icons.send, color: Colors.black //Colors.white,
-                              ),
-                      color: Colors.greenAccent
-                          .withOpacity(1), //global_color_highlight_1,
-                      onPressed: () async {
-                        await Backend_Com().chatnachricht_hinzufuegen(
-                            widget.selected_chat, _message_controller.text);
-                        Map<String, String> _temp = {
-                          "time": DateTime.now().toString(),
-                          "user_id": global_user_data.id,
-                          "text": _message_controller.text
-                        };
-                        setState(() {});
-                        _chat.add(_temp);
-                        _message_controller.text = "";
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((_) => _scroll_down());
-                      },
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ));
+                  color: global_color_1,
+                  onPressed: () async {
+                    await Backend_Com().chatnachricht_hinzufuegen(
+                        widget.selected_chat, _message_controller.text);
+                    Map<String, String> _temp = {
+                      "time": DateTime.now().toString(),
+                      "user_id": global_user_data.id,
+                      "text": _message_controller.text
+                    };
+                    setState(() {});
+                    _chat.add(_temp);
+                    _message_controller.text = "";
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((_) => _scroll_down());
+                  },
+                ),
+              )
+            ],
+          ),
+        )
+      ],
+    ));
   }
 }
 
@@ -340,8 +355,8 @@ class _Chat_View_Messages_ElementState
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: _own_message
-                ? Colors.greenAccent.withOpacity(0.4)
-                : Colors.orangeAccent.withOpacity(0.4),
+                ? global_color_1.withOpacity(0.9)
+                : global_color_4.withOpacity(0.4),
           ),
           child: Stack(
             children: [

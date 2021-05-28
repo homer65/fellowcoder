@@ -16,6 +16,7 @@ class Basic_Image extends StatefulWidget {
   bool maximize;
   BoxFit fit;
   Widget child;
+  bool shadow;
 
   Basic_Image(this.image,
       {this.width /* = 200*/,
@@ -29,7 +30,8 @@ class Basic_Image extends StatefulWidget {
       this.default_image_asset = "assets/images/image_default.jpeg",
       this.maximize = false,
       this.fit = BoxFit.cover,
-      this.child = const SizedBox()});
+      this.child = const SizedBox(),
+      this.shadow = false});
 
   @override
   _Basic_ImageState createState() => _Basic_ImageState();
@@ -46,6 +48,7 @@ class _Basic_ImageState extends State<Basic_Image> {
   @override
   void initState() {
     super.initState();
+
     if (widget.get_image_from_storage) {
       initialise();
     } else {
@@ -163,6 +166,25 @@ class _Basic_ImageState extends State<Basic_Image> {
       widget.border_radius = BorderRadius.circular(100);
     }
     return AnimatedContainer(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: widget.shadow
+            ? [
+                BoxShadow(
+                  color: global_color_1_1.withOpacity(0.6),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(5, 5), // changes position of shadow
+                ),
+                BoxShadow(
+                  color: global_color_1_2.withOpacity(0.6),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(-5, -5), // changes position of shadow
+                ),
+              ]
+            : [],
+      ),
       duration: widget.animation_duration,
       padding: widget.padding,
       margin: widget.margin,
@@ -175,11 +197,13 @@ class _Basic_ImageState extends State<Basic_Image> {
                   onTap: () async {
                     await _maximize();
                   },
-                  child: SizedBox(
-                    width: widget.width,
-                    height: widget.height,
-                    child: ClipRRect(
-                        borderRadius: widget.border_radius, child: _image()),
+                  child: ClipRRect(
+                    borderRadius: widget.border_radius,
+                    child: SizedBox(
+                      width: widget.width,
+                      height: widget.height,
+                      child: _image(),
+                    ),
                   ))
               : SizedBox(
                   width: widget.width,

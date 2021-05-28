@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Fellowcoder_Frontend/global_stuff/DB_User.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
@@ -28,6 +30,9 @@ class _Main_ProfileState extends State<Main_Profile> {
   TextEditingController _name_controller = TextEditingController();
   TextEditingController _description_controller = TextEditingController();
   bool _loading = true;
+  StreamSubscription _subscription;
+  String _age = "-";
+  String _description = "-";
 
   Future<void> _change_data(
       Profile_Change_Data pcd, BuildContext n_context) async {
@@ -84,7 +89,11 @@ class _Main_ProfileState extends State<Main_Profile> {
     if (widget.userview) {
       _user_data = widget.data;
     } else {
-      print(global_user_data.name);
+      //print(global_user_data.name);
+      if (global_user_data == null) {
+        _loading = true;
+        return;
+      }
       if (global_user_data.name == null) {
         _loading = true;
         return;
@@ -94,17 +103,31 @@ class _Main_ProfileState extends State<Main_Profile> {
     }
     _name_controller.text = _user_data.name;
     _description_controller.text = _user_data.beschreibungstext;
+    if (_user_data.geburtsdatum != null) {
+      _age = (DateTime.now().year - _user_data.geburtsdatum.year).toString();
+    }
+    if (_user_data.beschreibungstext != null &&
+        _user_data.beschreibungstext != "") {
+      _description = _user_data.beschreibungstext;
+    }
+
     _loading = false;
   }
 
   @override
   void initState() {
     super.initState();
-    global_rebuild_controller.stream.listen((data) {
+    _subscription = global_rebuild_controller.stream.listen((data) {
       initialise();
       setState(() {});
     });
     initialise();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -122,73 +145,89 @@ class _Main_ProfileState extends State<Main_Profile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: _on_mobile ? 10 : 10,
-                ),
-                widget.userview
-                    ? Container()
-                    : SizedBox(
-                        width: _screen_size.width,
-                        child: Wrap(
-                          alignment: WrapAlignment.spaceEvenly,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                    width: 250,
-                                    child: Own_Textinput_V1(
-                                      init_text:
-                                          auth_firebase.currentUser.email,
-                                      label: "E-Mail",
-                                      enabled: false,
-                                    )),
-                                IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: () {
-                                      _change_data(
-                                          Profile_Change_Data.email, context);
-                                    })
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                    width: 250,
-                                    child: Own_Textinput_V1(
-                                      init_text: "xxxxxxxxx",
-                                      label: "Passwort",
-                                      enabled: false,
-                                      obscure: true,
-                                    )),
-                                IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: () {
-                                      _change_data(Profile_Change_Data.password,
-                                          context);
-                                    })
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                SizedBox(
-                  height: _on_mobile ? 30 : 60,
-                ),
-                SizedBox(
-                  width: 300,
+                Container(
+                  color: global_color_1.withOpacity(0.3),
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: _on_mobile ? 10 : 10,
+                      ),
+                      widget.userview
+                          ? Container()
+                          : SizedBox(
+                              width: _screen_size.width,
+                              child: Wrap(
+                                alignment: WrapAlignment.spaceEvenly,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                          width: 250,
+                                          child: Own_Textinput_V1(
+                                            init_text:
+                                                auth_firebase.currentUser.email,
+                                            label: global_language ==
+                                                    Global_Language.ger
+                                                ? "E-Mail"
+                                                : "E-Mail",
+                                            enabled: false,
+                                          )),
+                                      IconButton(
+                                          icon: Icon(Icons.edit),
+                                          onPressed: () {
+                                            _change_data(
+                                                Profile_Change_Data.email,
+                                                context);
+                                          })
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                          width: 250,
+                                          child: Own_Textinput_V1(
+                                            init_text: "xxxxxxxxx",
+                                            label: global_language ==
+                                                    Global_Language.ger
+                                                ? "Passwort"
+                                                : "Password",
+                                            enabled: false,
+                                            obscure: true,
+                                          )),
+                                      IconButton(
+                                          icon: Icon(Icons.edit),
+                                          onPressed: () {
+                                            _change_data(
+                                                Profile_Change_Data.password,
+                                                context);
+                                          })
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                      widget.userview
+                          ? SizedBox()
+                          : SizedBox(
+                              height: _on_mobile ? 30 : 60,
+                            ),
                       widget.userview
                           ? Basic_Image(
                               _user_data.bildurl,
                               width: 200,
                               height: 200,
+                              padding: EdgeInsets.all(0),
+                              margin: EdgeInsets.all(10),
+                              shadow: true,
                             )
                           : Image_Web_Picker(
                               key: ValueKey(_user_data.bildurl),
                               image: _user_data.bildurl,
+                              padding: EdgeInsets.all(0),
+                              margin: EdgeInsets.all(10),
+                              shadow: true,
                               old_image_path: _user_data.bild_name,
                               upload_begins: () {},
                               upload_done: (name, link) async {
@@ -212,6 +251,17 @@ class _Main_ProfileState extends State<Main_Profile> {
                                     "bild_name", _user_data.bild_name);
                               },
                             ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 300,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
                       widget.userview
                           ? RaisedButton(
                               onPressed: () async {
@@ -226,21 +276,37 @@ class _Main_ProfileState extends State<Main_Profile> {
                                 Navigator.of(context)
                                     .pushNamed(Chat_View.route);
                               },
-                              child: Text("Chat"),
+                              child: Text(global_language == Global_Language.ger
+                                  ? "Chat"
+                                  : "Chat"),
                               color: global_color_1,
                             )
                           : Container(),
-                      Own_Submittable_Text_Input(
-                        _name_controller,
-                        enabled: !widget.userview,
-                        on_changed: (value) {},
-                        submitted: (value) {
-                          Backend_Com().change_userdata("name", value);
-                          _user_data.name = value;
-                        },
-                        aborted: () {},
-                        label_text: "Name",
-                        max_lines: 1,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      widget.userview
+                          ? Text(_user_data.name,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ))
+                          : Own_Submittable_Text_Input(
+                              _name_controller,
+                              enabled: !widget.userview,
+                              on_changed: (value) {},
+                              submitted: (value) {
+                                Backend_Com().change_userdata("name", value);
+                                _user_data.name = value;
+                              },
+                              aborted: () {},
+                              label_text: global_language == Global_Language.ger
+                                  ? "Name"
+                                  : "Name",
+                              max_lines: 1,
+                            ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Own_Country_Select_Dropdown(
                         enabled: !widget.userview,
@@ -251,19 +317,46 @@ class _Main_ProfileState extends State<Main_Profile> {
                               .change_userdata("land", _user_data.land);
                         },
                       ),
-                      Text_Date_Picker(
-                        enabled: !widget.userview,
-                        onValueChanged: (value) {
-                          _user_data.geburtsdatum = value;
-                          Backend_Com().change_userdata(
-                              "geburtsdatum", _user_data.geburtsdatum);
-                        },
-                        label: "Geburtsdatum",
-                        date: _user_data.geburtsdatum == null
-                            ? DateTime.now()
-                            : _user_data.geburtsdatum,
-                        first_date:
-                            DateTime.now().subtract(Duration(days: 100000)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      widget.userview
+                          ? Text(
+                              global_language == Global_Language.ger
+                                  ? "Alter: "
+                                  : "Age: " + _age,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ))
+                          : Text_Date_Picker(
+                              enabled: !widget.userview,
+                              onValueChanged: (value) {
+                                _user_data.geburtsdatum = value;
+                                Backend_Com().change_userdata(
+                                    "geburtsdatum", _user_data.geburtsdatum);
+                              },
+                              label: global_language == Global_Language.ger
+                                  ? "Geburtsdatum"
+                                  : "Birthday",
+                              date: _user_data.geburtsdatum == null
+                                  ? DateTime.now()
+                                  : _user_data.geburtsdatum,
+                              first_date: DateTime.now()
+                                  .subtract(Duration(days: 100000)),
+                            ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        global_language == Global_Language.ger
+                            ? "Skills"
+                            : "Skills",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        height: 3,
+                        color: global_color_1,
                       ),
                       Own_Coding_Language_Selection(
                         enabled: !widget.userview,
@@ -273,17 +366,48 @@ class _Main_ProfileState extends State<Main_Profile> {
                               .change_userdata("sprachen", _user_data.sprachen);
                         },
                       ),
-                      Own_Submittable_Text_Input(
-                        _description_controller,
-                        enabled: !widget.userview,
-                        on_changed: (value) {},
-                        submitted: (value) {
-                          Backend_Com()
-                              .change_userdata("beschreibungstext", value);
-                          _user_data.beschreibungstext = value;
-                        },
-                        aborted: () {},
-                        label_text: "Beschreibung",
+                      Container(
+                        height: 3,
+                        color: global_color_1,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      widget.userview
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                    global_language == Global_Language.ger
+                                        ? "Beschreibung:"
+                                        : "personal description:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                Text(_description,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                    )),
+                              ],
+                            )
+                          : Own_Submittable_Text_Input(
+                              _description_controller,
+                              enabled: !widget.userview,
+                              on_changed: (value) {},
+                              submitted: (value) {
+                                Backend_Com().change_userdata(
+                                    "beschreibungstext", value);
+                                _user_data.beschreibungstext = value;
+                              },
+                              aborted: () {},
+                              label_text: global_language == Global_Language.ger
+                                  ? "Beschreibung"
+                                  : "personal description",
+                            ),
+                      SizedBox(
+                        height: 30,
                       ),
                     ],
                   ),
@@ -315,7 +439,9 @@ class _Main_Profile_Change_EmailState extends State<Main_Profile_Change_Email> {
               width: 250,
               child: Own_Textinput_V1(
                 init_text: auth_firebase.currentUser.email,
-                label: "neue E-Mail",
+                label: global_language == Global_Language.ger
+                    ? "neue E-Mail"
+                    : "new E-Mail",
                 enabled: true,
                 on_changed: (value) {
                   _new_email = value;
@@ -325,7 +451,7 @@ class _Main_Profile_Change_EmailState extends State<Main_Profile_Change_Email> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               RaisedButton(
-                color: Colors.greenAccent,
+                color: global_color_1,
                 onPressed: () async {
                   try {
                     await auth_firebase.currentUser.updateEmail(_new_email);
@@ -340,14 +466,18 @@ class _Main_Profile_Change_EmailState extends State<Main_Profile_Change_Email> {
                     ));
                   }
                 },
-                child: Text("Ändern"),
+                child: Text(global_language == Global_Language.ger
+                    ? "Ändern"
+                    : "Change"),
               ),
               RaisedButton(
-                color: Colors.orangeAccent,
+                color: global_color_4,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Abbrechen"),
+                child: Text(global_language == Global_Language.ger
+                    ? "Abbrechen"
+                    : "Cancel"),
               )
             ],
           )
@@ -375,7 +505,9 @@ class _Main_Profile_Change_PasswordState
     if (_passwort_0.length < 6) {
       Scaffold.of(widget.context).showSnackBar(SnackBar(
         content: Text(
-          "Das Passwort ist zu kurz.",
+          global_language == Global_Language.ger
+              ? "Das Passwort ist zu kurz."
+              : "The password is too short.",
           textAlign: TextAlign.center,
         ),
         duration: Duration(milliseconds: 1500),
@@ -385,7 +517,9 @@ class _Main_Profile_Change_PasswordState
     if (_passwort_0 != _passwort_1) {
       Scaffold.of(widget.context).showSnackBar(SnackBar(
         content: Text(
-          "Die Passwörter sind nicht identisch.",
+          global_language == Global_Language.ger
+              ? "Die Passwörter sind nicht identisch."
+              : "The passwords are not identical.",
           textAlign: TextAlign.center,
         ),
         duration: Duration(milliseconds: 1500),
@@ -406,7 +540,9 @@ class _Main_Profile_Change_PasswordState
               width: 250,
               child: Own_Textinput_V1(
                 obscure: true,
-                label: "neues Passwort",
+                label: global_language == Global_Language.ger
+                    ? "neues Passwort"
+                    : "new password",
                 enabled: true,
                 on_changed: (value) {
                   _passwort_0 = value;
@@ -416,7 +552,9 @@ class _Main_Profile_Change_PasswordState
               width: 250,
               child: Own_Textinput_V1(
                 obscure: true,
-                label: "Passwort bestätigen",
+                label: global_language == Global_Language.ger
+                    ? "Passwort bestätigen"
+                    : "repeat password",
                 enabled: true,
                 on_changed: (value) {
                   _passwort_1 = value;
@@ -426,7 +564,7 @@ class _Main_Profile_Change_PasswordState
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               RaisedButton(
-                color: Colors.greenAccent,
+                color: global_color_1,
                 onPressed: () async {
                   try {
                     if (_check_input()) {
@@ -445,14 +583,18 @@ class _Main_Profile_Change_PasswordState
                     ));
                   }
                 },
-                child: Text("Ändern"),
+                child: Text(global_language == Global_Language.ger
+                    ? "Ändern"
+                    : "Change"),
               ),
               RaisedButton(
-                color: Colors.orangeAccent,
+                color: global_color_4,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Abbrechen"),
+                child: Text(global_language == Global_Language.ger
+                    ? "Abbrechen"
+                    : "Cancel"),
               )
             ],
           )
