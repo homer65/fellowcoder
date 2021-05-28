@@ -144,7 +144,8 @@ def chatnachricht_hinzufuegen():
     data = get_request_data()
     chatid = data["chat_id"]
     nachricht = data["nachricht"]
-    fs.addChatNachricht(pseudonym,chatid,nachricht)
+    partner_id = data["partner_id"]
+    fs.addChatNachricht(pseudonym,chatid,partner_id,nachricht)
     return '{"return":"ok"}'
 
 @app.route('/chateintrag_daten_lesen', methods=["POST", "GET"])
@@ -154,6 +155,22 @@ def chateintrag_daten_lesen():
     chatid = data["chat_id"]
     chat = fs.getChat(chatid)
     return json.dumps(chat,default=str)
+
+@app.route('/chateintrag_loeschen', methods=["POST", "GET"])
+def chateintrag_loeschen():
+    pseudonym = get_uid()
+    data = get_request_data()
+    partner = data["partner_id"]
+    chatid = data["chat_id"]
+    ok = True
+    rc = fs.removeChatFromUser(pseudonym,chatid)
+    if not rc: ok = False
+    rc = fs.removeChatFromUser(partner,chatid)
+    if not rc: ok = False
+    if ok:
+        fs.removeChat(chatid,pseudonym)
+        return '{"return":"ok"}'
+    return '{"return":"ko"}'
 # END interactions --------------------------------------------------------------------------------------------------------------------
 
 

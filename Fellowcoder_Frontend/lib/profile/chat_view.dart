@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Fellowcoder_Frontend/global_stuff/backend_com.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
@@ -14,13 +16,15 @@ class Chat_View extends StatefulWidget {
 
 class _Chat_ViewState extends State<Chat_View> {
   String _active_chat;
+  String _partner_id;
   PageController _pc = PageController();
   bool _loading = true;
+  StreamSubscription _global_stream_sub;
 
   @override
   void initState() {
     super.initState();
-    global_rebuild_controller.stream.listen((data) {
+    _global_stream_sub = global_rebuild_controller.stream.listen((data) {
       if (global_user_data.name != null) {
         if (global_user_data.chats.length > 0) {
           _active_chat = global_user_data.chats[0]["chat_id"];
@@ -40,9 +44,22 @@ class _Chat_ViewState extends State<Chat_View> {
   }
 
   @override
+  void dispose() {
+    _global_stream_sub.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _screen_size = MediaQuery.of(context).size;
     bool _on_mobile = _screen_size.width < global_mobile_treshold;
+
+    if (global_user_data.chats.length > 0) {
+      _partner_id = global_user_data.chats.firstWhere(
+          (element) => element["chat_id"] == _active_chat)["partner_id"];
+    } else {
+      _partner_id = "";
+    }
     return _loading
         ? Center(
             child: CircularProgressIndicator(
@@ -64,7 +81,11 @@ class _Chat_ViewState extends State<Chat_View> {
                           curve: Curves.easeIn);
                     },
                   ),
-                  Chat_View_Messages(_active_chat, ValueKey(_active_chat))
+                  Chat_View_Messages(
+                      _active_chat,
+                      global_user_data.chats.firstWhere((element) =>
+                          element["chat_id"] == _active_chat)["partner_id"],
+                      ValueKey(_active_chat))
                 ],
               )
             : Row(
@@ -82,7 +103,7 @@ class _Chat_ViewState extends State<Chat_View> {
                   Expanded(
                       flex: 4,
                       child: Chat_View_Messages(
-                          _active_chat, ValueKey(_active_chat))),
+                          _active_chat, _partner_id, ValueKey(_active_chat))),
                 ],
               );
   }
@@ -97,24 +118,36 @@ class Chat_View_Select extends StatefulWidget {
 }
 
 class _Chat_View_SelectState extends State<Chat_View_Select> {
+  StreamSubscription _docstreamsub;
+  Stream documentStream;
+  bool _delete_visible = false;
+  String _delete_chat = "";
   @override
   void initState() {
     super.initState();
     //print(global_user_data.chats);
-    Stream documentStream = FirebaseFirestore.instance
+    documentStream = FirebaseFirestore.instance
         .collection('benutzer')
         .doc(global_user_data.id)
         .snapshots();
-    documentStream.listen((documentSnapshot) {
+    _docstreamsub = documentStream.listen((documentSnapshot) {
       DocumentSnapshot ds = documentSnapshot;
-      global_user_data.chats = [];
-      ds.data()["chats"].forEach((value) {
-        global_user_data.chats.add(value);
-      });
-      if (mounted) {
-        setState(() {});
+      if (global_user_data != null && ds.data()["chats"] != null) {
+        global_user_data.chats = [];
+        ds.data()["chats"].forEach((value) {
+          global_user_data.chats.add(value);
+        });
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _docstreamsub.cancel();
+    super.dispose();
   }
 
   @override
@@ -131,71 +164,158 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
         ),
         child: widget.active_chat == null
             ? Text(
-                "noch keine Chats",
+                global_language == Global_Language.ger
+                    ? "noch keine Chats"
+                    : "no chats yet",
                 textAlign: TextAlign.center,
               )
             : ListView(
                 children: [
                   for (Map<String, dynamic> element in global_user_data.chats)
-                    TextButton(
-                      style: ButtonStyle(
-                          textStyle: MaterialStateProperty.all(
-                              TextStyle(color: Colors.black))),
-                      onPressed: () {
-                        widget.selected_chat(element["chat_id"]);
-                      },
-                      child: Container(
-                        height: 60,
-                        margin: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              bottomLeft: Radius.circular(30),
-                              topRight: Radius.circular(5),
-                              bottomRight: Radius.circular(5)),
-                          color: element["chat_id"] == widget.active_chat
-                              ? global_color_1
-                              : global_color_4.withOpacity(0.7),
-                          /*border: Border(
-                            top: BorderSide(
-                              width: 1.0,
-                              color: Colors.black,
+                    Stack(
+                      children: [
+                        TextButton(
+                          style: ButtonStyle(
+                              textStyle: MaterialStateProperty.all(
+                                  TextStyle(color: Colors.black))),
+                          onPressed: () {
+                            widget.selected_chat(element["chat_id"]);
+                          },
+                          onLongPress: () {
+                            setState(() {
+                              _delete_chat = element["chat_id"];
+                              _delete_visible = true;
+                            });
+                          },
+                          child: Container(
+                            height: 60,
+                            margin: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  bottomLeft: Radius.circular(30),
+                                  topRight: Radius.circular(5),
+                                  bottomRight: Radius.circular(5)),
+                              color: element["chat_id"] == widget.active_chat
+                                  ? global_color_1
+                                  : global_color_4.withOpacity(0.7),
+                              /*border: Border(
+                                top: BorderSide(
+                                  width: 1.0,
+                                  color: Colors.black,
+                                ),
+                                bottom: BorderSide(
+                                  width: 1.0,
+                                  color: Colors.black,
+                                ),
+                              ),*/
                             ),
-                            bottom: BorderSide(
-                              width: 1.0,
-                              color: Colors.black,
-                            ),
-                          ),*/
-                        ),
-                        child: Stack(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                            child: Stack(
                               children: [
-                                Basic_Image(
-                                  "assets/images/image_default.jpeg",
-                                  padding: EdgeInsets.all(5),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Basic_Image(
+                                      element["partner_picture"],
+                                      padding: EdgeInsets.all(5),
+                                      width: 60,
+                                      height: 60,
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(element["partner_name"],
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
                                 ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(element["partner_name"],
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    element["last_message_time"] == null
+                                        ? "-"
+                                        : DateFormat('dd.MM.yyyy HH:mm').format(
+                                            string_to_date(
+                                                element["last_message_time"])),
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold)),
+                                        fontSize: 10, color: Colors.black),
+                                  ),
+                                ),
                               ],
                             ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                "letzte Zeit / Datum  ",
-                                style: TextStyle(
-                                    fontSize: 10, color: Colors.black),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                        _delete_visible && element["chat_id"] == _delete_chat
+                            ? Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                      bottomLeft: Radius.circular(30),
+                                      topRight: Radius.circular(5),
+                                      bottomRight: Radius.circular(5)),
+                                  color: Colors.redAccent.withOpacity(1),
+                                ),
+                                margin: EdgeInsets.all(4),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    IconButton(
+                                        onPressed: () async {
+                                          var _response = await Backend_Com()
+                                              .chateintrag_loeschen(
+                                                  element["chat_id"],
+                                                  element["partner_id"]);
+                                          setState(() {
+                                            global_user_data.chats.removeWhere(
+                                                (el) =>
+                                                    el["chat_id"] ==
+                                                    element["chat_id"]);
+                                            _delete_chat = "";
+                                            _delete_visible = false;
+                                          });
+                                        },
+                                        icon: Row(
+                                          children: [
+                                            Icon(Icons.delete,
+                                                color: Colors.black),
+                                          ],
+                                        )),
+                                    Text(
+                                      global_language == Global_Language.ger
+                                          ? "Chat für alle löschen"
+                                          : "delete chat for all",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    Expanded(child: SizedBox()),
+                                    IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _delete_chat = "";
+                                            _delete_visible = false;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          Icons.cancel,
+                                          color: Colors.black,
+                                        )),
+                                    Text(
+                                      global_language == Global_Language.ger
+                                          ? "abbrechen"
+                                          : "cancel",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                      ],
                     )
                 ],
               ));
@@ -204,8 +324,9 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
 
 class Chat_View_Messages extends StatefulWidget {
   String selected_chat;
+  String partner_id;
   Key key;
-  Chat_View_Messages(this.selected_chat, this.key);
+  Chat_View_Messages(this.selected_chat, this.partner_id, this.key);
   @override
   _Chat_View_MessagesState createState() => _Chat_View_MessagesState();
 }
@@ -214,6 +335,7 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
   List<Map<String, dynamic>> _chat;
   TextEditingController _message_controller = TextEditingController();
   ScrollController _scroll_controller = ScrollController();
+  StreamSubscription _docstreamsub;
 
   @override
   void initState() {
@@ -223,7 +345,7 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
         .collection('chats')
         .doc(widget.selected_chat)
         .snapshots();
-    documentStream.listen((documentSnapshot) {
+    _docstreamsub = documentStream.listen((documentSnapshot) {
       DocumentSnapshot ds = documentSnapshot;
       _chat = [];
       ds.data()["messages"].forEach((value) {
@@ -231,6 +353,12 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
       });
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    _docstreamsub.cancel();
+    super.dispose();
   }
 
   void _get_chat() async {
@@ -251,73 +379,84 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
-      children: [
-        Expanded(
-          child: ListView(
-            controller: _scroll_controller,
+    return global_user_data.chats.length > 0
+        ? Container(
+            child: Column(
             children: [
-              for (Map<String, dynamic> e in _chat)
-                Chat_View_Messages_Element(e)
-            ],
-          ),
-        ),
-        Container(
-          height: 80,
-          margin: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              color: global_color_1.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(40)),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 20,
-              ),
               Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _message_controller,
-                  maxLines: 2,
-                  decoration: InputDecoration(
-                      hintText: global_language == Global_Language.ger
-                          ? "Nachricht"
-                          : "Message"),
+                child: ListView(
+                  controller: _scroll_controller,
+                  children: [
+                    for (Map<String, dynamic> e in _chat)
+                      Chat_View_Messages_Element(e)
+                  ],
                 ),
-              )),
+              ),
               Container(
-                //padding: EdgeInsets.all(5),
-                width: 80,
                 height: 80,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40.0),
-                  ),
-                  child: Icon(Icons.send, color: Colors.black //Colors.white,
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: global_color_1.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(40)),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: _message_controller,
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                            hintText: global_language == Global_Language.ger
+                                ? "Nachricht"
+                                : "Message"),
                       ),
-                  color: global_color_1,
-                  onPressed: () async {
-                    await Backend_Com().chatnachricht_hinzufuegen(
-                        widget.selected_chat, _message_controller.text);
-                    Map<String, String> _temp = {
-                      "time": DateTime.now().toString(),
-                      "user_id": global_user_data.id,
-                      "text": _message_controller.text
-                    };
-                    setState(() {});
-                    _chat.add(_temp);
-                    _message_controller.text = "";
-                    WidgetsBinding.instance
-                        .addPostFrameCallback((_) => _scroll_down());
-                  },
+                    )),
+                    Container(
+                      //padding: EdgeInsets.all(5),
+                      width: 80,
+                      height: 80,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40.0),
+                        ),
+                        child:
+                            Icon(Icons.send, color: Colors.black //Colors.white,
+                                ),
+                        color: global_color_1,
+                        onPressed: () async {
+                          await Backend_Com().chatnachricht_hinzufuegen(
+                              widget.selected_chat,
+                              widget.partner_id,
+                              _message_controller.text);
+                          Map<String, String> _temp = {
+                            "time": DateTime.now().toString(),
+                            "user_id": global_user_data.id,
+                            "text": _message_controller.text
+                          };
+                          //_chat.add(_temp);
+                          _message_controller.text = "";
+                          WidgetsBinding.instance
+                              .addPostFrameCallback((_) => _scroll_down());
+                        },
+                      ),
+                    )
+                  ],
                 ),
               )
             ],
-          ),
-        )
-      ],
-    ));
+          ))
+        : Center(
+            child: Text(
+              global_language == Global_Language.ger
+                  ? "Such nach Programmieren mit gleichen Interessen und schreibe sie an um zusammen coole Projekte umzusetzen."
+                  : "Look for programmers with similar interests and contact them to implement cool projects together.",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          );
   }
 }
 

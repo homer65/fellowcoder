@@ -60,6 +60,7 @@ class Firestore:
     def addChatToUser(self, pseudonym, chatid, partner):
         benutzer = self.get_Benutzer(partner)
         partner_name = benutzer["name"]
+        partner_picture = benutzer["bildurl"]
         dokument_ref = self.db.collection('benutzer').document(pseudonym)
         dokument = dokument_ref.get()
         if dokument.exists:
@@ -74,7 +75,7 @@ class Firestore:
                 if testid == chatid:
                     gibtsschon = True
             if not gibtsschon:
-                chats.append({"chat_id":chatid,"partner_id":partner,"partner_name":partner_name})
+                chats.append({"chat_id":chatid,"partner_id":partner,"partner_name":partner_name,"partner_picture":partner_picture,"last_message_time":None})
                 self.db.collection('benutzer').document(pseudonym).update({"chats":chats})
                 return True
             return False
@@ -82,17 +83,60 @@ class Firestore:
     def addChat(self, chatid, user):
         self.db.collection('chats').document(chatid).set({"messages": []}) 
         return
-    
-    def addChatNachricht(self, pseudonym, chatid, nachricht):
-        dokument_ref = self.db.collection('chats').document(chatid)
+
+    def removeChatFromUser(self, user_id, chatid):
+        dokument_ref = self.db.collection('benutzer').document(user_id)
         dokument = dokument_ref.get()
         if dokument.exists:
             pydokument = dokument.to_dict()
+            chats = []
+            try:
+                chats = pydokument["chats"]
+            except:
+                pass
+            j = 0
+            for i, e in enumerate(chats):
+                if e["chat_id"] == chatid:
+                    j = i
+                    break
+            chats.pop(j)
+            self.db.collection('benutzer').document(user_id).update({"chats":chats})
+            return True
+        return False
+    
+    def removeChat(self, chatid, user):
+        self.db.collection('chats').document(chatid).delete()
+        return
+
+    def addChatNachricht(self, pseudonym, chatid, partner_id, nachricht):
+        dokument_ref = self.db.collection('chats').document(chatid)
+        dokument = dokument_ref.get()
+        jetzt = str(datetime.now())
+        if dokument.exists:
+            pydokument = dokument.to_dict()
             pyarray = pydokument["messages"]
-            jetzt = str(datetime.now())
             pyarray.append({"time":jetzt,"user_id":pseudonym,"text":nachricht})
             pydokument["messages"] = pyarray
             self.db.collection('chats').document(chatid).set(pydokument)
+        # change last message time for this chat in each users database
+        dokument_ref_1 = self.db.collection('benutzer').document(pseudonym)
+        dokument_ref_2 = self.db.collection('benutzer').document(partner_id)
+        c1 = dokument_ref_1.get().to_dict()["chats"]
+        j = 0
+        for i, e in enumerate(c1):
+            if e["chat_id"] == chatid:
+                j = i
+                break
+        c1[j]["last_message_time"] = jetzt
+        c2 = dokument_ref_2.get().to_dict()["chats"]
+        j = 0
+        for i, e in enumerate(c2):
+            if e["chat_id"] == chatid:
+                j = i
+                break
+        c2[j]["last_message_time"] = jetzt
+        self.db.collection('benutzer').document(pseudonym).update({"chats": c1})
+        self.db.collection('benutzer').document(partner_id).update({"chats": c2})
         return
             
     def getChat(self, chatid):

@@ -58,12 +58,12 @@ class Backend_Com {
   Future create_user() async {
     String url = _be_url + "/create_user";
     Map<String, dynamic> data = {
-      "name": null,
+      "name": "",
       "bildurl": null,
       "bild_name": null,
       "geburtsdatum": null,
       "land": "Germany",
-      "beschreibungstext": null,
+      "beschreibungstext": "",
       "sprachen": [],
       "registriert": DateTime.now().toString(),
       "lastlogin": DateTime.now().toString(),
@@ -92,16 +92,25 @@ class Backend_Com {
     return _response;
   }
 
-  Future chateintrag_erstellen(String partner_id) async {
+  Future chateintrag_erstellen(
+      String partner_id, String partner_picture) async {
     String url = _be_url + "/chateintrag_erstellen";
-    Map<String, dynamic> data = {"Id": partner_id};
+    Map<String, dynamic> data = {"Id": partner_id, "picture": partner_picture};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     return _response;
   }
 
-  Future chatnachricht_hinzufuegen(String chat_id, String nachricht) async {
+  Future chatnachricht_hinzufuegen(
+    String chat_id,
+    String partner_id,
+    String nachricht,
+  ) async {
     String url = _be_url + "/chatnachricht_hinzufuegen";
-    Map<String, dynamic> data = {"chat_id": chat_id, "nachricht": nachricht};
+    Map<String, dynamic> data = {
+      "chat_id": chat_id,
+      "partner_id": partner_id,
+      "nachricht": nachricht
+    };
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
     return _response;
   }
@@ -124,6 +133,13 @@ class Backend_Com {
       _response_format.add(_respone_element);
     });
     return _response_format;
+  }
+
+  Future chateintrag_loeschen(String chat_id, String partner_id) async {
+    String url = _be_url + "/chateintrag_loeschen";
+    Map<String, dynamic> data = {"chat_id": chat_id, "partner_id": partner_id};
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    return _response;
   }
 // END interactions ----------------------------------------------------------
 }

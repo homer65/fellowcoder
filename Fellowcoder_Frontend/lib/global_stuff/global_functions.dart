@@ -58,11 +58,16 @@ Future<String> refresh_id_token() async {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded"
     };
-    http.Response _response =
-        await http.post(url, body: data, headers: _headers);
-    String _new_id_token = json.decode(_response.body)["id_token"];
-    cookie.set("id_token", _new_id_token);
-    return _new_id_token;
+    try {
+      http.Response _response =
+          await http.post(url, body: data, headers: _headers);
+      String _new_id_token = json.decode(_response.body)["id_token"];
+      cookie.set("id_token", _new_id_token);
+      return _new_id_token;
+    } on Exception catch (e) {
+      // something went wrong
+      return "";
+    }
   }
   return "";
 }

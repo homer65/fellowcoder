@@ -138,7 +138,7 @@ class _Main_ProfileState extends State<Main_Profile> {
     return _loading
         ? Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.orangeAccent),
+              valueColor: AlwaysStoppedAnimation<Color>(global_color_1),
             ),
           )
         : SingleChildScrollView(
@@ -265,14 +265,18 @@ class _Main_ProfileState extends State<Main_Profile> {
                       widget.userview
                           ? RaisedButton(
                               onPressed: () async {
-                                await Backend_Com()
-                                    .chateintrag_erstellen(_user_data.id);
-                                global_user_data.chats.add({
-                                  "chat_id":
-                                      global_user_data.id + _user_data.id,
-                                  "partner_name": _user_data.name,
-                                  "partner_id": _user_data.id
-                                });
+                                if (global_usertype == Usertype.user) {
+                                  await Backend_Com().chateintrag_erstellen(
+                                      _user_data.id, _user_data.bildurl);
+                                  global_user_data.chats.add({
+                                    "chat_id":
+                                        global_user_data.id + _user_data.id,
+                                    "partner_name": _user_data.name,
+                                    "partner_id": _user_data.id,
+                                    "partner_picture": _user_data.bildurl,
+                                    "last_message_time": null
+                                  });
+                                }
                                 Navigator.of(context)
                                     .pushNamed(Chat_View.route);
                               },
