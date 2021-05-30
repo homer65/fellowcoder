@@ -116,6 +116,17 @@ def get_user():
     erg = json.dumps(dict_erg, default=str, indent = 4)
     return erg
 
+@app.route('/get_user_userview', methods=["POST", "GET"])
+def get_user_userview():
+    id = get_request_data()["id"]
+    data = fs.get_Benutzer(id)
+    data["Id"] = id
+    dict_erg = {}
+    dict_erg["return"] = "ok"
+    dict_erg["detail"] = data
+    erg = json.dumps(dict_erg, default=str, indent = 4)
+    return erg
+
 @app.route('/change_userdata', methods=["POST", "GET"])
 def change_userdata():
     pseudonym = get_uid()

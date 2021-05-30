@@ -12,21 +12,23 @@ import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_textinput_v1.d
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/text_date_picker.dart';
 import 'package:Fellowcoder_Frontend/profile/chat_view.dart';
 import 'package:flutter/material.dart';
+import 'package:cooky/cooky.dart' as cookie;
 
 enum Profile_Change_Data { email, password }
 Map<String, dynamic> click_change_weekday_data;
 
 class Main_Profile extends StatefulWidget {
   static const String route = '/main_profile';
-  bool userview;
   DB_User data;
-  Main_Profile({this.userview = false, this.data});
+  String user_id;
+  Main_Profile({this.data, this.user_id = ""});
   @override
   _Main_ProfileState createState() => _Main_ProfileState();
 }
 
 class _Main_ProfileState extends State<Main_Profile> {
   DB_User _user_data;
+  bool _userview;
   TextEditingController _name_controller = TextEditingController();
   TextEditingController _description_controller = TextEditingController();
   bool _loading = true;
@@ -86,8 +88,24 @@ class _Main_ProfileState extends State<Main_Profile> {
   }
 
   void initialise() async {
-    if (widget.userview) {
-      _user_data = widget.data;
+    if (cookie.get("id_token") == null || cookie.get("id_token") == "") {
+      _userview = true;
+    } else {
+      if (global_user_data == null) {
+        _loading = true;
+        return;
+      } else {
+        _userview = !(widget.user_id == global_user_data.id);
+      }
+    }
+    if (_userview) {
+      if (widget.data == null) {
+        _loading = true;
+        widget.data = await Backend_Com().get_user_userview(widget.user_id);
+        _user_data = widget.data;
+      } else {
+        _user_data = widget.data;
+      }
     } else {
       //print(global_user_data.name);
       if (global_user_data == null) {
@@ -111,7 +129,9 @@ class _Main_ProfileState extends State<Main_Profile> {
       _description = _user_data.beschreibungstext;
     }
 
-    _loading = false;
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -121,6 +141,7 @@ class _Main_ProfileState extends State<Main_Profile> {
       initialise();
       setState(() {});
     });
+    _loading = true;
     initialise();
   }
 
@@ -152,7 +173,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                       SizedBox(
                         height: _on_mobile ? 10 : 10,
                       ),
-                      widget.userview
+                      _userview
                           ? Container()
                           : SizedBox(
                               width: _screen_size.width,
@@ -208,12 +229,12 @@ class _Main_ProfileState extends State<Main_Profile> {
                                 ],
                               ),
                             ),
-                      widget.userview
+                      _userview
                           ? SizedBox()
                           : SizedBox(
                               height: _on_mobile ? 30 : 60,
                             ),
-                      widget.userview
+                      _userview
                           ? Basic_Image(
                               _user_data.bildurl,
                               width: 200,
@@ -262,7 +283,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                       SizedBox(
                         height: 10,
                       ),
-                      widget.userview
+                      _userview
                           ? RaisedButton(
                               onPressed: () async {
                                 if (global_usertype == Usertype.user) {
@@ -289,7 +310,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                       SizedBox(
                         height: 10,
                       ),
-                      widget.userview
+                      _userview
                           ? Text(_user_data.name,
                               style: TextStyle(
                                 fontSize: 18,
@@ -297,7 +318,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                               ))
                           : Own_Submittable_Text_Input(
                               _name_controller,
-                              enabled: !widget.userview,
+                              enabled: !_userview,
                               on_changed: (value) {},
                               submitted: (value) {
                                 Backend_Com().change_userdata("name", value);
@@ -313,7 +334,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                         height: 10,
                       ),
                       Own_Country_Select_Dropdown(
-                        enabled: !widget.userview,
+                        enabled: !_userview,
                         init_value: _user_data.land,
                         on_change: (country) {
                           _user_data.land = country;
@@ -324,7 +345,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                       SizedBox(
                         height: 10,
                       ),
-                      widget.userview
+                      _userview
                           ? Text(
                               global_language == Global_Language.ger
                                   ? "Alter: "
@@ -334,7 +355,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                                 fontWeight: FontWeight.bold,
                               ))
                           : Text_Date_Picker(
-                              enabled: !widget.userview,
+                              enabled: !_userview,
                               onValueChanged: (value) {
                                 _user_data.geburtsdatum = value;
                                 Backend_Com().change_userdata(
@@ -343,9 +364,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                               label: global_language == Global_Language.ger
                                   ? "Geburtsdatum"
                                   : "Birthday",
-                              date: _user_data.geburtsdatum == null
-                                  ? DateTime.now()
-                                  : _user_data.geburtsdatum,
+                              date: _user_data.geburtsdatum,
                               first_date: DateTime.now()
                                   .subtract(Duration(days: 100000)),
                             ),
@@ -363,7 +382,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                         color: global_color_1,
                       ),
                       Own_Coding_Language_Selection(
-                        enabled: !widget.userview,
+                        enabled: !_userview,
                         coding_language_list: _user_data.sprachen,
                         on_change: () {
                           Backend_Com()
@@ -377,7 +396,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                       SizedBox(
                         height: 10,
                       ),
-                      widget.userview
+                      _userview
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -398,7 +417,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                             )
                           : Own_Submittable_Text_Input(
                               _description_controller,
-                              enabled: !widget.userview,
+                              enabled: !_userview,
                               on_changed: (value) {},
                               submitted: (value) {
                                 Backend_Com().change_userdata(

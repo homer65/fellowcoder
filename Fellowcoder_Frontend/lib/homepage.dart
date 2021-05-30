@@ -48,7 +48,7 @@ class _HomepageState extends State<Homepage>
         _screen_size.width < global_mobile_treshold ? true : false;
 
     double _width_1 = calc_length_max(800, 0.95, _screen_size.width);
-    double _width_2 = calc_length_max(300, 0.90, _screen_size.width);
+    double _width_2 = calc_length_max(320, 0.95, _screen_size.width);
 
     return Container(
       alignment: Alignment.center,
@@ -96,15 +96,15 @@ class _HomepageState extends State<Homepage>
             SizedBox(
               height: 15,
             ),
-            OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  _settings_expanded = !_settings_expanded;
-                });
-              },
-              style: ButtonStyle(),
-              child: SizedBox(
-                width: _width_2,
+            SizedBox(
+              width: _width_2,
+              child: OutlinedButton(
+                onPressed: () {
+                  setState(() {
+                    _settings_expanded = !_settings_expanded;
+                  });
+                },
+                style: ButtonStyle(),
                 child: Text(
                     global_language == Global_Language.ger
                         ? "weitere Einstellungen:"
@@ -113,9 +113,11 @@ class _HomepageState extends State<Homepage>
                     style: TextStyle(color: Colors.black)),
               ),
             ),
-            AnimatedContainer(
-              duration: Duration(milliseconds: 500),
+            Container(
+              //AnimatedContainer(
+              //duration: Duration(milliseconds: 500),
               height: _settings_expanded ? null : 4,
+              width: _width_2,
               decoration: BoxDecoration(
                   border: Border.all(
                     color: global_color_4,
@@ -123,11 +125,12 @@ class _HomepageState extends State<Homepage>
                   ),
                   borderRadius: BorderRadius.circular(5)),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(
                     height: 5,
                   ),
-                  Own_Group_Person_Select(
+                  /*Own_Group_Person_Select(
                     width: _width_2,
                     init_gps: Group_Person_Select.person,
                     on_change: (value) {
@@ -152,9 +155,16 @@ class _HomepageState extends State<Homepage>
                   ),
                   SizedBox(
                     height: 10,
-                  ),
+                  ),*/
+                  Text(
+                      global_language == Global_Language.ger
+                          ? "Land:"
+                          : "Country:",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
                   Own_Country_Select_Dropdown(
-                    width: _width_2,
+                    width: _width_2 - 3,
                     init_value: global_search_data["country"],
                     on_change: (String country) {
                       global_search_data["country"] = country;
@@ -163,6 +173,13 @@ class _HomepageState extends State<Homepage>
                   SizedBox(
                     height: 10,
                   ),
+                  Text(
+                      global_language == Global_Language.ger
+                          ? "Skills:"
+                          : "Skills:",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
                   Container(
                     alignment: Alignment.center,
                     width: _width_2 + 12,
@@ -184,23 +201,26 @@ class _HomepageState extends State<Homepage>
             AnimatedBuilder(
               animation: _search_button_animationcontroller,
               builder: (_, __) {
-                return RaisedButton(
-                  onPressed: () async {
-                    global_results_list =
-                        await Backend_Com().get_search_data(global_search_data);
-                    Navigator.of(context).pushNamed(Search_Result_Page.route);
-                  },
-                  color: global_color_1.withGreen(220 +
-                      (_search_button_animationcontroller.value * 10).toInt()),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: _width_2,
-                    padding: const EdgeInsets.all(15),
-                    child: Text(
-                      global_language == Global_Language.ger
-                          ? "Suchen"
-                          : "Search",
-                      style: TextStyle(color: Colors.white, fontSize: 25),
+                return SizedBox(
+                  width: _width_2,
+                  child: RaisedButton(
+                    onPressed: () async {
+                      global_results_list = await Backend_Com()
+                          .get_search_data(global_search_data);
+                      Navigator.of(context).pushNamed(Search_Result_Page.route);
+                    },
+                    color: global_color_1.withGreen(220 +
+                        (_search_button_animationcontroller.value * 10)
+                            .toInt()),
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(15),
+                      child: Text(
+                        global_language == Global_Language.ger
+                            ? "Suchen"
+                            : "Search",
+                        style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
                     ),
                   ),
                 );

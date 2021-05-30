@@ -40,6 +40,12 @@ class _Text_Date_PickerState extends State<Text_Date_Picker> {
       } else {
         _date_controller.text = DateFormat('dd.MM.yyyy').format(widget.date);
       }
+    } else {
+      if (widget.date_and_time) {
+        _date_controller.text = "--.--.---- --:--";
+      } else {
+        _date_controller.text = "--.--.----";
+      }
     }
   }
 

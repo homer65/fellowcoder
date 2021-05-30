@@ -11,6 +11,7 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/homepage.dart';
 import 'package:Fellowcoder_Frontend/login_register/login.dart';
 import 'package:Fellowcoder_Frontend/login_register/register.dart';
+import 'package:Fellowcoder_Frontend/login_register/register_follow.dart';
 import 'package:Fellowcoder_Frontend/profile/chat_view.dart';
 import 'package:Fellowcoder_Frontend/profile/main_profile.dart';
 import 'package:Fellowcoder_Frontend/router.dart';
@@ -54,7 +55,7 @@ class _MainState extends State<Main> {
     auth_firebase.authStateChanges().listen((User user) async {
       //print(user);
       if (user == null && global_usertype != Usertype.visitor) {
-        //print('User is currently signed out!');
+        print('User is currently signed out!');
         try {
           logout(); // logout just in case the id_token is still saved
         } catch (e) {}
@@ -62,25 +63,32 @@ class _MainState extends State<Main> {
           global_usertype = Usertype.visitor;
         });
       } else if (user != null && global_usertype != Usertype.user) {
-        //print('User is signed in!');
+        print('User is signed in!');
         if (global_user_data == null) {
           global_user_data =
               DB_User(); // prevents requesting the userdata again when the listener fires several times
-          var _user_data = await Backend_Com().get_user();
+          var _user_data = null;
+          try {
+            _user_data = await Backend_Com().get_user();
+          } catch (e) {
+            _user_data = null;
+          }
           if (_user_data == null) {
+            print('Sign out old user');
             logout();
             setState(() {
               global_usertype = Usertype.visitor;
             });
+            global_rebuild_controller.add(true);
             return;
           } else {
-            global_user_data = await Backend_Com().get_user();
+            global_user_data = _user_data;
           }
         }
-        global_rebuild_controller.add(true);
         setState(() {
           global_usertype = Usertype.user;
         });
+        global_rebuild_controller.add(true);
       }
     });
   }
@@ -129,13 +137,7 @@ Widget get_main_widget(var arguments) {
     case Login.route:
       return Login();
     case Main_Profile.route:
-      if (arguments == null) {
-        return Main_Profile();
-      }
-      return Main_Profile(
-        userview: arguments["userview"],
-        data: arguments["data"],
-      );
+      return Main_Profile();
     case Chat_View.route:
       return Chat_View();
     case About_Us.route:
@@ -146,7 +148,18 @@ Widget get_main_widget(var arguments) {
       return Nutzungsbedingungen();
     case Datenschutz.route:
       return Datenschutz();
+    case Register_Follow.route:
+      return Register_Follow();
     default:
+      try {
+        if (global_active_route.substring(0, Main_Profile.route.length) ==
+            Main_Profile.route) {
+          return Main_Profile(
+              data: arguments["data"], user_id: arguments["user_id"]);
+        }
+      } catch (e) {
+        print(e);
+      }
       return Homepage();
   }
 }

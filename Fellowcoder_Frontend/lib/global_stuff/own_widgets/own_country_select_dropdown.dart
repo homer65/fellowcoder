@@ -54,6 +54,9 @@ class _Own_Country_Select_DropdownState
                   width: widget.width - 25,
                   child: Row(
                     children: [
+                      SizedBox(
+                        width: 3,
+                      ),
                       Image.asset(
                         global_country_info[value].icon,
                         width: 40,
@@ -76,6 +79,9 @@ class _Own_Country_Select_DropdownState
             height: widget.height,
             child: Row(
               children: [
+                SizedBox(
+                  width: 3,
+                ),
                 Image.asset(
                   global_country_info.values
                       .firstWhere(

@@ -84,7 +84,8 @@ class _HeaderState extends State<Header> {
                     ? FlatButton(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         onPressed: () {
-                          Navigator.of(context).pushNamed(Main_Profile.route);
+                          Navigator.of(context).pushNamed(
+                              Main_Profile.route + "/" + global_user_data.id);
                         },
                         child: Icon(
                           Icons.person,

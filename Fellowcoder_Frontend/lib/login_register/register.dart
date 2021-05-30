@@ -4,6 +4,7 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_textinput_v1.dart';
 import 'package:Fellowcoder_Frontend/homepage.dart';
+import 'package:Fellowcoder_Frontend/login_register/register_follow.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cooky/cooky.dart' as cookie;
@@ -132,7 +133,8 @@ class _RegisterState extends State<Register> {
                         if ((await Backend_Com().create_user()).toString() ==
                             '{return: ok}') {
                           global_user_data = await Backend_Com().get_user();
-                          Navigator.of(context).popAndPushNamed(Homepage.route);
+                          Navigator.of(context)
+                              .popAndPushNamed(Register_Follow.route);
                         } else {
                           global_user_data = null;
                           Scaffold.of(context).showSnackBar(SnackBar(

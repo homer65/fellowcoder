@@ -82,6 +82,16 @@ class Backend_Com {
     return DB_User.fromJson(_response["detail"]);
   }
 
+  Future<DB_User> get_user_userview(String id) async {
+    String url = _be_url + "/get_user_userview";
+    Map<String, dynamic> data = {"id": id};
+    var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    if (_response["return"] == "nok") {
+      return null;
+    }
+    return DB_User.fromJson(_response["detail"]);
+  }
+
   Future change_userdata(String feld, dynamic wert) async {
     String url = _be_url + "/change_userdata";
     if (feld == "geburtsdatum") {

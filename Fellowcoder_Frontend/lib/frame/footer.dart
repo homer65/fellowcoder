@@ -31,7 +31,7 @@ class _FooterState extends State<Footer> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              FlatButton(
+              /*FlatButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(About_Us.route);
                   },
@@ -48,7 +48,7 @@ class _FooterState extends State<Footer> {
                 width: 1,
                 height: 20,
                 color: Colors.black,
-              ),
+              ),*/
               FlatButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(Datenschutz.route);

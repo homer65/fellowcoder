@@ -187,7 +187,15 @@ class _Own_Coding_Language_Selection_ElementState
                           SizedBox(
                             width: 10,
                           ),
-                          Text(global_coding_language_info[value].name),
+                          Text(
+                            global_coding_language_info[value].name,
+                            style: TextStyle(
+                                fontSize: (16.5 -
+                                        global_coding_language_info[value]
+                                            .name
+                                            .length)
+                                    .toDouble()),
+                          ),
                         ],
                       ),
                     );
