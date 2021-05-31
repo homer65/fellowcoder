@@ -29,13 +29,23 @@ final FirebaseAuth auth_firebase = FirebaseAuth.instance;
 //Authentication END--------------------------------------------------------------------------
 
 //Color variables START-----------------------------------------------------------------------
-Color global_color_background_1 = Color.fromRGBO(250, 250, 250, 1);
+// Schema 1
+/*Color global_color_background_1 = Color.fromRGBO(250, 250, 250, 1);
 Color global_color_1 = Color.fromRGBO(220, 220, 100, 1);
 Color global_color_1_1 = Color.fromRGBO(200, 200, 80, 1);
 Color global_color_1_2 = Color.fromRGBO(250, 250, 130, 1);
 Color global_color_2 = Color.fromRGBO(192, 242, 97, 1);
 Color global_color_3 = Color.fromRGBO(204, 204, 204, 1);
 Color global_color_4 = Color.fromRGBO(138, 138, 138, 1);
+Color global_color_5 = Color.fromRGBO(0, 0, 0, 1);*/
+// Schema 2
+Color global_color_background_1 = Color.fromRGBO(250, 250, 250, 1);
+Color global_color_1 = Color.fromRGBO(138, 138, 138, 1);
+Color global_color_1_1 = Color.fromRGBO(118, 118, 118, 1);
+Color global_color_1_2 = Color.fromRGBO(168, 168, 168, 1);
+Color global_color_2 = Color.fromRGBO(192, 242, 97, 1);
+Color global_color_3 = Color.fromRGBO(204, 204, 204, 1);
+Color global_color_4 = Color.fromRGBO(220, 220, 100, 1);
 Color global_color_5 = Color.fromRGBO(0, 0, 0, 1);
 //Color variables END-----------------------------------------------------------------------
 
@@ -232,6 +242,7 @@ final Map<Country, Country_Info> global_country_info = {
 
 //Coding language variables START-----------------------------------------------------------------------
 enum Coding_Language {
+  all,
   android,
   cpp,
   csharp,
@@ -261,6 +272,8 @@ class Coding_Language_Info {
 }
 
 final Map<Coding_Language, Coding_Language_Info> global_coding_language_info = {
+  Coding_Language.all: Coding_Language_Info(
+      name: "All", icon: "assets/coding_languages/all_100.png"),
   Coding_Language.python: Coding_Language_Info(
       name: "Python", icon: "assets/coding_languages/python_100.png"),
   Coding_Language.csharp: Coding_Language_Info(

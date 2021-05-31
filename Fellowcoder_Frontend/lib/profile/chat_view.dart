@@ -132,6 +132,10 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
         .snapshots();
     _docstreamsub = documentStream.listen((documentSnapshot) {
       DocumentSnapshot ds = documentSnapshot;
+      /*print(global_user_data.chats);
+      print("-A---");
+      print(ds.data()["chats"]);
+      print("-A-A-A-");*/
       if (global_user_data != null && ds.data()["chats"] != null) {
         global_user_data.chats = [];
         ds.data()["chats"].forEach((value) {
@@ -157,7 +161,7 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
     return Container(
         height: double.infinity,
         decoration: BoxDecoration(
-          color: global_color_4.withOpacity(0.2),
+          color: global_color_1.withOpacity(0.2),
           border: Border(
             right: BorderSide(width: _on_mobile ? 0 : 1.0, color: Colors.black),
           ),
@@ -197,8 +201,8 @@ class _Chat_View_SelectState extends State<Chat_View_Select> {
                                   topRight: Radius.circular(5),
                                   bottomRight: Radius.circular(5)),
                               color: element["chat_id"] == widget.active_chat
-                                  ? global_color_1
-                                  : global_color_4.withOpacity(0.7),
+                                  ? global_color_4
+                                  : global_color_1.withOpacity(0.7),
                               /*border: Border(
                                 top: BorderSide(
                                   width: 1.0,
@@ -396,7 +400,7 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
                 height: 80,
                 margin: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                    color: global_color_1.withOpacity(0.3),
+                    color: global_color_4.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(40)),
                 child: Row(
                   children: [
@@ -426,21 +430,24 @@ class _Chat_View_MessagesState extends State<Chat_View_Messages> {
                         child:
                             Icon(Icons.send, color: Colors.black //Colors.white,
                                 ),
-                        color: global_color_1,
+                        color: global_color_4,
                         onPressed: () async {
-                          await Backend_Com().chatnachricht_hinzufuegen(
-                              widget.selected_chat,
-                              widget.partner_id,
-                              _message_controller.text);
-                          Map<String, String> _temp = {
+                          if (_message_controller.text != "" &&
+                              _message_controller.text != null) {
+                            await Backend_Com().chatnachricht_hinzufuegen(
+                                widget.selected_chat,
+                                widget.partner_id,
+                                _message_controller.text);
+                            /*Map<String, String> _temp = {
                             "time": DateTime.now().toString(),
                             "user_id": global_user_data.id,
                             "text": _message_controller.text
                           };
-                          //_chat.add(_temp);
-                          _message_controller.text = "";
-                          WidgetsBinding.instance
-                              .addPostFrameCallback((_) => _scroll_down());
+                          _chat.add(_temp);*/
+                            _message_controller.text = "";
+                            WidgetsBinding.instance
+                                .addPostFrameCallback((_) => _scroll_down());
+                          }
                         },
                       ),
                     )
@@ -494,8 +501,8 @@ class _Chat_View_Messages_ElementState
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: _own_message
-                ? global_color_1.withOpacity(0.9)
-                : global_color_4.withOpacity(0.4),
+                ? global_color_4.withOpacity(0.9)
+                : global_color_1.withOpacity(0.4),
           ),
           child: Stack(
             children: [

@@ -78,7 +78,7 @@ class _Own_Coding_Language_Selection_AddState
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: global_color_4)
+          border: Border.all(color: global_color_1)
           /*color: global_color_highlight_1,
         boxShadow: [
           BoxShadow(
@@ -92,8 +92,8 @@ class _Own_Coding_Language_Selection_AddState
       child: FlatButton(
           onPressed: () {
             setState(() {
-              widget.coding_language_list.add(
-                  global_coding_language_info[Coding_Language.python].name);
+              widget.coding_language_list
+                  .add(global_coding_language_info[Coding_Language.all].name);
             });
             widget.update();
           },
@@ -135,7 +135,7 @@ class _Own_Coding_Language_Selection_ElementState
       padding: EdgeInsets.only(left: 2),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: global_color_4)
+          border: Border.all(color: global_color_1)
           /*color: global_color_highlight_1,
         boxShadow: [
           BoxShadow(

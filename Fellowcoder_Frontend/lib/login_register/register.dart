@@ -119,7 +119,7 @@ class _RegisterState extends State<Register> {
                   valueColor: AlwaysStoppedAnimation<Color>(global_color_1),
                 )
               : RaisedButton(
-                  color: global_color_1,
+                  color: global_color_4,
                   onPressed: () async {
                     setState(() {
                       _loading = true;

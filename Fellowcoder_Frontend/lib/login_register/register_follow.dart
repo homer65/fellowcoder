@@ -41,8 +41,8 @@ class _Register_FollowState extends State<Register_Follow> {
             ),
             Text(
               global_language == Global_Language.ger
-                  ? "Hier kannst du noch weitere Daten zu deinem Profil hinzufügen.\nDadurch können dich andere Nutzer besser finden.\nDu kannst deine Angaben auch später in deinem Profil bearbeiten und ergänzen."
-                  : "Here you can add more data to your profile.\nThis will help other users to find you better.\nYou can also edit and add details later in your profile.",
+                  ? "Hier kannst du noch weitere Angaben zu deinem Profil hinzufügen.\nDadurch können dich andere Nutzer besser finden.\nDu kannst deine Angaben auch später in deinem Profil bearbeiten und ergänzen."
+                  : "Here you can add more Information to your profile.\nThis will help other users to find you better.\nYou can also edit and add details later in your profile.",
               style: TextStyle(
                   fontWeight: FontWeight.bold, fontSize: _on_mobile ? 14 : 20),
             ),
@@ -138,7 +138,7 @@ class _Register_FollowState extends State<Register_Follow> {
                   ),
                   Container(
                     height: 3,
-                    color: global_color_1,
+                    color: global_color_4,
                   ),
                   Own_Coding_Language_Selection(
                     enabled: true,
@@ -150,7 +150,7 @@ class _Register_FollowState extends State<Register_Follow> {
                   ),
                   Container(
                     height: 3,
-                    color: global_color_1,
+                    color: global_color_4,
                   ),
                   SizedBox(
                     height: 20,
@@ -172,7 +172,7 @@ class _Register_FollowState extends State<Register_Follow> {
                     height: 80,
                   ),
                   RaisedButton(
-                    color: global_color_1,
+                    color: global_color_4,
                     onPressed: () async {
                       Navigator.of(context).popAndPushNamed(
                           Main_Profile.route + "/" + global_user_data.id);

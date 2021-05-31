@@ -4,6 +4,7 @@ import 'package:Fellowcoder_Frontend/global_stuff/global_functions.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/global_variables.dart';
 import 'package:Fellowcoder_Frontend/global_stuff/own_widgets/own_textinput_v1.dart';
 import 'package:Fellowcoder_Frontend/homepage.dart';
+import 'package:Fellowcoder_Frontend/login_register/register.dart';
 import 'package:flutter/material.dart';
 import 'package:cooky/cooky.dart' as cookie;
 
@@ -44,7 +45,9 @@ class _LoginState extends State<Login> {
                 },
               ),
               FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).popAndPushNamed(Register.route);
+                  },
                   child: Text(
                     global_language == Global_Language.ger
                         ? "noch kein Profil?"
@@ -83,7 +86,7 @@ class _LoginState extends State<Login> {
                   valueColor: AlwaysStoppedAnimation<Color>(global_color_1),
                 )
               : RaisedButton(
-                  color: global_color_1,
+                  color: global_color_4,
                   onPressed: () async {
                     setState(() {
                       _loading = true;

@@ -1,3 +1,4 @@
+import 'package:Fellowcoder_Frontend/frame/cookie_banner.dart';
 import 'package:Fellowcoder_Frontend/frame/footer.dart';
 import 'package:Fellowcoder_Frontend/frame/frame_pages/about_us.dart';
 import 'package:Fellowcoder_Frontend/frame/frame_pages/datenschutz.dart';
@@ -113,11 +114,18 @@ class _MainState extends State<Main> {
     return Scaffold(
       backgroundColor: global_color_background_1,
       //drawer: Main_Drawer(),
-      body: Column(
+      body: Stack(
         children: [
-          Header(),
-          Expanded(key: UniqueKey(), child: get_main_widget(widget.arguments)),
-          Footer(),
+          Column(
+            children: [
+              Header(),
+              Expanded(
+                child: get_main_widget(widget.arguments),
+              ),
+              Footer(),
+            ],
+          ),
+          Align(alignment: Alignment.topCenter, child: Cookie_Banner()),
         ],
       ),
     );
@@ -155,7 +163,8 @@ Widget get_main_widget(var arguments) {
         if (global_active_route.substring(0, Main_Profile.route.length) ==
             Main_Profile.route) {
           return Main_Profile(
-              data: arguments["data"], user_id: arguments["user_id"]);
+              data: arguments == null ? null : arguments["data"],
+              user_id: arguments["user_id"]);
         }
       } catch (e) {
         print(e);

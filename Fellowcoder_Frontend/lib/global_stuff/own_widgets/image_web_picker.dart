@@ -51,6 +51,7 @@ class Image_Web_Picker extends StatefulWidget {
 
 class _Image_Web_PickerState extends State<Image_Web_Picker> {
   bool _edit = false;
+  //String _resize_path_extension = "_500x500"; // this extension gets added from the firebase extension that resizes the images
 
   void _uploadImage({@required Function(File file) onSelected}) {
     InputElement uploadInput = FileUploadInputElement()..accept = 'image/*';

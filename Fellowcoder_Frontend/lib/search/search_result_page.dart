@@ -72,7 +72,7 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
             title: Text(''),
             backgroundColor: global_color_background_1,
             stretch: true,
-            expandedHeight: 200 +
+            expandedHeight: 210 +
                 (_settings_expanded
                     ? 160 +
                         ((global_search_data["coding_languages"].length + 1) /
@@ -83,174 +83,169 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
             flexibleSpace: FlexibleSpaceBar(
               background: Column(
                 children: [
+                  Text(
+                      global_language == Global_Language.ger
+                          ? "Nach welchen Skills suchst du:"
+                          : "What skills are you looking for:",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold)),
+                  Container(
+                    alignment: Alignment.center,
+                    width: _width_1,
+                    child: Own_Coding_Language_Selection(
+                      coding_language_list:
+                          global_search_data["coding_languages"],
+                      on_change: () {},
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    width: _width_2,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        setState(() {
+                          _settings_expanded = !_settings_expanded;
+                        });
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                topRight: Radius.circular(5)))),
+                      ),
+                      child: Text(
+                          global_language == Global_Language.ger
+                              ? "weitere Einstellungen:"
+                              : "further settings:",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black)),
+                    ),
+                  ),
+                  Container(
+                    //AnimatedContainer(
+                    //duration: Duration(milliseconds: 500),
+                    height: _settings_expanded ? null : 4,
+                    width: _width_2,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: global_color_1,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(5),
+                            bottomRight: Radius.circular(5))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        /*Own_Group_Person_Select(
+                    width: _width_2,
+                    init_gps: Group_Person_Select.person,
+                    on_change: (value) {
+                      setState(() {
+                        global_search_data["group_person_select"] =
+                            global_group_person_select_info[value].name;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Own_Group_Goal_Select(
+                    width: _width_2,
+                    greyed_out:
+                        global_search_data["group_person_select"] == "Person",
+                    init_ggs: Group_Goal_Select.team,
+                    on_change: (value) {
+                      global_search_data["group_goal_select"] =
+                          global_group_goal_select_info[value].name;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),*/
+                        Text(
+                            global_language == Global_Language.ger
+                                ? "Land:"
+                                : "Country:",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
+                        Own_Country_Select_Dropdown(
+                          width: _width_2 - 3,
+                          init_value: global_search_data["country"],
+                          on_change: (String country) {
+                            global_search_data["country"] = country;
+                          },
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                            global_language == Global_Language.ger
+                                ? "Suchtext:"
+                                : "Search text:",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
+                        Container(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          /*decoration: BoxDecoration(
+                        border: Border.all(
+                          color: global_color_1,
+                          width: 4,
+                        ),
+                        borderRadius: BorderRadius.circular(5)),*/
+                          //width: _width_1,
+                          child: TextFormField(
+                            cursorColor: global_color_1,
+                            autofocus: false,
+                            maxLines: 1,
+                            controller: null,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 24),
+                            onChanged: (value) {
+                              setState(() {
+                                global_search_data["search_text"] = value;
+                              });
+                            },
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                                icon: Icon(Icons.search),
+                                /*border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,*/
+                                hintStyle: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey.withOpacity(0.7),
+                                ),
+                                hintText: global_language == Global_Language.ger
+                                    ? "Name oder Beschreibungstext"
+                                    : "Name or personal description",
+                                alignLabelWithHint: false),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: 5,
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: global_color_1,
-                              width: 4,
-                            ),
-                            borderRadius: BorderRadius.circular(5)),
-                        width: _width_1,
-                        child: TextFormField(
-                          cursorColor: global_color_1,
-                          autofocus: false,
-                          maxLines: 1,
-                          controller: _search_text_controller,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 24),
-                          onChanged: (value) {
-                            setState(() {
-                              global_search_data["search_text"] = value;
-                            });
-                          },
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              hintStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey.withOpacity(0.7)),
-                              hintText: global_language == Global_Language.ger
-                                  ? "Gib einen bestimmten Namen ein oder lass es frei um alle zu finden"
-                                  : "Insert a certain name or leave blank to find all",
-                              alignLabelWithHint: false),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        width: _width_2,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              _settings_expanded = !_settings_expanded;
-                            });
-                          },
-                          style: ButtonStyle(),
-                          child: Text(
-                              global_language == Global_Language.ger
-                                  ? "weitere Einstellungen:"
-                                  : "further settings:",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                      ),
-                      Container(
-                        //AnimatedContainer(
-                        //duration: Duration(milliseconds: 500),
-                        height: _settings_expanded ? null : 4,
-                        width: _width_2,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: global_color_4,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            /*Own_Group_Person_Select(
-                              width: _width_2,
-                              init_gps:
-                                  global_search_data["group_person_select"] ==
-                                          "Person"
-                                      ? Group_Person_Select.person
-                                      : Group_Person_Select.group,
-                              on_change: (value) {
-                                setState(() {
-                                  global_search_data["group_person_select"] =
-                                      global_group_person_select_info[value]
-                                          .name;
-                                });
-                              },
-                            ),
-                            SizedBox(
-                              height: 1,
-                            ),
-                            Own_Group_Goal_Select(
-                              width: _width_2,
-                              greyed_out:
-                                  global_search_data["group_person_select"] ==
-                                      global_group_person_select_info[
-                                              Group_Person_Select.person]
-                                          .name,
-                              init_ggs: global_search_data[
-                                          "group_goal_select"] ==
-                                      global_group_goal_select_info[
-                                              Group_Goal_Select.team]
-                                          .name
-                                  ? Group_Goal_Select.team
-                                  : global_search_data["group_goal_select"] ==
-                                          global_group_goal_select_info[
-                                                  Group_Goal_Select.forum]
-                                              .name
-                                      ? Group_Goal_Select.forum
-                                      : Group_Goal_Select.discussion,
-                              on_change: (value) {
-                                global_search_data["group_goal_select"] =
-                                    global_group_goal_select_info[value].name;
-                              },
-                            ),*/
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                                global_language == Global_Language.ger
-                                    ? "Land:"
-                                    : "Country:",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
-                            Own_Country_Select_Dropdown(
-                              width: _width_2 - 3,
-                              init_value: global_search_data["country"],
-                              on_change: (String country) {
-                                global_search_data["country"] = country;
-                              },
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                                global_language == Global_Language.ger
-                                    ? "Skills:"
-                                    : "Skills:",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
-                            Container(
-                              alignment: Alignment.center,
-                              width: _width_2 + 12,
-                              child: Own_Coding_Language_Selection(
-                                coding_language_list:
-                                    global_search_data["coding_languages"],
-                                on_change: () {
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                          ],
-                        ),
-                      ),
                       SizedBox(
                         height: 15,
                       ),
@@ -262,7 +257,7 @@ class _Search_Result_PageState extends State<Search_Result_Page> {
                                 .get_search_data(global_search_data);
                             setState(() {});
                           },
-                          color: global_color_1,
+                          color: global_color_4,
                           child: Container(
                             alignment: Alignment.center,
                             padding: const EdgeInsets.all(15),
@@ -352,7 +347,7 @@ class _Search_Result_Page_List_ElementState
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         color: global_color_background_1,
-        border: Border.all(color: global_color_4),
+        border: Border.all(color: global_color_1),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -511,7 +506,7 @@ class _Coding_Language_ElementState extends State<Coding_Language_Element> {
     return Container(
       margin: EdgeInsets.all(5),
       height: 25,
-      width: 80,
+      width: 100,
       child: Row(
         children: [
           Image.asset(_icon),
@@ -520,7 +515,8 @@ class _Coding_Language_ElementState extends State<Coding_Language_Element> {
           ),
           Text(
             _name,
-            style: TextStyle(color: Colors.black),
+            style:
+                TextStyle(color: Colors.black, fontSize: (20.0 - _name.length)),
           )
         ],
       ),

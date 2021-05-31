@@ -17,7 +17,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage>
     with SingleTickerProviderStateMixin {
   AnimationController _search_button_animationcontroller;
-  bool _settings_expanded = true;
+  bool _settings_expanded = false;
 
   @override
   void initState() {
@@ -28,7 +28,9 @@ class _HomepageState extends State<Homepage>
     super.initState();
     global_search_data = {
       "country": "All",
-      "coding_languages": [], // if no coding language is selected then find all
+      "coding_languages": [
+        "All"
+      ], // if no coding language is selected then find all
       "search_text": "",
       "group_person_select": "Person",
       "group_goal_select": "Team",
@@ -51,50 +53,44 @@ class _HomepageState extends State<Homepage>
     double _width_2 = calc_length_max(320, 0.95, _screen_size.width);
 
     return Container(
-      alignment: Alignment.center,
+      alignment: Alignment.topCenter,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(
+              height: calc_length_min(10, 0.05, _screen_size.height),
+            ),
+            Text(
+                global_language == Global_Language.ger
+                    ? "Programmierer verbinden"
+                    : "Connecting programmers",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: calc_length_min(25, 0.05, _screen_size.height))),
+            SizedBox(
+              height: calc_length_min(0, 0.1, _screen_size.height) + 10,
+            ),
+            Text(
+                global_language == Global_Language.ger
+                    ? "Nach welchen Skills suchst du:"
+                    : "What skills are you looking for:",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold)),
             Container(
-              padding: EdgeInsets.only(left: 5, right: 5),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: global_color_1,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(5)),
+              alignment: Alignment.center,
               width: _width_1,
-              child: TextFormField(
-                cursorColor: global_color_1,
-                autofocus: true,
-                maxLines: 1,
-                controller: null,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                onChanged: (value) {
-                  setState(() {
-                    global_search_data["search_text"] = value;
-                  });
-                },
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    hintStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.withOpacity(0.7),
-                    ),
-                    hintText: global_language == Global_Language.ger
-                        ? "Gib einen bestimmten Namen ein oder lass es frei um alle zu finden"
-                        : "Insert a certain name or leave blank to find all",
-                    alignLabelWithHint: false),
+              child: Own_Coding_Language_Selection(
+                coding_language_list: global_search_data["coding_languages"],
+                on_change: () {},
               ),
             ),
             SizedBox(
-              height: 15,
+              height: 10,
             ),
             SizedBox(
               width: _width_2,
@@ -104,7 +100,12 @@ class _HomepageState extends State<Homepage>
                     _settings_expanded = !_settings_expanded;
                   });
                 },
-                style: ButtonStyle(),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5)))),
+                ),
                 child: Text(
                     global_language == Global_Language.ger
                         ? "weitere Einstellungen:"
@@ -120,10 +121,12 @@ class _HomepageState extends State<Homepage>
               width: _width_2,
               decoration: BoxDecoration(
                   border: Border.all(
-                    color: global_color_4,
+                    color: global_color_1,
                     width: 2,
                   ),
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -175,18 +178,49 @@ class _HomepageState extends State<Homepage>
                   ),
                   Text(
                       global_language == Global_Language.ger
-                          ? "Skills:"
-                          : "Skills:",
+                          ? "Suchtext:"
+                          : "Search text:",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
                   Container(
-                    alignment: Alignment.center,
-                    width: _width_2 + 12,
-                    child: Own_Coding_Language_Selection(
-                      coding_language_list:
-                          global_search_data["coding_languages"],
-                      on_change: () {},
+                    padding: EdgeInsets.only(left: 5, right: 5),
+                    /*decoration: BoxDecoration(
+                        border: Border.all(
+                          color: global_color_1,
+                          width: 4,
+                        ),
+                        borderRadius: BorderRadius.circular(5)),*/
+                    //width: _width_1,
+                    child: TextFormField(
+                      cursorColor: global_color_1,
+                      autofocus: false,
+                      maxLines: 1,
+                      controller: null,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                      onChanged: (value) {
+                        setState(() {
+                          global_search_data["search_text"] = value;
+                        });
+                      },
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                          icon: Icon(Icons.search),
+                          /*border: InputBorder.none,
+
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,*/
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.withOpacity(0.7),
+                          ),
+                          hintText: global_language == Global_Language.ger
+                              ? "Name oder Beschreibungstext"
+                              : "Name or personal description",
+                          alignLabelWithHint: false),
                     ),
                   ),
                   SizedBox(
@@ -209,7 +243,7 @@ class _HomepageState extends State<Homepage>
                           .get_search_data(global_search_data);
                       Navigator.of(context).pushNamed(Search_Result_Page.route);
                     },
-                    color: global_color_1.withGreen(220 +
+                    color: global_color_4.withGreen(220 +
                         (_search_button_animationcontroller.value * 10)
                             .toInt()),
                     child: Container(
@@ -225,7 +259,10 @@ class _HomepageState extends State<Homepage>
                   ),
                 );
               },
-            )
+            ),
+            SizedBox(
+              height: 40,
+            ),
           ],
         ),
       ),

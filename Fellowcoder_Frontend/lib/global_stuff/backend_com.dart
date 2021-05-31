@@ -79,6 +79,7 @@ class Backend_Com {
     if (_response["return"] == "nok") {
       return null;
     }
+    //print("get_user");
     return DB_User.fromJson(_response["detail"]);
   }
 
@@ -89,6 +90,7 @@ class Backend_Com {
     if (_response["return"] == "nok") {
       return null;
     }
+    //print("get_user_userview");
     return DB_User.fromJson(_response["detail"]);
   }
 
@@ -107,6 +109,7 @@ class Backend_Com {
     String url = _be_url + "/chateintrag_erstellen";
     Map<String, dynamic> data = {"Id": partner_id, "picture": partner_picture};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    //print("chateintrag_erstellen");
     return _response;
   }
 
@@ -122,7 +125,8 @@ class Backend_Com {
       "nachricht": nachricht
     };
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
-    return _response;
+    //print("chatnachricht_hinzufuegen");
+    return "_response";
   }
 
   Future<List<Map<String, dynamic>>> chateintrag_daten_lesen(
@@ -142,6 +146,7 @@ class Backend_Com {
       });
       _response_format.add(_respone_element);
     });
+    //print("chateintrag_daten_lesen");
     return _response_format;
   }
 
@@ -149,6 +154,7 @@ class Backend_Com {
     String url = _be_url + "/chateintrag_loeschen";
     Map<String, dynamic> data = {"chat_id": chat_id, "partner_id": partner_id};
     var _response = (await Backend_Com().postdata(url, jsonEncode(data)));
+    //print("chateintrag_loeschen");
     return _response;
   }
 // END interactions ----------------------------------------------------------

@@ -3,6 +3,7 @@ from firebase_admin import credentials, firestore, storage
 from global_functions import url_to_date
 #from test.test_tempfile import TestGetCandidateNames
 from datetime import datetime
+import re
 
 global anzahl_init_firebase
 anzahl_init_firebase = 0
@@ -168,10 +169,14 @@ class Firestore:
                 erg = False
         if not search_text == "None":
             try:
-                if data["beschreibungstext"].find(search_text) == -1 : erg = False
+                if not re.search(search_text, data["beschreibungstext"], re.IGNORECASE):
+                    try:
+                        if not re.search(search_text, data["name"], re.IGNORECASE): erg = False
+                    except:
+                        erg = False
             except:
                 erg = False
-        if not coding_languages == "None":
+        if not coding_languages == "None" and not "All" in coding_languages:
             ok = False
             for language in coding_languages:
                 try:

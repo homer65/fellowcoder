@@ -88,7 +88,7 @@ class _ImpressumState extends State<Impressum> {
                       color: _text_color),
                 ),
                 Text(
-                  "Telefon: (+49)/0 17683417498\nE-Mail: franz.graaf@gmail.com",
+                  "Telefon: (+49)/0 17683417498\nE-Mail: xinix.ug@gmail.com",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.normal,

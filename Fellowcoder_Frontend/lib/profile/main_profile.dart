@@ -304,14 +304,15 @@ class _Main_ProfileState extends State<Main_Profile> {
                               child: Text(global_language == Global_Language.ger
                                   ? "Chat"
                                   : "Chat"),
-                              color: global_color_1,
+                              color: global_color_4,
                             )
                           : Container(),
                       SizedBox(
                         height: 10,
                       ),
                       _userview
-                          ? Text(_user_data.name,
+                          ? Text(
+                              _user_data.name == null ? "-" : _user_data.name,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -379,7 +380,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                       ),
                       Container(
                         height: 3,
-                        color: global_color_1,
+                        color: global_color_4,
                       ),
                       Own_Coding_Language_Selection(
                         enabled: !_userview,
@@ -391,7 +392,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                       ),
                       Container(
                         height: 3,
-                        color: global_color_1,
+                        color: global_color_4,
                       ),
                       SizedBox(
                         height: 10,
@@ -408,7 +409,7 @@ class _Main_ProfileState extends State<Main_Profile> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     )),
-                                Text(_description,
+                                Text(_description == null ? "-" : _description,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.normal,

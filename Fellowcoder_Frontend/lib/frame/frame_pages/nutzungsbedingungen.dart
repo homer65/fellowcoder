@@ -17,6 +17,9 @@ class _NutzungsbedingungenState extends State<Nutzungsbedingungen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(
+                  height: 40,
+                ),
                 Text(
                   "Nutzungsbedingungen",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -25,7 +28,7 @@ class _NutzungsbedingungenState extends State<Nutzungsbedingungen> {
                   height: 20,
                 ),
                 Text(
-                  "Mit dem Zugriff auf „Fellowcoder“ („https://www.fellowcoder.org“) wird zwischen dir und dem Betreiber ein Vertrag mit folgenden Regelungen geschlossen:",
+                  "Mit dem Zugriff auf „Fellowcoder“ („https://fellowcoder.org“) wird zwischen dir und dem Betreiber ein Vertrag mit folgenden Regelungen geschlossen:",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(

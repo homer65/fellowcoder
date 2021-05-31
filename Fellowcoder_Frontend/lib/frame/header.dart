@@ -45,11 +45,17 @@ class _HeaderState extends State<Header> {
               },
               child: Row(
                 children: [
-                  Icon(Icons.home),
+                  Icon(
+                    Icons.home,
+                    //color: global_color_4,
+                  ),
                   SizedBox(
                     width: 5,
                   ),
-                  Text("Fellowcoder.org"),
+                  Text(
+                    "Fellowcoder.org",
+                    style: TextStyle(/*color: global_color_4*/),
+                  ),
                 ],
               )),
           ButtonTheme(
