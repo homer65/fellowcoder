@@ -125,7 +125,16 @@ class _MainState extends State<Main> {
               Footer(),
             ],
           ),
-          Align(alignment: Alignment.topCenter, child: Cookie_Banner()),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Cookie_Banner(),
+                ],
+              )),
         ],
       ),
     );

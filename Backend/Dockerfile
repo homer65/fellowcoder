@@ -18,4 +18,4 @@ RUN pip install Flask gunicorn
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 #CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
-CMD ["python", "controller.py"]
+CMD ["python", "main.py"]
